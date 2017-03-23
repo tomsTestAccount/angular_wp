@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<div>
+
+    <form [formGroup]="currentForm">
+
+        <!--
+        <textarea [ngStyle]="{'background-color':'black','color':'white'}" [(ngModel)]='usermodel.prevEducation' rows="15" cols="80">
+                        </textarea>
+
+                         [ngClass]="{'formFrame_invalid' : peForm.controls[formEntry.key].value == true && uploadedData_Degree.length == 0 ,
+                                'formFrame_valid' :peForm.controls[formEntry.key].value == false || (peForm.controls[formEntry.key].value == true && uploadedData_Degree.length > 0)}"
+        -->
+
+        <div *ngFor="let formEntry of currentFormEntries">
+
+            <div [ngSwitch]="formEntry.key" >
+
+                <div *ngSwitchCase="'degreeCertAvailable'">
+                    <!-- do nothing for that formcontrol-element at the moment, because it is handled by 'copy_of_certificate' below -->
+                </div>
+
+                <div *ngSwitchCase="'copy_of_certificate'"
+                     class="form-group"
+                     [ngClass]="{'formFrame_invalid' : !currentForm.controls[formEntry.key].valid && currentForm.controls['degreeCertAvailable'].value == true,
+                                'formFrame_valid' : currentForm.controls[formEntry.key].valid  ||  currentForm.controls['degreeCertAvailable'].value == false}"
+                     >
+
+                    <div>
+
+                            <md-checkbox formControlName="degreeCertAvailable" align="start">
+                               <label class="lbl-form_main"> Degree Certificate available ? </label>
+                            </md-checkbox>
+
+                        <!--
+                                <md-icon class="infoIcon"
+                                         [ngClass]="{'isInfoActive' : showTooltip1}"
+                                         (click)="toggleInfo($event)"
+                                         (mouseover)="showTooltip1=true"
+                                         (mouseleave)="showTooltip1=false" >
+                                    info_outline
+                                </md-icon>
+                        -->
+                        <i class="mdi mdi-information-outline mdi-24px"
+                           [ngClass]="{'isInfoActive' : showTooltip1}"
+                           (click)="toggleInfo($event)"
+                           (mouseover)="showTooltip1=true"
+                           (mouseleave)="showTooltip1=false"
+                            [style.color]="'#4b797c'"></i>
+
+                            <div *ngIf="showTooltip1" class="container-fluid">
+                                <div class="row">
+                                    <label class="infoText"> Please uncheck this box if you are unable to provide your degree certificate (e.g. bachelor's) by the application deadline because it will be issued by your academic institution only after the deadline
+                                    </label>
+                                </div>
+                            </div>
+
+                    </div>
+
+
+                        <rt-file-uploader *ngIf="currentForm.value.degreeCertAvailable == true"
+                                          [formgroup]= currentForm
+                                          [formEntry] = formEntry
+
+                        ></rt-file-uploader>
+
+
+                </div>
+
+
+                <div *ngSwitchDefault>
+                    <rt-input
+                              [formgroup]=currentForm
+                              [formEntry]=formEntry>
+
+                    </rt-input>
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!--
+        <button type="submit" class="btn btn-default">Submit</button>
+        -->
+
+    </form>
+
+    <hr/>
+
+    <div  [ngClass]="{'formFrame_optional' : true}">
+
+        <md-checkbox align="start" [(ngModel)]="ac2Open" [checked]="ac2Open">
+            <label class="lbl-form_main"> Other previous education available ? (optional) </label>
+        </md-checkbox>
+
+        <form [hidden]="!ac2Open"
+              [formGroup]="currentForm2" name="ac2_form">
+
+            <div *ngFor="let formEntry of currentFormEntries2">
+
+                <div [ngSwitch]="formEntry.key" >
+
+                    <div *ngSwitchDefault>
+                        <rt-input
+                                [formgroup]=currentForm2
+                                [formEntry]=formEntry>
+
+                        </rt-input>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!--
+            <button type="submit">test submit that formGroup</button>
+            -->
+
+        </form>
+
+    </div>
+
+
+  </div>
+
+    <!--
+        <button type="button"  md-tooltip="showDebug" md-icon-button (click)="toggleDbg()">
+            <md-icon class="md-42">build</md-icon>
+        </button>
+        <md-list *ngIf="dbgIsOpen">
+            <md-list-item *ngFor="let formObj of peForm.value | getKeyValuePair">
+                {{formObj.key }} : {{formObj.val}}
+            </md-list-item>
+        </md-list>
+    -->
+
+
+</html>
+
+
+
+<!-- -----------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!--
+       <div class="form-group">
+            <label for="acadEdu">Academic Education *</label>
+            <textarea rows="2"
+                      class="form-control"
+                      id="acadEdu"
+                      formControlName="acadEdu"
+                      required ></textarea>
+
+
+       </div>
+
+       <div class="form-group">
+           <label for="acadLvl">Academic Level *</label>
+           <textarea rows="2"
+                     class="form-control"
+                     id="acadLvl"
+                     formControlName="acadLvl"
+                     required ></textarea>
+
+       </div>
+
+       <div class="form-group">
+           <label for="acadInst">Academic Institution *</label>
+           <textarea rows="2"
+                     class="form-control"
+                     id="acadInst"
+                     formControlName="acadInst"
+                     required ></textarea>
+       </div>
+
+       <label >Degree Conferral Date *</label>
+       <div class="form-group">
+
+           <p-calendar id="degreeConferralDate"
+                       formControlName="degreeConferralDate"
+                       dateFormat="dd.mm.yy"
+                       [monthNavigator]="true"
+                       [yearNavigator]="true"
+                       dataType="string"
+                       yearRange="1980:2020"
+                       placeholder="dd.mm.yyyy"
+                       required>
+           </p-calendar>
+
+       </div>
+
+
+       <div class="form-group"
+            [ngClass]="{'formFrame_invalid' : peForm.value.degreeCertAvailable && uploadedData_Degree.length==0,'formFrame_valid' : peForm.value.degreeCertAvailable && uploadedData_Degree.length!=0 }"
+           >
+
+
+           <div class="form-group">
+
+               <md-checkbox formControlName="degreeCertAvailable" align="start">
+                   Degree Certificate available ?
+               </md-checkbox>
+
+
+               <md-icon class="infoIcon"
+                        [ngClass]="{'isInfoActive' : showTooltip1}"
+                        (click)="toggleInfo($event)"
+                        (mouseover)="showTooltip1=true"
+                        (mouseleave)="showTooltip1=false" >
+                   info_outline
+               </md-icon>
+               <div *ngIf="showTooltip1" class="container-fluid">
+                   <div class="row">
+                       <label class="infoText"> Please uncheck this box if you are unable to provide your degree certificate (e.g. bachelor's) by the application deadline because it will be issued by your academic institution only after the deadline
+                       </label>
+                   </div>
+               </div>
+
+
+           </div>
+
+
+
+
+
+           <rt-file-uploader *ngIf="peForm.value.degreeCertAvailable"
+                   [compId] = "'copyOfDegreeCert_ope'"
+
+                   [title] = "'Copy of Degree Certificate (e.g. Bachelor) *'"
+                   [secParagraphArray] = "['Please upload a PDF copy of your degree certificate.']"
+
+                   [options4upload] = options_degreeUpload
+                   [(uploadedDataArray)] = "uploadedData_Degree"
+
+                   [formCtrlGroup]="peForm"
+                   [formCtrlName] = "'copyOfDegreeCert'"
+                   [required] = true
+           ></rt-file-uploader>
+
+       </div>
+
+
+       <div class="form-group"
+            [ngClass]="{'formFrame_invalid' : uploadedData_transcriptOrOtherGrades.length==0,'formFrame_valid' : uploadedData_transcriptOrOtherGrades.length!=0 }"
+       >
+           <rt-file-uploader
+                             [compId] = "'transcriptOrOtherGrades'"
+
+                             [title] = "'Transcript of Records or Other Proof of Grades *'"
+                             [secParagraphArray] = "[' Please upload your Transcript of Records (or other proof of grades) in PDF format.','The transcript must include at least 30 ECTS in Computational Methods and 30 ECTS in Data-Based Modelling (see below)']"
+
+                             [options4upload] = options_transcriptOrOtherGrades
+                             [(uploadedDataArray)] = "uploadedData_transcriptOrOtherGrades"
+
+                             [formCtrlGroup]="peForm"
+                             [formCtrlName] = "'transcriptOrOtherGrades'"
+                             [required] = true
+           ></rt-file-uploader>
+       </div>
+
+       <!--
+       <div class="form-group">
+           <label for="avGr1_bestPerf">Average Grade of the Best Performance = AvGr1 *</label>
+           <label class="secParagraph"> Please calculate the average grade from the best performance (equivalent to 150 ECTS) and enter this in the field below.
+               <b>Note:</b> Applicants whose Transcript of Records does not include ECTS: A 6-semester study program equals a workload of 180 ECTS.
+               Divide this workload between the different courses you took during your study program and upload your calculation at the end of this online application in the field Other documents.
+           </label>
+           <input type="number"
+                  class="form-control"
+                  formControlName="avGr1_bestPerf"
+                  id="avGr1_bestPerf"
+                  placeholder="0.0"
+                  required>
+
+       </div>
+
+       <div class="form-group">
+           <label for="avGr1_bestPerf">Computational Methods = AvGr2 *</label>
+           <label class="secParagraph"> Please enter the courses you attended in Computational Methods (this includes, for example, informatics, database-orientated methods, computational statistics, optimisation)
+           </label>
+
+           <div class="form-control"
+                [ngClass]="{'ng-invalid' : avgr2_courseList.length == 0 ,'ng-valid' : avgr2_courseList.length > 0 ,'formList':true}"
+                required>
+               <md-grid-list *ngIf="avgr2_courseList.length==0"
+                             cols="9" rowHeight="42px" class="form-control">
+                   <md-grid-tile [colspan]="7" [rowspan]="1">
+                       <md-list [style.padding]="'0'">
+                           <md-list-item class="myMdlist-item">
+                               <md-icon md-list-avatar class="material-icons">warning</md-icon>
+                               <h4 md-line> ... No Course has been added yet !</h4>
+                           </md-list-item>
+                       </md-list>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1" [style.background]="'snow'">
+                       <button type="button"  class="btn_lmu" md-tooltip="add course" tooltip-position="after" md-button (click)="addNewLine_grTbl('avgr2')" [style.width]="'100%'" [style.height]="'100%'">
+                           <md-icon>add</md-icon>
+                           <label>Add New</label>
+                       </button>
+                   </md-grid-tile>
+               </md-grid-list>
+
+               <md-grid-list *ngIf="avgr2_courseList.length!=0"
+                             cols="9" rowHeight="42px" class="form-control">
+
+                   <md-grid-tile [colspan]="3" [rowspan]="1"  [style.background]="'lightgrey'">
+                       <md-list [style.padding]="'0'">
+                           <md-list-item>
+                               <p  md-line class="form_gridList_mdList_mainParagraph">Course Name</p>
+                               <p  md-line class="form_gridList_mdList_secParagraph"> E.g.: Database Systems </p>
+                           </md-list-item>
+                       </md-list>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1"  [style.background]="'lightgrey'">
+                       <md-list [style.padding]="'0'">
+                           <md-list-item>
+                               <p  md-line >ECTS</p>
+                               <p  md-line class="secParagraph"> E.g.: 6 or 4.5 </p>
+                           </md-list-item>
+                       </md-list>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1" [style.background]="'lightgrey'">
+                       <md-list [style.padding]="'0'">
+                           <md-list-item>
+                               <p  md-line>Grade</p>
+                               <p  md-line class="secParagraph"> E.g.: 1.5 </p>
+                           </md-list-item>
+                       </md-list>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1" [style.background]="'snow'">
+                           <button type="button"  class="btn_lmu" md-tooltip="add course" tooltip-position="after" md-button (click)="addNewLine_grTbl('avgr2')" [style.width]="'100%'" [style.height]="'100%'">
+                               <md-icon>add</md-icon>
+                               <label>Add New</label>
+                           </button>
+
+                   </md-grid-tile>
+
+               </md-grid-list>
+
+               <md-grid-list cols="9" rowHeight="38px" class="form_gridListRow"
+                             *ngIf="avgr2_newCourseObj"
+               >
+                   <md-grid-tile [colspan]="3" [rowspan]="1">
+
+                       <input type="text" class="form-control" (input)="change_courseName(avgr2_newCourseObj,$event)" placeholder="Course Name" />
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1">
+
+                       <input type="number" class="form-control" (input)="change_courseECTS(avgr2_newCourseObj,$event)" placeholder="0.0"/>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1">
+
+                       <input type="number" class="form-control" (input)="change_courseGrade(avgr2_newCourseObj,$event)" placeholder="0.0"/>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="1" [rowspan]="1">
+                       <button
+                               type="button" class="form-control" md-tooltip="cancel" md-button (click)="cancelNewLine_grTbl('avgr2')">
+                           <md-icon class="md-42">cancel</md-icon>
+                       </button>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="1" [rowspan]="1" [style.border-left]="'thin solid lightgrey'">
+                       <button  *ngIf="avgr2_newCourseObj.courseComplete == true"
+                               type="button" class="form-control" md-tooltip="delete course" md-button (click)="addCourseToList('avgr2')">
+                           <md-icon class="md-42">done</md-icon>
+                       </button>
+                   </md-grid-tile>
+                   <input type="hidden" formControlName="avGr2_computationalMethods" [(ngModel)]="avgr2_courseList"/>
+               </md-grid-list>
+
+               <md-grid-list cols="9" rowHeight="38px" class="form_gridListRow"
+                             *ngFor="let course of avgr2_courseList"
+                             [style.border-top]="'thin solid lightgrey'"
+               >
+                   <md-grid-tile [colspan]="3" [rowspan]="1" [style.border-right]="'thin solid lightgrey'">
+
+                       <label class="form_gridList_mdList_mainParagraph">{{course.name}}</label>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1" [style.border-right]="'thin solid lightgrey'">
+
+                       <label  class="form_gridList_mdList_mainParagraph">{{course.ects}}</label>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1" [style.border-right]="'thin solid lightgrey'">
+
+                       <label class="form_gridList_mdList_mainParagraph">{{course.grade}}</label>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1" >
+                       <button
+                               type="button" class="form-control" md-tooltip="delete course" tooltip-position="after" md-button (click)="deleteCourseFromList('avgr2',course)">
+                           <md-icon>delete</md-icon>
+                       </button>
+                   </md-grid-tile>
+
+                   <input type="hidden" formControlName="avGr2_computationalMethods" [(ngModel)]="avgr2_courseList"/>
+               </md-grid-list>
+
+           </div>
+
+       </div>
+
+       <div class="form-group">
+           <label for="avGr1_bestPerf">Data-Based Modelling = AvGr 3 *</label>
+           <label class="secParagraph"> Please enter the courses you attended in Data-Based Modelling (this includes, for example, statistics, data mining, probability theory, machine learning)</label>
+
+           <div class="form-control"
+                [ngClass]="{'ng-invalid' : avgr3_courseList.length == 0 ,'ng-valid' : avgr3_courseList.length > 0 ,'formList':true}"
+                required>
+               <md-grid-list *ngIf="avgr3_courseList.length==0"
+                             cols="9" rowHeight="42px" class="form-control">
+                   <md-grid-tile [colspan]="7" [rowspan]="1">
+                       <md-list [style.padding]="'0'">
+                           <md-list-item class="myMdlist-item">
+                               <md-icon md-list-avatar class="material-icons">warning</md-icon>
+                               <h4 md-line> ... No Course has been added yet !</h4>
+                           </md-list-item>
+                       </md-list>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1" [style.background]="'snow'">
+                       <button type="button"  class="btn_lmu" md-tooltip="add course" tooltip-position="after" md-button (click)="addNewLine_grTbl('avgr3')" [style.width]="'100%'" [style.height]="'100%'">
+                           <md-icon>add</md-icon>
+                           <label>Add New</label>
+                       </button>
+                   </md-grid-tile>
+               </md-grid-list>
+
+               <md-grid-list *ngIf="avgr3_courseList.length!=0"
+                             cols="9" rowHeight="42px" class="form-control">
+
+                   <md-grid-tile [colspan]="3" [rowspan]="1"  [style.background]="'lightgrey'">
+                       <md-list [style.padding]="'0'">
+                           <md-list-item>
+                               <p  md-line class="form_gridList_mdList_mainParagraph">Course Name</p>
+                               <p  md-line class="form_gridList_mdList_secParagraph"> E.g.: Database Systems </p>
+                           </md-list-item>
+                       </md-list>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1"  [style.background]="'lightgrey'">
+                       <md-list [style.padding]="'0'">
+                           <md-list-item>
+                               <p  md-line >ECTS</p>
+                               <p  md-line class="secParagraph"> E.g.: 6 or 4.5 </p>
+                           </md-list-item>
+                       </md-list>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1" [style.background]="'lightgrey'">
+                       <md-list [style.padding]="'0'">
+                           <md-list-item>
+                               <p  md-line>Grade</p>
+                               <p  md-line class="secParagraph"> E.g.: 1.5 </p>
+                           </md-list-item>
+                       </md-list>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1" [style.background]="'snow'">
+                       <button type="button"  class="btn_lmu" md-tooltip="add course" tooltip-position="after" md-button (click)="addNewLine_grTbl('avgr3')" [style.width]="'100%'" [style.height]="'100%'">
+                           <md-icon>add</md-icon>
+                           <label>Add New</label>
+                       </button>
+
+                   </md-grid-tile>
+
+               </md-grid-list>
+
+               <md-grid-list cols="9" rowHeight="38px" class="form_gridListRow"
+                             *ngIf="avgr3_newCourseObj"
+               >
+                   <md-grid-tile [colspan]="3" [rowspan]="1">
+
+                       <input type="text" class="form-control" (input)="change_courseName(avgr3_newCourseObj,$event)" placeholder="Course Name" />
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1">
+
+                       <input type="number" class="form-control" (input)="change_courseECTS(avgr3_newCourseObj,$event)" placeholder="0.0"/>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1">
+
+                       <input type="number" class="form-control" (input)="change_courseGrade(avgr3_newCourseObj,$event)" placeholder="0.0"/>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="1" [rowspan]="1">
+                       <button
+                               type="button" class="form-control" md-tooltip="delete course" md-button (click)="cancelNewLine_grTbl('avgr3')">
+                           <md-icon class="md-42">cancel</md-icon>
+                       </button>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="1" [rowspan]="1" [style.border-left]="'thin solid lightgrey'">
+                       <button  *ngIf="avgr3_newCourseObj.courseComplete == true"
+                                type="button" class="form-control" md-tooltip="delete course" md-button (click)="addCourseToList('avgr3')">
+                           <md-icon class="md-42">done</md-icon>
+                       </button>
+                   </md-grid-tile>
+                   <input type="hidden" formControlName="avGr3_dataBasedModelling" [(ngModel)]="avgr3_courseList"/>
+               </md-grid-list>
+
+               <md-grid-list cols="9" rowHeight="38px" class="form_gridListRow"
+                             *ngFor="let course of avgr3_courseList"
+                             [style.border-top]="'thin solid lightgrey'"
+               >
+                   <md-grid-tile [colspan]="3" [rowspan]="1" [style.border-right]="'thin solid lightgrey'">
+
+                       <label class="form_gridList_mdList_mainParagraph">{{course.name}}</label>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1" [style.border-right]="'thin solid lightgrey'">
+
+                       <label  class="form_gridList_mdList_mainParagraph">{{course.ects}}</label>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1" [style.border-right]="'thin solid lightgrey'">
+
+                       <label class="form_gridList_mdList_mainParagraph">{{course.grade}}</label>
+                   </md-grid-tile>
+                   <md-grid-tile [colspan]="2" [rowspan]="1" >
+                       <button
+                               type="button" class="form-control" md-tooltip="delete course" tooltip-position="after" md-button (click)="deleteCourseFromList('avgr3',course)">
+                           <md-icon>delete</md-icon>
+                       </button>
+                   </md-grid-tile>
+
+                   <input type="hidden" formControlName="avGr2_computationalMethods" [(ngModel)]="avgr3_courseList"/>
+               </md-grid-list>
+
+
+           </div>
+
+
+
+
+       </div>
+
+
+       -->
+<!--
+<div class="form-group"
+     [ngClass]="{'formFrame_valid' : formInputValid('typeOfInst4bach') == true,'formFrame_invalid' : formInputValid('typeOfInst4bach') == false }"
+>
+    <div class="form-group" >
+        <label for="typeOfInst4bach">Institution at which Bachelor's Degree was Received *</label>
+        <select class="form-control"  id="typeOfInst4bach"
+
+                formControlName="typeOfInst4bach"
+                (change)="onChange($event)">
+            <option [value]="'lmu'">LMU</option>
+            <option [value]="'university'">Other University</option>
+            <option [value]="'universityOfAppliedSciences'">University of Applied Sciences</option>
+            <option [value]="'other'">Other kind of Institution</option>
+        </select>
+    </div>
+</div>
+
+<rt-file-uploader
+        [compId] = "'proofOfEnglishProficiency'"
+
+        [title] = "'Proof of English Language Proficiency '"
+        [secParagraphArray] = "secParagraphText_toG"
+
+        [options4upload] = "options_proofEnglish"
+        [(uploadedDataArray)] = "uploadedData_proofEnglish"
+
+        [formCtrlGroup]= "peForm"
+        [formCtrlName] = "'proofOfEnglishProficiency'"
+        [required] = true
+></rt-file-uploader>
+-->
+
+<!-- -----------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+        <ng2-select [placeholder]="'Choose your framework'" [(ngModel)]="usermodel.selectTest2" name="selectTest2"
+            [displayBy]="'name'"
+            [selectedDisplayBy]="'name'"
+            [options]="countries"    >
+
+        </ng2-select>
+        -->
+<!--
+<button md-button>FLAT</button>
+		<button md-raised-button>RAISED</button>
+		<button md-icon-button>
+			<md-icon class="md-24">android</md-icon>
+		</button>
+		<button md-fab>
+			<md-icon class="md-24">add</md-icon>
+		</button>
+		<button md-mini-fab>
+			<md-icon class="md-24">add</md-icon>
+		</button>
+-->
+<!--
+<input type="text"  id="name"
+  required
+  [(ngModel)]="model.name" name="name"
+
+ #name="ngModel" >
+        <div [hidden]="name.valid || name.pristine"
+             class="alert alert-danger">
+          Name is required
+        </div>
+-->
+<!--
+
+<span [ngClass]="'form-control'">
+	sdnfkjhdsfhdkjfsdlfhs
+</span>
+-->
+
+
+
+
+<!--
+<md-card class="demo-card demo-basic">
+  <md-toolbar color="primary">Basic</md-toolbar>
+  <md-card-content>
+    <form>
+      <md-input class="demo-full-width" placeholder="Company (disabled)" disabled value="Google">
+      </md-input>
+
+      <table style="width: 100%" cellspacing="0"><tr>
+        <td><md-input placeholder="First name" style="width: 100%"></md-input></td>
+        <td><md-input placeholder="Long Last Name That Will Be Truncated" style="width: 100%"></md-input></td>
+      </tr></table>
+      <p>
+
+        <md-textarea class="demo-full-width" placeholder="Address" value="1600 Amphitheatre Pkway"></md-textarea>
+        <md-textarea class="demo-full-width" placeholder="Address 2"></md-textarea>
+
+	  </p>
+      <table style="width: 100%" cellspacing="0"><tr>
+        <td><md-input class="demo-full-width" placeholder="City"></md-input></td>
+        <td><md-input class="demo-full-width" placeholder="State"></md-input></td>
+        <td><md-input #postalCode class="demo-full-width" maxlength="5"
+                      placeholder="Postal Code"
+                      value="94043">
+          <md-hint align="end">{{postalCode.characterCount}} / 5</md-hint>
+        </md-input></td>
+      </tr></table>
+    </form>
+  </md-card-content>
+</md-card>
+-->
+
+
+<!--
+                           <md-slide-toggle formControlName="degreeCertAvailable" color="primary">
+                               <label class="lbl-form_main"> Degree Certificate available ? </label>
+
+                           </md-slide-toggle>
+                      -->
+
+<!--
+<label class="lbl-form_main"> Degree Certificate available ? </label>
+
+<md-button-toggle-group formControlName="degreeCertAvailable">
+    <md-button-toggle  value={{true}} color="primary">YES</md-button-toggle>
+    <md-button-toggle value={{false}} color="primary">NO</md-button-toggle>
+</md-button-toggle-group>
+-->

@@ -1,0 +1,201 @@
+
+header {
+
+    /*display:inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    */
+    background-image: url(../images/header_images/header_bg.png);
+}
+
+.header_images_container
+{
+    max-height:148px;
+    width:100%;
+    height: 148px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+
+    /*max-width: 975px;*/
+
+    /*background-color:#019ba5;*/
+}
+
+.header_images_item
+{
+    margin:auto;
+    margin-top:15px;
+    margin-left:15px;
+}
+
+#header_images_item_ds
+{
+
+    float:right;
+}
+
+.header_images_item:hover,
+.header_images_item:active
+{
+    border:#4b797c 1px solid;
+}
+
+.header_row
+{
+    height:31px;
+    width:100%;
+}
+
+#header_row_menu_userInfo
+{
+    background: rgba(127,128,125,0.5); /*#807f7d;*/
+    color: white;
+    display:flex;
+    justify-content: space-between;
+}
+
+#header_menu_column
+{
+
+    align-self: flex-start;
+
+}
+
+
+.menuButton
+{
+    color:#4b797c;
+    border: none;
+    background: inherit;
+    padding-left: 16px;
+    cursor: pointer;
+    width: 100%;
+    height: 46px;
+    text-align: left;
+    text-indent: 16px;
+}
+
+
+.menuButton:hover,
+.menuButton:active
+{
+    background:lightgrey;
+}
+
+
+div.md-menu-content
+{
+    padding:unset;
+}
+
+#header_userInfo_column
+{
+    /*background: rgba(127,128,125,0.5);
+
+    color: white;
+
+    display:flex;
+    justify-content: flex-end;
+    */
+
+    align-self: flex-end;
+}
+
+
+.header_userInfo_field
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    /*min-width: 80px;*/
+    height: 100%;
+
+    /*float: right;*/
+    margin-right:10px;
+    margin-left: 10px;
+}
+
+.header_userInfo_item
+{
+
+    margin-right:10px;
+}
+
+.header_userInfo_item_button
+{
+    margin-right:10px;
+    cursor:pointer;
+}
+
+.header_userInfo_item_button:active,
+.header_userInfo_item_button:hover
+{
+    color:#4b797c;
+    background:white;
+}
+
+.icon_button:active,
+.icon_button:hover
+{
+    color:#4b797c;
+    /*background:white;*/
+}
+
+#headerImg
+{
+    max-width: 100%;
+    height: auto !important;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+
+.loginOut_button
+{
+
+    /*border:#019ba5 1px solid;
+    color:#019ba5;
+    background:white;
+    */
+    border:none;
+    color:white;
+    background:inherit;
+    box-shadow: none;
+    cursor:pointer;
+}
+
+
+/**********************************************************/
+
+
+#lmuFooter
+{
+    display:flex;
+    justify-content:center;
+    font-size: small;
+    font-weight: bold;
+    /*margin-top: -0.5rem;*/
+    margin-top:12px;
+    height:36px;
+}
+
+
+
+.a_lmu
+{
+    color:inherit;
+}
+
+
+.footerItem
+{
+    padding-right:24px;
+    color:darkcyan !important;
+}
+
+/***********************************************************************************/

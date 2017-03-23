@@ -1,0 +1,256 @@
+
+
+<div [formGroup]="formgroup">
+
+    <div [ngSwitch]="formEntry.type">
+        <!--
+        <input *ngSwitchCase="'selectbox'" [formControlName]="formEntry.key"
+               [id]="formEntry.key" [type]="formEntry.type">
+        <select [id]="formEntry.key" *ngSwitchCase="'dropdown'" [formControlName]="formEntry.key">
+            <option *ngFor="let opt of formEntry.options" [value]="opt.key">{{opt.value}}</option>
+        </select>
+        -->
+
+        <div  *ngSwitchCase="'text'">
+            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
+                                                'formFrame_valid' : formgroup.controls[formEntry.key].valid &&  formgroup.controls[formEntry.key].value != '' ,
+                                                  'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value == ''}">
+                <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
+                <br />
+                <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
+                </label>
+                <input *ngIf="formEntry.required == true"
+                       type={{formEntry.type}}
+                       class="form-control"
+                       [id]="formEntry.key"
+                       formControlName={{formEntry.key}}
+                       required />
+                <input *ngIf="formEntry.required == undefined ||  formEntry.required == false"
+                        type={{formEntry.type}}
+                       class="form-control"
+                       [id]="formEntry.key"
+                       formControlName={{formEntry.key}}
+                        />
+
+            </div>
+        </div>
+
+        <div *ngSwitchCase="'textarea'">
+            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
+                                                'formFrame_valid' : formgroup.controls[formEntry.key].valid &&  formgroup.controls[formEntry.key].value != '',
+                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value == ''}">
+                <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
+                <br />
+                <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
+                </label>
+
+                <textarea *ngIf="formEntry.required == true"
+                          rows="2"
+                          class="form-control"
+                          [id]="formEntry.key"
+                          formControlName={{formEntry.key}}
+                          required >
+                </textarea>
+                <textarea *ngIf="formEntry.required == undefined ||  formEntry.required == false"
+                        rows="2"
+                       class="form-control"
+                       [id]="formEntry.key"
+                       formControlName={{formEntry.key}}
+                        >
+                </textarea>
+            </div>
+        </div>
+
+
+        <div  *ngSwitchCase="'date'">
+            <div class="form-group" [ngClass]="{    'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
+                                                    'formFrame_valid' : formgroup.controls[formEntry.key].valid,
+                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value == ''}"
+                id="ngPrimeCalender">
+                <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
+                <br />
+                <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
+                </label>
+                <div *ngIf="formEntry.required == true">
+                    <p-calendar
+                            [id]="formEntry.key"
+                            formControlName={{formEntry.key}}
+
+                            dateFormat="yy-mm-dd"
+                            [monthNavigator]="true"
+                            [yearNavigator]="true"
+                            dataType="string"
+                            yearRange="1950:2010"
+                            placeholder= "yyyy.mm.dd"
+                            [defaultDate]="dateValue"
+                            required>
+                    </p-calendar>
+
+                    <input class="notvisibleInput" formControlName={{formEntry.key}} value={{formgroup.controls[formEntry.key].value}} required>
+
+                </div>
+                <div *ngIf="formEntry.required == undefined ||  formEntry.required == false">
+                    <p-calendar
+                                [id]="formEntry.key"
+                                formControlName={{formEntry.key}}
+                                dateFormat="yy-mm-dd"
+                                [monthNavigator]="true"
+                                [yearNavigator]="true"
+                                dataType="string"
+                                yearRange="1950:2010"
+                                [defaultDate]="dateValue"
+                                placeholder= "yyyy-mm-dd"
+                                >
+                    </p-calendar>
+                    <input class="notvisibleInput" formControlName={{formEntry.key}} value={{formgroup.controls[formEntry.key].value}} >
+                </div>
+
+            </div>
+        </div>
+
+        <div  *ngSwitchCase="'select'">
+            <div class="form-group" [ngClass]="{    'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true ,
+                                                    'formFrame_valid' : formgroup.controls[formEntry.key].valid,
+                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value == ''}">
+
+                <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
+                <br />
+                <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
+                </label>
+                <select *ngIf="formEntry.required == true"
+                        class="form-control"
+                        [id]="formEntry.key"
+                        formControlName={{formEntry.key}}
+                        required>
+                    <option selected="selected" disabled="disabled" value="">Please Select</option>
+                    <option *ngFor="let option of formEntry.options" [value]="option.name">{{option.name}}</option>
+                </select>
+                <select *ngIf="formEntry.required != true"
+                        class="form-control"
+                        [id]="formEntry.key"
+                        formControlName={{formEntry.key}}
+                        >
+                    <option selected="selected" disabled="disabled" value="">Please Select</option>
+                    <option *ngFor="let option of formEntry.options" [value]="option.name">{{option.name}}</option>
+                </select>
+
+
+            </div>
+        </div>
+
+        <div    *ngSwitchCase="'number'">
+            <div class="form-group" [ngClass]="{
+                                                    'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
+                                                    'formFrame_valid' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value != '',
+                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value == ''}">
+                <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
+                <br />
+                <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
+                </label>
+                <input *ngIf="formEntry.required == true"
+                        type={{formEntry.type}}
+                       class="form-control"
+                       [id]="formEntry.key"
+                       value=""
+                       formControlName={{formEntry.key}}
+                       required />
+                <input *ngIf="formEntry.required != true"
+                       type={{formEntry.type}}
+                       class="form-control"
+                       [id]="formEntry.key"
+                       value=""
+                       formControlName={{formEntry.key}}
+                       />
+
+
+            </div>
+        </div>
+
+        <div    *ngSwitchCase="'email'">
+            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
+                                                 'formFrame_valid' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value != '',
+                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value == ''}">
+                <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
+                <input *ngIf="formEntry.required == true"
+                        type={{formEntry.type}}
+                       class="form-control"
+                       [id]="formEntry.key"
+                       formControlName={{formEntry.key}}
+                       required />
+                <input *ngIf="formEntry.required != true"
+                        type={{formEntry.type}}
+                       class="form-control"
+                       [id]="formEntry.key"
+                       formControlName={{formEntry.key}}
+                        />
+
+            </div>
+        </div>
+
+        <div *ngSwitchCase="'grid-box-add'">
+                <rt-grid-box-add
+                        [formgroup]=formgroup
+                        [formEntry]= formEntry>
+                </rt-grid-box-add>
+        </div>
+
+        <div *ngSwitchCase="'fileUpload'">
+          <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
+                                                 'formFrame_valid' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value.length != 0,
+                                                    'formFrame_optional' : formEntry.required == false &&  formgroup.controls[formEntry.key].value.length == 0}">
+                <rt-file-uploader
+                                  [formgroup]=formgroup
+                                  [formEntry] = formEntry>
+                </rt-file-uploader>
+           <!--</div>-->
+        </div>
+
+        <div *ngSwitchCase="'checkBox'">
+            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
+                                                 'formFrame_valid' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value != 0 && formEntry.required == true,
+                                                 'formFrame_optional' : formEntry.required == false}">
+
+                <div [style.color]="'#4b797c'">
+                    <md-checkbox formControlName={{formEntry.key}} align="start">
+                        <label class="lbl-form_main" [attr.for]="formEntry.key"> {{formEntry.title}} </label>
+                    </md-checkbox>
+
+                        <!--
+                        <md-icon *ngIf="formEntry.infoText != invalid"
+                                 class="infoIcon"
+                                 [ngClass]="{'isInfoActive' : showTooltip}"
+                                 (click)="toggleInfo($event)"
+                                 (mouseover)="showTooltip=true"
+                                 (mouseleave)="showTooltip=false" >
+                            info_outline
+                        </md-icon>
+                        -->
+                        <i *ngIf="formEntry.infoText != invalid"
+                           class="mdi mdi-information-outline mdi-24px"
+                       [ngClass]="{'isInfoActive' : showTooltip}"
+                       (click)="toggleInfo($event)"
+                       (mouseover)="showTooltip=true"
+                       (mouseleave)="showTooltip=false"
+                           [style.color]="'inherit'"></i>
+
+                        <div *ngIf="showTooltip" class="container-fluid">
+                            <div class="row">
+                                <label class="infoText"> {{formEntry.infoText}} </label>
+                            </div>
+                        </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!--
+
+[ngClass]="{'required':formEntry.required}" >
+<div class="errorMessage" *ngIf="!isValid">{{formEntry.label}} is required</div>
+
+-->

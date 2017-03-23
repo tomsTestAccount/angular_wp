@@ -1,0 +1,50 @@
+<md-card *ngIf="userMail!=''"
+        class="setPassword-card"
+        [style.min-height]="'77%'">
+
+    <md-card-content class="setPassword">
+
+        <div class="setPassword-body">
+            <p>Please set a password to complete your account registration.</p>
+
+            <form [formGroup]="setPasswordForm" #f="ngForm"
+                  layout="column" layout-fill layout-padding layout-margin>
+                <div layout="row">
+                    <md-input-container>
+                    <input mdInput readOnly='true' formControlName="email" type="email" placeholder="Email"></md-input-container>
+                </div>
+                <div layout="row">
+                    <md-input-container>
+                      <input mdInput formControlName="password" type="password" placeholder="Password" (ngModelChange)="clearConfirmPwd($event)">
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-input-container>
+                      <input mdInput formControlName="confirm_password" type="password" placeholder="Password Repeat">
+                    </md-input-container>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="setPassword_result">
+            <div [hidden]="error == ''">
+                <md-toolbar class="mat-warn"  >
+                    <label>{{ error }}</label>
+                </md-toolbar>
+            </div>
+            <div [hidden]="result == ''">
+                <!--<md-toolbar class="md-accent">-->
+              <md-toolbar class="mat-accent">
+                    <label>{{ result }}</label>
+                </md-toolbar>
+            </div>
+        </div>
+
+        <div class="setPassword-footer">
+            <div class="modalFooter">
+                <button  type="submit" class="formSubmitButton" [disabled]="!setPasswordForm.valid" aria-label="register" (click)="setPassword()">Set Password</button>
+            </div>
+        </div>
+    </md-card-content>
+</md-card>

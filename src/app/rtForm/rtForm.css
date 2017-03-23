@@ -1,0 +1,219 @@
+
+
+
+.label-title
+{
+    font-size: small;
+}
+
+
+.secParagraph
+{
+    font-size: small;
+    color: grey;
+
+}
+
+
+.myMdlist-item
+{
+    /*border-top: thin solid #d3d0d0;*/
+    height: 38px;
+}
+
+
+.md-checkbox-background
+{
+    /*background-color:#019ba5 !important;*/
+}
+.md-checkbox-frame
+{
+    color:#4b797c;
+}
+
+.md-checkbox-background checked
+{
+    background-color:#4b797c;
+}
+
+.md-tab-header
+{
+    justify-content:space-between !important;
+    background-color: #ffffff;
+}
+
+
+
+.formList
+{
+    padding:0;
+    cursor:default;
+}
+
+#formList.optional
+{
+    border-left: 5px solid lightgrey;
+}
+
+
+input:invalid,
+select:invalid{
+    box-shadow: none;
+
+}
+
+/*
+select.form-control.ng-untouched
+{
+  color:lightgrey !important;
+}
+*/
+
+
+/****************************************************************/
+
+/* Default class applied to drop zones on over */
+.file-over {
+    border: dotted 5px lightblue;
+    background-color: aliceblue;
+}
+.file-over-bg
+{
+    background-color: aliceblue;
+}
+
+.md-ripple-background
+{
+    background:snow;
+}
+
+.btn_lmu,
+.btn_lmu[disabled]:hover{
+    position: relative;
+    overflow: hidden;
+
+    cursor: pointer !important;
+
+    /*margin: 10px;*/
+    background:  #4b797c;
+    color:white;
+
+
+    width:100%;
+    height:100%;
+
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+
+    border-top-right-radius: 0.25rem;
+}
+
+.btn_lmu_emptyFields,
+.btn_lmu_emptyFields[disabled]:hover
+{
+    position: relative;
+    overflow: hidden;
+
+    cursor: pointer !important;
+
+    /*margin: 10px;*/
+    background:  #4b797c;
+    color:white;
+
+
+    width:100%;
+    height:100%;
+
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+
+
+
+
+
+
+.btn_lmu:hover,
+.btn_lmu:active,
+.btn_lmu_emptyFields:hover,
+.btn_lmu_emptyFields:active
+{
+    /*background:  #009999;*/
+    background:snow;
+    color: #4b797c;
+
+    cursor: pointer !important;
+
+
+    border-width:1px;
+    border-style: solid;
+    border-color: #4b797c;
+}
+
+
+
+
+.btn_lmu input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+
+    cursor: pointer !important;
+
+    filter: alpha(opacity=0);
+
+    width:100%;
+    /*display: none;*/
+    opacity: 0;
+    font-size: 100px;
+    overflow: hidden;
+}
+
+
+.placeholder_button
+{
+    width:15%;
+}
+
+.formLabel_button
+{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content: space-around;
+    min-width: 100px;
+    height:100%;
+    cursor: pointer;
+}
+
+
+.label_crop
+{
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    /*width:100px;*/
+}
+
+.notvisibleInput
+{
+    width:1px;
+    height:1px;
+    opacity: 0;
+    background:  #019ba5;
+    border:none !important;
+}
+
+.formInput_grid
+{
+    width: 100%;
+    border: none;
+    height: 100%;
+}

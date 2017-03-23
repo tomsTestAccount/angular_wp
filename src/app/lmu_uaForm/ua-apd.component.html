@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+    <div> <!--class="container">-->
+
+
+    <form [formGroup]="currentForm" (ngSubmit)="onSubmit()">
+
+
+        <!-- for formArrays
+        <div formArrayName="apd_subFormGroup"> -->
+            <!--<div *ngFor="let address of currentForm.controls['apd_formArray']; let i=index">-->
+
+                    <rt-input *ngFor="let formEntry of currentFormEntries"
+                              [formEntry]=formEntry
+
+
+                              [formgroup]=currentForm>
+
+                    </rt-input>
+
+
+            <!--</div>
+
+        </div>-->
+
+
+
+    </form>
+
+
+        <!--
+        <div class="form-group"  [ngClass]="{ 'formFrame_invalid' : !apdForm.controls['surname'].valid ,
+             'formFrame_valid' : apdForm.controls['surname'].valid}" >
+            <div class="form-group" >
+                <label for="surname">Surname / Family Name *</label>
+                <input type="text"
+                       class="form-control"
+                       id="surname"
+                       formControlName="surname"
+                       required>
+                <span class="tooltip">Info</span>
+            </div>
+        </div>
+
+         [formgroup]="formEntry.fromgroup"
+                  [formEntry]="{    key : 'surname',
+                                    title : 'Surname / Family Name *',
+                                    type: 'text',
+                                    required: true
+                  }">
+
+        -->
+
+
+
+        <!--
+                <div class="form-group"
+                     [ngClass]="{ 'formFrame_invalid' : !apdForm.controls['givenname'].valid ,
+                     'formFrame_valid' : apdForm.controls['givenname'].valid}">
+                    <div class="form-group" >
+                            <label for="givenname">First Name(s)/Given Name(s) *</label>
+                            <input type="text"  class="form-control" id="givenname"
+                                   formControlName="givenname"
+                                   required>
+                    </div>
+                </div>
+
+
+                <div class="form-group"
+                     [ngClass]="{ 'formFrame_invalid' : !apdForm.controls['gender'].valid ,
+                     'formFrame_valid' : apdForm.controls['gender'].valid}">
+                    <div class="form-group" >
+                            <label for="gender">Gender *</label>
+                            <select class="form-control"  id="gender"
+
+                                    formControlName="gender"
+                                    required>
+                                <option>male</option>
+                                <option>female</option>
+                            </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !apdForm.controls['dateOfBirth2'].valid ,
+                     'formFrame_valid' : apdForm.controls['dateOfBirth2'].valid}">
+                    <label >Date of Birth *</label>
+                    <div class="form-group" id="ngPrimeCalender">
+                        <p-calendar id="dateOfBirth2"
+                                    formControlName="dateOfBirth2"
+                                    dateFormat="dd.mm.yy"
+                                    [monthNavigator]="true"
+                                    [yearNavigator]="true"
+                                    dataType="string"
+                                    yearRange="1950:2010"
+                                    placeholder="dd.mm.yyyy"
+                                    required>
+                        </p-calendar>
+                    </div>
+
+                </div>
+
+
+        <div class="form-group"
+             [ngClass]="{ 'formFrame_invalid' : !apdForm.controls['nationality'].valid ,
+             'formFrame_valid' : apdForm.controls['nationality'].valid}">
+            <div class="form-group" >
+                    <label for="nationality">Country of Nationality *</label>
+                    <select class="form-control"  id="nationality"
+                            formControlName="nationality"
+                            required>
+                        <option *ngFor="let country of countries" [value]="country.name">{{country.name}}</option>
+                    </select>
+            </div>
+        </div>
+
+
+
+
+
+        <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !apdForm.controls['address1'].valid ,
+             'formFrame_valid' : apdForm.controls['address1'].valid}">
+            <div class="form-group" >
+                <label >Street Name and House Number *</label>
+                <input type="text" id="address1" class="form-control"
+                       formControlName="address1"
+                       required>
+            </div>
+        </div>
+
+
+        <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !apdForm.controls['address2'].valid ,
+             'formFrame_valid' : apdForm.controls['address2'].valid}">
+            <div class="form-group" >
+                <label >Postcode / ZIP Code *</label>
+                <input type="text" id="address2" class="form-control"
+                       formControlName="address2"
+                       required>
+            </div>
+        </div>
+
+        <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !apdForm.controls['address3'].valid ,
+             'formFrame_valid' : apdForm.controls['address3'].valid}">
+            <div class="form-group" >
+                <label >Place of Residence *</label>
+                <input type="text" class="form-control"
+                       formControlName="address3"
+                       id="address3"
+                       required>
+            </div>
+        </div>
+
+        <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !apdForm.controls['address4'].valid ,
+             'formFrame_valid' : apdForm.controls['address4'].valid}">
+            <div class="form-group" >
+                <label >Country of Residence *</label>
+                <select class="form-control"
+                    formControlName="address4" id="address4"
+                        required>
+                    <option *ngFor="let country of countries" [value]="country.name">{{country.name}}</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !apdForm.controls['phoneNumber'].dirty,
+             'formFrame_valid' : apdForm.controls['phoneNumber'].valid}">
+            <div class="form-group" >
+                <label >Phonenumber *</label>
+                <input type="number"
+                   class="form-control"
+                   formControlName="phoneNumber"
+                   id="phoneNumber"
+                   required>
+            </div>
+        </div>
+
+        <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !apdForm.controls['phoneNumber2'].valid && apdForm.controls['phoneNumber2'].untouched ,
+             'formFrame_valid' : apdForm.controls['phoneNumber2'].valid}">
+            <div class="form-group" >
+            <label >other Phonenumber (optional)</label>
+            <input type="number" class="form-control" formControlName="phoneNumber2" id="phoneNumber2"
+                   >
+            </div>
+        </div>
+
+
+
+        <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !apdForm.controls['email'].valid ,
+             'formFrame_valid' : apdForm.controls['email'].valid}">
+            <label>Email Address *</label>
+            <input type="email" class="form-control"
+                   formControlName="email"
+                   id="email"
+                   required>
+
+
+
+        </div>
+
+
+
+       <button type="submit" class="btn btn-default">Submit</button>
+        -->
+
+
+
+    <!--
+    <div class="form-group">
+        {{diagnostic}}
+    </div>
+    -->
+
+    </div>
+
+
+<!--
+
+    <button type="button"  md-tooltip="showDebug" md-icon-button (click)="toggleDbg()">
+        <md-icon class="md-42">build</md-icon>
+    </button>
+
+
+<md-list *ngIf="dbgIsOpen">
+    <md-list-item *ngFor="let formObj of apdForm.value | getKeyValuePair">
+        {{formObj.key }} : {{formObj.val}}
+    </md-list-item>
+</md-list>
+
+-->
+
+</html>

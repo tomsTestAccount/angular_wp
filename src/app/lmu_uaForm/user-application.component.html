@@ -1,0 +1,138 @@
+
+
+
+<!--
+<div class="header">
+	<picture id="headerImg">
+		<source srcset="/images/kopfbild.png">
+		<img src="/images/kopfbild.png" alt="lmu_logos">
+	</picture>
+</div>
+
+<div class="header">
+
+
+	<img id="headerImg">
+
+	<img md-card-image src="/images/kopfbild.png">
+	<a id="lmu-logo" href="http://www.uni-muenchen.de/index.html" title="LMU - Ludwig-Maximilians-Universität München">
+        LMU - Ludwig-Maximilians-Universität München
+      </a>
+	<span>lmu - elite master program for data science</span>
+	<div class="headerDiv"></div>
+
+</div>
+-->
+
+
+	<div class="userApplication_ContentContainer"> <!-- class="grid grid-pad">-->
+		<!--
+		<div class="db_componentsBar">
+			<a *ngFor="let db_comp of db_components"  (click)="select_comp4User(db_comp.name)"  class="col-1-4">
+
+				<div class="db_component">
+				  {{db_comp.title}}
+				</div>
+
+			</a>
+		</div>
+
+		<md-card>
+		 <md-card-content>
+			<div [ngSwitch]="dbComp_User">
+				<template [ngSwitchCase]="'dbComp_User_apd'"><lmu_user_apd></lmu_user_apd></template>
+				<div *ngSwitchCase="'dbComp_User_pe'">In dbComp_User_pe</div>
+				<div *ngSwitchCase="'dbComp_User_ope'">In dbComp_User_ope</div>
+				<div *ngSwitchCase="'dbComp_User_oi'">In dbComp_User_oi</div>
+				<div *ngSwitchDefault>In default</div>
+			</div>
+			<router-outlet></router-outlet>
+		 </md-card-content>
+		</md-card>
+		-->
+
+		<md-tab-group
+      mat-center-tabs="true"
+      id="uaTabGroup">
+
+
+
+				<md-tab *ngFor="let ua_sec of ua_sections"
+                (click)="select_comp4User(ua_sec.name)"
+                id="uaTab_+{{ua_sec.name}}">
+					<template md-tab-label>{{ua_sec.title}}
+					<!--<span class="num">
+						{{ua_sec.answerMissing}}
+					</span>
+					-->
+					</template>
+					<!--<template md-tab-content>-->
+
+					<form [formGroup]="main_lmu_ua_form">
+
+						<md-card class="ua-cardBg">
+
+							<md-card-content class="uacard-content" >
+
+								<lmu_user_apd *ngIf="ua_sec.name=='dbComp_User_apd'" [setForm]="main_lmu_ua_form.controls['subFormGroup_apd']" [setFormEntries]="apd_formObj.formEntries" (onFormEvent_apd)="onFormEvent_apd($event)"></lmu_user_apd>
+
+								<lmu_user_pe *ngIf="ua_sec.name=='dbComp_User_pe'"
+                             [setForm]="main_lmu_ua_form.controls['subFormGroup_ac']"
+                             [setFormEntries]="ac_formObj.formEntries"
+                              [setForm2]="main_lmu_ua_form.controls['subFormGroup_ac2']"
+                              [setFormEntries2]="ac2_formObj.formEntries">
+                </lmu_user_pe>
+
+								<lmu_user_oi *ngIf="ua_sec.name=='dbComp_User_oi'" [setForm]="main_lmu_ua_form.controls['subFormGroup_oi']" [setFormEntries]="oi_formObj.formEntries"></lmu_user_oi>
+							</md-card-content>
+
+							<md-card-footer class="uacard-footer">
+								<div class="form-group" >
+									<label class="lbl-form_main">* = required</label>
+								</div>
+							</md-card-footer>
+
+						</md-card>
+
+					<!--</template>-->
+
+						<hr/>
+						<div [style.background]="'white'">
+
+
+							<div align="center" class="uacard-footer">
+								<button md-button type="button">Back</button>
+								<button md-button type="button" (click)="saveFormObj()">Save</button>
+								<button md-button type="button">Next</button>
+								<button md-button type="submit" [disabled]="!main_lmu_ua_form.valid">Submit</button>
+								<button md-button type="submit" (click)="showDbg()">Submit_dbg</button>
+							</div>
+						</div>
+
+					</form>
+
+				</md-tab>
+
+
+
+		</md-tab-group>
+
+
+	</div>
+
+<!--
+	<footer>
+	<button type="submit" class="btn btn-default" [disabled]="!uasubmit" >Submit {{uasubmit}}</button>
+	</footer>
+-->
+
+<!--
+<md-list *ngIf="dbgIsOpen">
+	<md-list-item *ngFor="let formObj of main_lmu_ua_form.value | getKeyValuePair">
+		<h4>{{formObj.key}}</h4>
+		<md-list-item *ngFor="let subformObj of formObj.value | getKeyValuePair">
+		{{subformObj.key }} : {{subformObj.value}}
+		</md-list-item>
+	</md-list-item>
+</md-list>
+-->

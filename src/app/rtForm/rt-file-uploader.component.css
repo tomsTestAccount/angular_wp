@@ -1,0 +1,326 @@
+
+
+
+/*
+** modifications in myScss-md.css
+ row 441, add justify-content: space-between  to md-tab-header
+//TODO: add word wrap and font-size to be more responisve
+
+
+
+ lmu-cyan: #019ba5
+
+ */
+
+[class*='col-'] {
+    float: left;
+    padding:2%;
+}
+
+/*
+[class*='col-']:last-of-type {
+  padding-right: 0;
+}
+*/
+
+a {
+    text-decoration: none;
+}
+*, *:after, *:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+h3 {
+    text-align: center; margin-bottom: 0;
+}
+h4 {
+    position: relative;
+}
+.grid {
+    margin: 0;
+}
+.col-1-4 {
+    width: 25%;
+}
+
+.col-1-2 {
+    width: 50%;
+}
+
+.col-1-3 {
+    width: 33%;
+}
+
+.grid-pad {
+    padding: 10px 0;
+}
+
+
+.secParagraph
+{
+    font-size: x-small;
+    color: grey;
+
+}
+
+
+.myMdlist-item
+{
+    border-top: thin solid #d3d0d0;
+    height: 38px;
+}
+
+
+.md-checkbox-background
+{
+    /*background-color:#019ba5 !important;*/
+}
+.md-checkbox-frame
+{
+    color:#019ba5;
+}
+
+.formLegend
+{
+    font-size: 16px;
+    line-height: 1.15;
+}
+
+
+.formFrame
+{
+    background:rgba(0, 148, 133, 0.09); /*#019ba5;*/
+    padding: 1%;
+}
+
+.formList
+{
+    padding:0;
+    cursor:default;
+}
+
+#formList.optional
+{
+    border-left: 5px solid lightgrey;
+}
+
+/**************************************************************/
+
+
+.form_gridList_mdList_mainParagraph
+{
+    font-size:medium !important;
+}
+
+.form_gridList_mdList_secParagraph
+{
+    font-size:smaller !important;;
+    color:grey;
+}
+
+.form_gridList_mdList_mainParagraph_sm
+{
+    font-size:smaller !important;
+}
+.form_gridList_mdList_secParagraph_sm
+{
+    font-size:x-small !important;;
+    color:grey;
+}
+
+.form_gridListRow
+{
+    border-top: thin solid lightgrey;
+}
+
+
+/**************************************************************/
+
+.infoIcon
+{
+    font-size:medium;
+    color:grey;
+}
+
+.isInfoActive
+{
+    color:darkblue;
+    font-size:larger;
+}
+
+.infoText
+{
+    font-size: small;
+    color: darkblue;
+    transition: height 1s ease-in-out;
+}
+
+/****************************************************************/
+
+/* Default class applied to drop zones on over */
+.file-over {
+    border: dotted 5px lightblue;
+    background-color: aliceblue;
+}
+.file-over-bg
+{
+    background-color: aliceblue;
+}
+
+.md-ripple-background
+{
+    background:snow;
+}
+
+.btn_lmu {
+    position: relative;
+    overflow: hidden;
+
+    cursor: pointer !important;
+
+    /*margin: 10px;*/
+    background:  #019ba5;
+    color:white;
+
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+}
+
+.btn_lmu:hover,
+.btn_lmu:active
+{
+    /*background:  #009999;*/
+    background:snow;
+    color: #019ba5;
+
+    cursor: pointer !important;
+
+    border-width:1px;
+    border-style: solid;
+    border-color: #019ba5;
+}
+
+
+
+
+.btn_lmu input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+
+    cursor: pointer !important;
+
+    filter: alpha(opacity=0);
+
+    width:100%;
+    /*display: none;*/
+    opacity: 0;
+    font-size: 100px;
+    overflow: hidden;
+}
+
+
+.placeholder_button
+{
+    width:15%;
+}
+
+.formLabel_fileInput
+{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content: space-around;
+    min-width: 100px;
+    height:100%;
+    cursor: pointer;
+}
+
+.notvisibleInput
+{
+    width:1px;
+    height:1px;
+    opacity: 0;
+    background:  #019ba5;
+    border:none !important;
+}
+
+.formInput_grid
+{
+    width: 100%;
+    border: none;
+    height: 100%;
+}
+
+/****************************************************************/
+
+md-radio-button {
+    margin: 15px;
+}
+
+
+.my-grid-list-text-align-left>figure {
+
+    justify-content: flex-start !important;
+
+}
+
+/*****************************************************************/
+
+.ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #009688; /*#42A948;*/ /* green */
+}
+
+.ng-invalid:not(form)  {
+    border-left: 5px solid #990000; /*#a94442;*/ /* red */
+}
+
+
+
+
+/************* bootstrap ****************************************************/
+
+
+
+.form-control:focus
+{
+    border-color: #009999;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 153, 153, 0.6);
+}
+
+#ngPrimeCalender .ui-inputtext.ui-state-focus, .ui-widget-content .ui-inputtext.ui-state-focus, .ui-widget-header .ui-inputtext.ui-state-focus {
+    /*-moz-box-shadow: 0px 0px 5px #1f89ce;
+    -webkit-box-shadow: 0px 0px 5px #1f89ce;
+    box-shadow: 0px 0px 5px #1f89ce;
+        */
+    border-color: #009999;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 153, 153, 0.6);
+}
+
+
+/************************** flex stuff for forms *****************************
+
+.flexContainer_row
+{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items:center;
+    justify-content: space-between;
+}
+
+.flexContainer_col
+{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items:stretch;
+    min-width:100px;
+    margin-bottom:5px;
+}
+
+*/

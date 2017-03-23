@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<div >
+
+    <form [formGroup]="opeForm" name="opeForm">
+
+
+        <div *ngFor="let formEntry of formEntries">
+
+
+            <div [ngSwitch]="formEntry.key" >
+
+                <div *ngSwitchDefault>
+                    <rt-input
+                            [formgroup]=opeForm
+                            [formEntry]=formEntry>
+
+                    </rt-input>
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <!--
+        <button type="submit">test submit that formGroup</button>
+        -->
+
+    </form>
+
+</div>
+<!--
+<button type="button"  md-tooltip="showDebug" md-icon-button (click)="toggleDbg()">
+    <md-icon class="md-42">build</md-icon>
+</button>
+<md-list *ngIf="dbgIsOpen">
+    <md-list-item *ngFor="let formObj of opeForm.value | getKeyValuePair">
+        {{formObj.key }} : {{formObj.val}}
+    </md-list-item>
+</md-list>
+-->
+</html>

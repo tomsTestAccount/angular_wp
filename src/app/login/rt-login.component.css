@@ -1,0 +1,72 @@
+
+
+#startPageCard
+{
+
+    height: 100%;
+}
+
+.loginModal
+{
+    z-index: 10;
+    /*position: absolute;*/
+    width:100%;
+    max-width:945px !important; /*container-with - 30 padding*/
+    height:77%;
+
+    background: rgb(3, 95, 97);/*rgba(0,0,0,0.85);*/
+}
+
+.my_modalHeader
+{
+    /*display:flex;
+    justify-content: space-between;
+    */
+}
+
+
+/******************************************************************/
+
+.toogleGroup>.md-button-toggle-checked
+{
+    background:#019ba5 !important;
+    color:white !important;
+}
+
+
+.modalSubmitButton,
+.modalSubmitButton:focus
+{
+    border:#019ba5 1px solid;
+    color:#019ba5;
+    background:white;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+
+}
+
+.modalSubmitButton:disabled
+{
+    border:lightgrey 1px solid;
+    color:darkgrey;
+    background:lightgrey;
+    box-shadow:none;
+}
+
+.modalClose
+{
+    float:right;
+    background:white;
+    /*color:#019ba5;*/
+}
+
+.modalFooter
+{
+    display: flex;
+    justify-content: center;
+}
+
+
+#forgetPwd_line
+{
+    color:darkcyan;
+}

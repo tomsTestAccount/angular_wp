@@ -1,0 +1,270 @@
+<!--<div *ngIf="bShowModal" class="loginModal" >-->
+<md-card class="loginModal" >
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+
+                <div class="my_modalHeader">
+
+                    <!--
+                    <h4 class="modal-title">Login </h4>
+                      -->
+
+                        <md-button-toggle-group *ngIf="loginRegister_toggle!='logout'"  name="login_register" class="toogleGroup" (change)="login_register_change($event)">
+                            <md-button-toggle  value="login" checked="true"><span>Login</span></md-button-toggle>
+                            <md-button-toggle  value="createAccount">Create Account</md-button-toggle>
+
+                        </md-button-toggle-group>
+
+
+                    <button md-icon-button class="modalClose" (click)="closeModal()">
+                            <!-- type="button" class="btn btn-default" (click)="closeModal()"> -->
+                          <i class="mdi mdi-close mdi-24px"></i>
+                    </button>
+                </div>
+
+            </div>
+            <div *ngIf="loginRegister_toggle=='login'">
+                <div class="modal-body">
+                    <p>Please add email and password to login.</p>
+
+                    <form [formGroup]="loginForm" #f="ngForm"
+                          layout="column" layout-fill layout-padding layout-margin>
+
+                        <md-input-container color="primary">
+                          <input mdInput  placeholder="Email" formControlName="email" type="email" >
+                        </md-input-container>
+                        <md-input-container color="accent">
+                          <input mdInput  placeholder="Password"  formControlName="password" type="password"  >
+                        </md-input-container>
+                    </form>
+
+                    <div layout="row" id="forgetPwd_line"><!-- layout-align="space-between center">-->
+                        <button md-button (click)="forgetPwd()">Forgot password?</button>
+
+                    </div>
+
+
+
+                </div>
+
+                <!--
+                <div [hidden]="error == ''">
+                    <md-toolbar class="md-warn" layout="row" layout-fill layout-padding layout-margin>
+                        <p class="md-body-1">{{ error }}</p>
+                    </md-toolbar>
+                </div>
+                -->
+
+                <!--
+                <div class="my_modal_result">
+                    <div [hidden]="error == ''">
+                        <md-toolbar class="md-warn"  >
+                            <label>{{ error }}</label>
+                        </md-toolbar>
+                    </div>
+                    <div [hidden]="result == ''">
+                        <md-toolbar class="md-accent" [style.color]="'white'">
+                            <label>{{ result }}</label>
+                        </md-toolbar>
+                    </div>
+                </div>
+                -->
+
+
+                <div class="modal-footer">
+                    <div class="modalFooter">
+                    <button  type="submit" class="formSubmitButton" [disabled]="!loginForm.valid" aria-label="login" (click)="login()">Log In</button>
+                    </div>
+                </div>
+
+            </div>
+            <div *ngIf="loginRegister_toggle=='createAccount'">
+                <div *ngIf="result == ''" class="modal-body">
+
+                    <p>Please add your email address,your last and first name and a password to register an account.</p>
+
+                    <form [formGroup]="createAccountForm" #f="ngForm"
+                          layout="column" layout-fill layout-padding layout-margin>
+                        <div layout="row">
+                            <md-input-container>
+                          <input mdInput formControlName="email" type="email" placeholder="Email">
+                            </md-input-container>
+                        </div>
+                        <div layout="row">
+                            <md-input-container>
+                              <input mdInput formControlName="lastName" type="text" placeholder="Last Name">
+                            </md-input-container>
+                        </div>
+                        <div layout="row">
+                            <md-input-container>
+                              <input mdInput formControlName="firstName" type="text" placeholder="First Name ">
+                            </md-input-container>
+                        </div>
+                      <div layout="row">
+                        <md-input-container>
+                          <input mdInput formControlName="password" type="password" placeholder="Password" (ngModelChange)="clearConfirmPwd($event)">
+                        </md-input-container>
+                      </div>
+                      <div layout="row">
+                        <md-input-container>
+                          <input mdInput formControlName="confirm_password" type="password" placeholder="Password Repeat">
+                        </md-input-container>
+                      </div>
+                    </form>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <div *ngIf="result == '' " class="modalFooter">
+                        <button  type="submit" class="formSubmitButton" [disabled]="!createAccountForm.valid"  (click)="createAccount()">Create Account</button>
+                    </div>
+                    <div *ngIf="result != '' " class="modalFooter">
+                        <button  type="submit" class="formSubmitButton"   (click)="closeModal()">Close</button>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div *ngIf="loginRegister_toggle=='forget_password'">
+                <div class="modal-body">
+
+                    <p>Please add email .</p>
+
+                    <form [formGroup]="pwdRequestForm" #f="ngForm" (ngSubmit)="login()"
+                          layout="column" layout-fill layout-padding layout-margin>
+                        <div layout="row">
+
+                          <md-input-container>
+                              <input mdInput placeholder="Email" formControlName="email" type="email" >
+                            </md-input-container>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <div class="modalFooter">
+                        <button  type="submit" class="formSubmitButton" [disabled]="!pwdRequestForm.valid" aria-label="register">Send Password Request</button>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div *ngIf="loginRegister_toggle=='logout'">
+                <div class="modal-body">
+                    <p>Are you really sure to logout ? </p>
+                </div>
+
+
+                <div class="modal-footer">
+                    <div class="modalFooter">
+                        <button  type="button" class="formSubmitButton"  aria-label="register" (click)="logout()">Logout</button>
+                    </div>
+                </div>
+
+
+            </div>
+
+          <div class="my_modal_result">
+            <div [hidden]="error == ''">
+              <md-toolbar class="mat-warn"  >
+                <label class="toolBar_lbl_flexible">{{ error }}</label>
+              </md-toolbar>
+            </div>
+            <div [hidden]="result == ''">
+              <md-toolbar class="mat-accent" [style.color]="'white'">
+                <label class="toolBar_lbl_flexible">{{ result }}</label>
+              </md-toolbar>
+            </div>
+          </div>
+
+
+            <!--
+            <div *ngIf="loginRegister_toggle=='signUp'">
+                <div class="modal-body">
+
+                    <p>Please add email and set password to register an account.</p>
+
+                    <form [formGroup]="registerForm" #f="ngForm"
+                          layout="column" layout-fill layout-padding layout-margin>
+                        <div layout="row">
+                            <md-input  formControlName="email" type="email" placeholder="Email"></md-input>
+                        </div>
+                        <div layout="row">
+                            <md-input formControlName="password" type="password" placeholder="Password"></md-input>
+                        </div>
+                        <div layout="row">
+                            <md-input formControlName="confirm_password" type="password" placeholder="Password Repeat"></md-input>
+                        </div>
+                    </form>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <div class="modalFooter">
+                        <button  type="submit" class="formSubmitButton" [disabled]="!registerForm.valid" aria-label="register" (click)="register()">Register</button>
+                    </div>
+                </div>
+
+
+            </div>
+            -->
+
+        </div>
+
+
+
+    </div>
+
+    <!--
+    <div class="md-content" layout="row" layout-align="center start" layout-fill layout-margin [style.background]="'white'">
+      <div layout="column" flex flex-md="50" flex-lg="50" flex-gt-lg="33" class="md-whiteframe-z2" layout-fill>
+        <md-toolbar class="md-access" color="access">
+          Sign in
+        </md-toolbar>
+
+        <div layout="column" layout-margin layout-padding>
+          <div layout="row" layout-margin>
+            <p class="md-body-2"> Sign in with your email</p>
+          </div>
+
+          <form [formGroup]="loginForm" #f="ngForm" (ngSubmit)="login()"
+                layout="column" layout-fill layout-padding layout-margin>
+
+            <md-input formControlName="email" type="email" placeholder="Email"></md-input>
+            <md-input formControlName="password" type="password" placeholder="Password"></md-input>
+
+            <div layout="row" layout-align="space-between center">
+              <a md-button [routerLink]="['/recover']">Forgot password?</a>
+              <button md-raised-button class="md-primary" type="submit" aria-label="login">Sign In</button>
+            </div>
+          </form>
+
+          <div [hidden]="error == ''">
+            <md-toolbar class="md-warn" layout="row" layout-fill layout-padding layout-margin>
+              <p class="md-body-1">{{ error }}</p>
+            </md-toolbar>
+          </div>
+
+          <md-divider></md-divider>
+
+          <div layout="row" layout-align="center">
+            <a md-button [routerLink]="['/signup']">Need an account?</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    -->
+</md-card>

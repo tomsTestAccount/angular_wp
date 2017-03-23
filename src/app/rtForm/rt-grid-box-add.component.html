@@ -1,0 +1,187 @@
+<div class="form-group" [formGroup]=formgroup
+     [ngClass]="{ 'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
+                  'formFrame_valid' : formgroup.controls[formEntry.key].valid,
+                  'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formEntry.required == false}">
+    <label class="lbl-form_main" [attr.for]="formEntry.key">{{formEntry.title}}</label>
+    <br />
+    <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray"> {{text}}  <br />
+    </label>
+
+    <!-- [ngClass]="{'ng-invalid' : formgroup.controls[formEntry.key].value.length == 0 ,'ng-valid' : formgroup.controls[formEntry.key].value.length > 0 ,'formList':true}"
+    -->
+    <div class="form-control"
+         [ngClass]="{'ng-invalid' : !isValValid ,
+                      'ng-valid' : isValValid ,
+                      'formList':true}"
+         required>
+        <md-grid-list *ngIf="(setObj.courses).length==0"
+                      cols={{gridOptions.allCols+2}} rowHeight={{gridOptions.rowHeight}}>
+            <md-grid-tile [colspan]="gridOptions.allCols" [rowspan]="1">
+                <md-list [style.padding]="'0'">
+
+                    <md-list-item class="myMdlist-item" [style.color]="'darkgrey'">
+                        <!--<md-icon md-list-avatar class="material-icons">warning</md-icon>-->
+                        <i class="mdi mdi-alert-box mdi-24px" > </i>
+                        <!--<input *ngIf="formEntry.required == true"
+                                class="notvisibleInput"
+                                type="number"
+                                formControlName={{formEntry.key}}
+                                [(ngModel)]="setObj.courses"
+                               required/>
+                        <input *ngIf="formEntry.required != true"
+                               class="notvisibleInput"
+                               type="number"
+                               formControlName={{formEntry.key}}
+                               [(ngModel)]="setObj.courses"
+                               />
+                        -->
+                        <input *ngIf="formEntry.required == true"
+                               class="notvisibleInput"
+                               type="number"
+                               formControlName={{formEntry.key}}
+
+                               required/>
+                        <input *ngIf="formEntry.required != true"
+                               class="notvisibleInput"
+                               type="number"
+                               formControlName={{formEntry.key}}
+
+                        />
+                        <div class="mat-list-text">
+                        <h4> ... No {{gridOptions.whatToAdd }} has been added yet !</h4>
+                        </div>
+                    </md-list-item>
+
+                </md-list>
+            </md-grid-tile>
+            <md-grid-tile [colspan]="2" [rowspan]="1" [style.background]="'snow'">
+                <button class="btn_lmu btn btn-sm"
+                     [ngClass]="{'btn_lmu_emptyFields' : setObj.courses.length==0, 'btn_lmu' : setObj.courses.length!=0 }"
+                     (click)="addNewLine_grTbl('avgr2')"
+                    disabled={{newAddObj}}>
+                    <label class="formLabel_button">
+                        <!--<md-icon>add</md-icon>-->
+                        <i class="mdi mdi-playlist-plus mdi-24px"></i>
+                        <span class="label_crop">{{gridOptions.whatToAdd }}</span>
+                        <span></span>
+                    </label>
+                </button>
+
+            </md-grid-tile>
+        </md-grid-list>
+
+        <md-grid-list *ngIf="(setObj.courses).length!=0"
+                      cols={{gridOptions.allCols+2}} rowHeight={{gridOptions.rowHeight}}  >
+            <md-grid-tile *ngFor="let cell of gridOptions.gridCells"
+            [colspan]="cell.cols" [rowspan]="cell.rows"  [style.background]="'lightgrey'">
+                <md-list [style.padding]="'0'">
+                    <md-list-item>
+                        <p  md-line class="form_gridList_mdList_mainParagraph">{{cell.title}}</p>
+                        <p  md-line class="form_gridList_mdList_secParagraph"> {{cell.secParagraph}}</p>
+                    </md-list-item>
+                </md-list>
+            </md-grid-tile>
+            <md-grid-tile [colspan]="2" [rowspan]="1" [style.background]="'snow'">
+
+                <button class="btn_lmu btn btn-sm"
+                        [style.width]="'100%'"
+                        [style.height]="'100%'"
+                        (click)="addNewLine_grTbl()"
+                        disabled={{newAddObj}}>
+                    <label class="formLabel_button">
+                        <!--<md-icon>add</md-icon>-->
+                        <i class="mdi mdi-playlist-plus mdi-24px"></i>
+                        <span class="label_crop">{{gridOptions.whatToAdd }}</span>
+                        <span></span>
+                    </label>
+                </button>
+
+            </md-grid-tile>
+        </md-grid-list>
+
+        <md-grid-list  *ngIf="newAddObj"
+                cols="9" rowHeight="38px" class="form_gridListRow"
+        >
+            <div *ngFor="let colEntry of newAddObj | objValuesPipe">
+                <md-grid-tile *ngIf="colEntry != 'complete'"
+                           [colspan]="colEntry.cols"
+                           [rowspan]="colEntry.rows" >
+                    <input type={{colEntry.type}} class="form-control"  (input)="change_colEntry(colEntry,newAddObj,$event)" placeholder={{colEntry.placeHolder}} />
+
+                </md-grid-tile>
+            </div>
+
+            <md-grid-tile [colspan]="1" [rowspan]="1">
+                <button  md-button
+                         class="mat-primary"
+                        type="button"
+                         (click)="cancelNewLine_grTbl()">
+                    <i class="mdi mdi-close mdi-24px"></i>
+                </button>
+            </md-grid-tile>
+
+            <md-grid-tile [colspan]="1" [rowspan]="1" [style.border-left]="'thin solid lightgrey'">
+                <button  disabled="{{!newAddObj.complete}}"
+                         md-button
+                         class="mat-primary"
+                         type="button"
+                         (click)="addObjToList(newAddObj)">
+                    <i class="mdi mdi-plus mdi-24px"></i>
+                </button>
+            </md-grid-tile>
+
+
+        </md-grid-list>
+
+
+
+        <div *ngIf="setObj.courses.length > 0" lang="en-US">
+        <md-grid-list cols="9" rowHeight="38px" class="form_gridListRow"
+                      *ngFor="let listObj of setObj.courses"
+                      [style.border-top]="'thin solid lightgrey'"
+        >
+
+            <div *ngFor="let colEntry of listObj | objValuesPipe">
+                <md-grid-tile *ngIf="colEntry != 'complete'"
+                              [colspan]="colEntry.cols" [rowspan]="colEntry.rows" [style.border-right]="'thin solid lightgrey'">
+                    <label class="form_gridList_mdList_mainParagraph">{{colEntry.value}}</label>
+
+                </md-grid-tile>
+            </div>
+
+            <md-grid-tile [colspan]="2" [rowspan]="1" >
+                <button  md-button
+                        type="button" class="mat-primary"  (click)="deleteObjFromList(listObj)">
+                   <!-- <md-icon>delete</md-icon>-->
+                    <i class="mdi mdi-delete mdi-24px"></i>
+                </button>
+            </md-grid-tile>
+        </md-grid-list >
+
+            <md-grid-list cols="9" rowHeight="38px" class="form_gridListRow"
+                          [style.border-top]="'thick solid darktgrey'" [style.background]="'lightgrey'"
+            >
+                <md-grid-tile
+                              [colspan]="7" [rowspan]="2" [style.border-right]="'thin solid white'" [style.color]="'white'">
+                    <label class="form_gridList_mdList_mainParagraph">Please enter the average grade calculated from the best performance (equivalent to 30 ECTS).</label>
+
+                </md-grid-tile>
+
+                <md-grid-tile
+                        [colspan]="2" [rowspan]="2" >
+
+                    <input type=number
+                           class="form-control"
+                           (input)="change_averageValue($event)"
+                           value={{setValue}}
+                           placeholder={{averageCalculated}}
+                           [style.text-align]="'center'"
+                    />
+                </md-grid-tile>
+            </md-grid-list>
+        </div>
+
+
+    </div>
+
+</div>

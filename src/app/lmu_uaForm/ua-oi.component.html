@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <form [formGroup]="currentForm">
+
+        <div *ngFor="let formEntry of currentFormEntries">
+
+            <div [ngSwitch]="formEntry.key" >
+
+                <div *ngSwitchDefault>
+                    <rt-input
+                            [formgroup]=currentForm
+                            [formEntry]=formEntry>
+
+                    </rt-input>
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+    <!--
+    <button type="button"  md-tooltip="showDebug" md-icon-button (click)="toggleDbg()">
+        <md-icon class="md-42">build</md-icon>
+    </button>
+
+    <md-list *ngIf="dbgIsOpen">
+        <md-list-item *ngFor="let formObj of oiForm.value | getKeyValuePair">
+            {{formObj.key }} : {{formObj.val}}
+        </md-list-item>
+    </md-list>
+    -->
+
+</html>
