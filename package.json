@@ -81,6 +81,7 @@
     "canonical-path": "0.0.2",
     "codelyzer": "~2.0.0",
     "concurrently": "^3.0.0",
+    "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.1",
     "extract-text-webpack-plugin": "2.0.0-beta.5",
     "file-loader": "^0.9.0",

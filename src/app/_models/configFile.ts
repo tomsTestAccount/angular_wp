@@ -30,12 +30,12 @@ export class ServerConfigs {
 
     //constructor(@Inject(WindowRef) private _window: WindowRef)
     //constructor(_window: Window)
-    constructor(private _window: WindowRef)
-    //constructor()
+    //constructor(private _window: WindowRef)
+    constructor()
     {
-        var window = _window.nativeWindow;
+        //var window = _window.nativeWindow;
 
-        console.log("window=",window.location);
+        //console.log("window=",window.location);
 
         /*
         this.host = _window.location.toString();

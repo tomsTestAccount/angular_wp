@@ -52,7 +52,7 @@ import {RtFormService} from './_services/rt-forms.service'
 import { AppComponent} 			from './app.component';
 
 import { AppLoginComponent} 			from './appLogin.component';
-import { AppRoutingModule }             from './app-routing';
+//import { AppRoutingModule }             from './app-routing';
 
 import {WindowRef} from './_services/windowRef.service'
 
@@ -67,21 +67,23 @@ var bootstrapList:any;
 
 if (environment.production == false) {
 */
-    var importsList = [BrowserModule,
+    var importsList = [
+        BrowserModule,
         FormsModule,
         ReactiveFormsModule,
-        AppRoutingModule,
+        //AppRoutingModule,
         HttpModule,
         MaterialModule.forRoot(),
         //ModalModule.forRoot(),
         CalendarModule,
         Ng2UploaderModule];
+
     var declarationList = [
         AppComponent,
-        AppLoginComponent,
-        StartPageComponent,
-        LoginComponent,
-        RtRegisterCompletion,
+        //AppLoginComponent,
+        //StartPageComponent,
+        //LoginComponent,
+        //RtRegisterCompletion,
         UserApplicationComponent,
         LmuUserApdComponent,
         LmuUserPeComponent,
@@ -92,6 +94,7 @@ if (environment.production == false) {
         rtGridBoxAddComponent,
         objValuesPipe,
         getKeyValuePair];
+
     var providersList = [//UserDataService,
         RestService,
         AuthenticationService,
