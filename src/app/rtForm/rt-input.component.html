@@ -198,11 +198,33 @@
           <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
                                                  'formFrame_valid' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value.length != 0,
                                                     'formFrame_optional' : formEntry.required == false &&  formgroup.controls[formEntry.key].value.length == 0}">
-                <rt-file-uploader
-                                  [formgroup]=formgroup
-                                  [formEntry] = formEntry>
-                </rt-file-uploader>
-           <!--</div>-->
+
+                               <rt-file-uploader
+                                                [formgroup]=formgroup
+                                                [formEntry] = formEntry>
+                              </rt-file-uploader>
+            <!--
+
+                            <file-upload
+                                    [showFileNameInput]="true"
+                                    allowedTypes="image/*"
+                                    uploadButtonText="Upload File"
+                                    [(ngModel)]]="someProperty">
+
+                            </file-upload>
+
+
+                              <file-upload
+                                      [showFileNameInput]="true"
+                                      allowedTypes="image/*"
+                                      uploadButtonText="Upload File"
+                                      >
+
+                              </file-upload>
+              -->
+
+
+              <!--</div>-->
         </div>
 
         <div *ngSwitchCase="'checkBox'">

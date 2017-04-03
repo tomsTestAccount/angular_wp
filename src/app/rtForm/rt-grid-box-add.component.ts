@@ -1,6 +1,6 @@
-import { Ng2UploaderModule } from 'ng2-uploader/ng2-uploader';
+//import { Ng2UploaderModule } from 'ng2-uploader/ng2-uploader';
 
-import { Component,OnInit,EventEmitter,Input,Output ,NgZone,ElementRef} from '@angular/core';
+import { Component,OnInit,AfterViewInit,EventEmitter,Input,Output ,NgZone,ElementRef} from '@angular/core';
 
 import {FormGroup,FormControl} from '@angular/forms';
 
@@ -17,7 +17,7 @@ import {
     animate
 } from '@angular/core';
 
-const dbgPrint = false;
+const dbgPrint = true;
 
 //var html = require('./rt-grid-box-add.component.html!text');
 //var css = require('./rtForm.css!text');
@@ -50,39 +50,21 @@ export class rtGridBoxAddComponent implements OnInit
 
     @Input() formgroup: FormGroup;
 
-    //@Input() gridOptions : any;
-
-
 
     //--------------------------------------------
 
 
-    avgr2_courseComplete: boolean;
-
-    avgr2_courseList : Object[] ;
-
-    avgr2Object_formModel : any;
-
     newAddObj : Object ;
-
-    //@Output() uploadedDataRes : any = new Array();  //TODO: load via restApi (Mock first)
-    //@Output('change') uploadedDataChanged = new EventEmitter();
-
-    //@Input() colsAll : number = 9;
-    //@Input() rowHeight : number = 42;
-
-    //tmpAddArray : any;//Array<{}> ;
 
     gridOptions : any;
 
-    currentUaFormObj : any;
+    //currentUaFormObj : any;
 
     averageCalculated = '0.0';
-    avrgValueSet : number;
+    //avrgValueSet : number;
 
-    setObj = {courses: new Array(),avrValue:'0.0'};
+    setObj : any ;
 
-    setValue : string;
     isValValid = false;
     //----------------------------------------------------
 
@@ -97,18 +79,16 @@ export class rtGridBoxAddComponent implements OnInit
 
     ngOnInit(): void {
 
-
-        this.gridOptions = this.formEntry.options;
-        //this.tmpAddArray = this.formgroup.controls[this.formEntry.key].value || [];
+        this.setObj = {table: new Array(),average:0};       //will be updated by server -data see parent (userApplication-Form)
+        this.gridOptions = this.formEntry.options;          //will be updated by server -data see parent (userApplication-Form)
 
         this.newAddObj = null;
 
-        //TODO this.currentUaFormObj = this._authService.auth_getFormObject();
 
-        if (dbgPrint) console.log("In rtGridBoxAddComponent , this formgroup=",this.formgroup);
+        //if (dbgPrint) console.log("In rtGridBoxAddComponent , this formgroup=",this.formgroup);
         if (dbgPrint) console.log("In rtGridBoxAddComponent , this formEntry=",this.formEntry);
 
-        //this.tmpAddArray = new Array();
+
 
         for (let formCtrlKey in this.formgroup.value) {
             if (formCtrlKey === this.formEntry.key)
@@ -120,20 +100,15 @@ export class rtGridBoxAddComponent implements OnInit
                     break;
                 }
 
-                console.log("found key ",formCtrlKey, ", value=",this.formgroup.value[formCtrlKey]);
+                if (dbgPrint) console.log("found key ",formCtrlKey, ", value=",this.formgroup.value[formCtrlKey]);
                 let tmpObj = this.formgroup.value[formCtrlKey];
 
-                if (!(this.formgroup.value[formCtrlKey].courses === 'undefined'))
+                //if ((tmpObj.table !== undefined) && (tmpObj.average!==undefined))
+                if ((tmpObj.table) && (tmpObj.average))
                 {
-                    /*for (let i=0;i< this.formgroup.value[formCtrlKey].courses.length;i++)   //for (let objkKey in tmpObj.courses)
-                    {
-                        this.tmpAddArray.push(this.formgroup.value[formCtrlKey].courses[i]);
-                    }
-                    this.avrgValueSet = this.formgroup.value[formCtrlKey].avrValue;
-                    */
 
-                    this.setObj.courses = tmpObj.courses;
-                    this.setValue = tmpObj.avrValue;
+                    this.setObj.table = tmpObj.table;
+                    this.setObj.average = tmpObj.average;
                 }
             }
         }
@@ -188,16 +163,20 @@ export class rtGridBoxAddComponent implements OnInit
     deleteObjFromList(courseItem):void {
 
             //console.log("delete courseItem=", courseItem);
-            let index = this.setObj.courses.indexOf(courseItem);
-            if (index > -1) {
-                this.setObj.courses.splice(index, 1);
+            let index = this.setObj.table.indexOf(courseItem);
+            if (index > -1)
+            {
+                this.setObj.table.splice(index, 1);
+            }
+            if (this.setObj.table.length >= 1)
+            {
+                this.calculate_average();
             }
 
-        this.calculate_average();
+
     }
 
-    change_colEntry(currentColEntry:any,newObj:Object,evt)
-    {
+    change_colEntry(currentColEntry:any,newObj:Object,evt) {
         newObj[currentColEntry.id].value = evt.target.value;
         this.checkNewAddObj();
     }
@@ -224,51 +203,38 @@ export class rtGridBoxAddComponent implements OnInit
 
     addObjToList(newObj:Object):void {
 
-        let newAddObj_Deep = this.copyDeep(newObj);
-        //newObj = this.newAddObj; // for copying by value and not by reference
+        let newAddObj_Deep = JSON.parse(JSON.stringify(newObj));  //this.copyDeep(newObj);
 
-        this.setObj.courses.push(newAddObj_Deep);
+        this.setObj.table.push(newAddObj_Deep);
 
         //(<FormControl>this.formgroup.controls[this.formEntry.key]).setValue(this.tmpAddArray);
 
         this.newAddObj = null;
 
-        if (dbgPrint) console.log('this.setObj.courses',this.setObj.courses);
+        if (dbgPrint) console.log('this.setObj.courses',this.setObj.table);
 
         this.calculate_average();
-    }
-
-    copyDeep(o:Object):Object {
-        var output, v, key;
-        output = Array.isArray(o) ? [] : {};
-        for (key in o) {
-            v = o[key];
-            output[key] = (typeof v === "object") ? this.copyDeep(v) : v;
-        }
-        return output;
     }
 
 
     calculate_average(){
         let sumValues:number = 0;
 
-        for (let i=0;i<this.setObj.courses.length;i++) {
+        for (let i=0;i<this.setObj.table.length;i++) {
 
-            sumValues = sumValues + parseFloat(this.setObj.courses[i].grade.value);
+            sumValues = sumValues + parseFloat(this.setObj.table[i].grade.value);
 
             this.averageCalculated = (sumValues/(i+1)).toFixed(1);
 
 
-            if (dbgPrint) console.log("sumValues=",sumValues,i,this.setObj.courses[i]);
+            if (dbgPrint) console.log("sumValues=",sumValues,i,this.setObj.table[i]);
         }
 
         //this.change_averageValue();
     }
 
 
-
-    change_averageValue(evt?:any)
-    {
+    change_averageValue(evt?:any) {
         //newObj[currentColEntry.id].value = evt.target.value;
         let tmpSetValue:string = '0.0';
 
@@ -277,17 +243,17 @@ export class rtGridBoxAddComponent implements OnInit
 
 
         //this.setObj.courses = this.tmpAddArray;
-        this.setObj.avrValue = tmpSetValue;
+        this.setObj.average = tmpSetValue;
 
-        //console.log("in change_averageValue,this.setObj.avrValue=",this.setObj.avrValue);
+        //console.log("in change_averageValue,this.setObj.average=",this.setObj.average);
 
-        if (isNaN(parseFloat(this.setObj.avrValue)))
+        if (isNaN(parseFloat(this.setObj.average)))
         {
             if (dbgPrint) console.log("in isNan,evt=",evt);
             this.calculate_average();
 
             //evt.srcE.placeholder = this.averageCalculated;
-            this.setObj.avrValue = '';
+            this.setObj.average = '';
             (<FormControl>this.formgroup.controls[this.formEntry.key]).setValue('');
             this.isValValid;
         }
@@ -299,7 +265,7 @@ export class rtGridBoxAddComponent implements OnInit
 
          //setValue(setObj);
 
-        if (dbgPrint) console.log("this.formgroup=",(<FormControl>this.formgroup.controls[this.formEntry.key])); //this.setObj.courses;
+        if (dbgPrint) console.log("this.formEntry for ",this.formEntry.key," =",(<FormControl>this.formgroup.controls[this.formEntry.key])); //this.setObj.courses;
 
     }
 

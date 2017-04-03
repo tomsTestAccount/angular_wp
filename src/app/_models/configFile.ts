@@ -1,41 +1,62 @@
-import { Injectable,Inject } from '@angular/core';
 
 
-
-var port = 8443;
 
 const dbgPrint = false;
-
-import {WindowRef} from '../_services/windowRef.service';
 
 
 export var constSrvUrl:any;
 
+//Todo: that as service
+
 export class ServerConfigs {
 
-    /*
-  restServer_ip : 'localhost',
-  restServer_port:  '8080',
-  fileUploadServer_ip : 'localhost',
-  fileUploadServer_port : '8080',
 
+    private serverURL : string = "";
+    private host : string = "";
+    private userId: string = "";
+    //var sshPort = 8443;
 
-    //restServer: 'efv-stage.tcs.ifi.lmu.de:8080/Plone',
-    restServer: 'https://localhost' + ':' + port,
-    fileUploadServer: 'https://localhost' + ':' + port
-    */
+    public onDevelopmentEnv = false;
 
-    private serverURL : string;
-    private host : string;
-
-    //constructor(@Inject(WindowRef) private _window: WindowRef)
-    //constructor(_window: Window)
-    //constructor(private _window: WindowRef)
     constructor()
     {
-        //var window = _window.nativeWindow;
 
-        //console.log("window=",window.location);
+        let locUrl = window.location;
+        //locUrl =
+
+        console.log("locUrl=",locUrl );
+
+        if (locUrl.pathname.indexOf('Plone') == -1)
+        {
+            //we're on developent system, so we need rest-login and authorization token
+            this.host = 'http://192.168.159.130:8080'; //for vmWare with PLone-instance running
+            this.serverURL = this.host + '/Plone';
+            this.userId = 'mueller';
+            this.onDevelopmentEnv  = true;
+        }
+        else
+        {
+            //we're on production system
+            this.onDevelopmentEnv  = false;
+            this.host= locUrl.host;
+            this.serverURL = locUrl.protocol + '//' + this.host + '/Plone';
+
+            //todo:found userId in url
+            if (locUrl.pathname.indexOf('applications') != -1)
+            {
+
+                let splitPathname = locUrl.pathname.split("/");
+                console.log("splitPathname =",splitPathname );
+                if (splitPathname.length)
+                {
+                    this.userId = splitPathname[splitPathname.length-1];
+                }
+
+            }
+        }
+
+
+
 
         /*
         this.host = _window.location.toString();
@@ -77,7 +98,7 @@ export class ServerConfigs {
         //this.serverURL = protocol + '//' + host + ':' + port + '/Plone';
         //this.serverURL = protocol + '//' + host + '/Plone';
 
-        this.serverURL = host + '/Plone';
+
         if (dbgPrint)  console.log("serverURL=",this.serverURL);
 
         constSrvUrl = this.serverURL;
@@ -88,6 +109,7 @@ export class ServerConfigs {
     {
 
         let srvObj = {
+            userId: this.userId,
             url : this.serverURL ,
             host: this.host
         };

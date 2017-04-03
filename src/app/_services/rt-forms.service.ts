@@ -36,7 +36,7 @@ export class RtFormService {
     private subFormObject_ac2 = new Subject<cFormObject>();
     private subFormIsUpdated = new Subject<boolean>();
 
-    //announcement
+    //announcements
     subFormAnnounced_apd$ = this.subFormObject_apd.asObservable();
     subFormAnnounced_ac$ = this.subFormObject_ac.asObservable();
     subFormAnnounced_oi$ = this.subFormObject_oi.asObservable();

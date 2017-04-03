@@ -1,9 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { FormGroup,FormControl,FormBuilder }        from '@angular/forms';
-//import { lmu_formBase }     from './question-base';
-
-//var html = require('./rt-input.component.html!text');
-//var css = require('./rtForm.css!text');
 
 @Component({
     //moduleId: module.id,

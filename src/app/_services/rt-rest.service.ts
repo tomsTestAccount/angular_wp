@@ -9,24 +9,41 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/timeout';
 
 import {ServerConfigs} from '../_models/configFile';
-import {Body} from "@angular/http/src/body";
-
+//import {Body} from "@angular/http/src/body";
+//import { Subject }    from 'rxjs/Subject';
 
 const dbgPrint_getUser = true;
 
 @Injectable()
 export class RestService {
 
-    serverURL : string;
-    host : string;
+    public serverURL : string;
+    public host : string;
+    public  userId:string;
+    public onDevEnv:boolean = false;
 
     constructor(private http: Http, serverConfs: ServerConfigs)
     {
         this.serverURL = serverConfs.get_serverConfigs().url;
+        //this._currentUserId = 'mueller';
+        this.userId = serverConfs.get_serverConfigs().userId;
+
+        this.onDevEnv = serverConfs.onDevelopmentEnv;
 
         console.log("serverURL=",this.serverURL);
     }
 
+    /********************************************************************************************************************/
+
+    /*
+    private onDevelopment = new Subject<boolean>();
+    onDevelopment$ = this.onDevelopment.asObservable();
+
+    // Service command
+    set_onDevelopment(val: boolean) {
+        this.onDevelopment.next(val);
+    }
+    */
 
 	/*********************************** PLONE-RESTAPI **************************************************************/
 
@@ -92,6 +109,8 @@ export class RestService {
     //get user application form entries -get
     restGet_getUserData(userId: string,token:string):Observable<any> {
 
+        if (!userId) userId = this.userId;
+
         let headers = new Headers();
         headers.append('Accept', 'application/json');
         //headers.append('Content-type', 'application/json');
@@ -111,9 +130,11 @@ export class RestService {
     //update user
     restPatch_updateUserdata(userId: string,token:string,userData:any):Observable<any> {
 
+        if (!userId) userId = this.userId;
+
         let headers = new Headers();
         headers.append('Content-type', 'application/json');
-        //headers.append('Authorization','Bearer ' + token);
+        if (token) headers.append('Authorization','Bearer ' + token);
 
         let body = JSON.stringify(userData);
 
@@ -133,9 +154,11 @@ export class RestService {
     //get user application form entries
     restGet_formObject(userId: string, token:string):Observable<any> {
 
+        if (!userId) userId = this.userId;
+
         let headers = new Headers();
         headers.append('Accept', 'application/json');
-        //headers.append('Authorization','Bearer ' + token); //'Authorization':'Bearer '
+        if (token) headers.append('Authorization','Bearer ' + token); //'Authorization':'Bearer '
 
         if (dbgPrint_getUser) console.log("in restService,auth_getFormObject: userId=",userId);
         return this.http.get(this.serverURL + '/applications/'+ userId +'/'+userId              //url req-main
@@ -152,12 +175,16 @@ export class RestService {
     //patch user application form entries
     restPatch_formObject(userId: string,token:string,form:any):Observable<any> {
 
+        if (!userId) userId = this.userId;
+
         let headers = new Headers();
         //headers.append('Content-type', 'application/json');
         headers.append('Accept', 'application/json');
-        headers.append('Authorization','Bearer ' + token); //'Authorization':'Bearer '
+        if (token) headers.append('Authorization','Bearer ' + token); //'Authorization':'Bearer '
 
-        let body = JSON.stringify(form);
+        //let body = JSON.stringify(form);
+        //TODO: check if valid JSON
+        let body = form;
 
         //console.log("in restService,auth_getFormObject: user=",user);
         return this.http.patch(this.serverURL + '/applications/'+ userId +'/'+userId                                        //url req-main
@@ -170,6 +197,35 @@ export class RestService {
 
     }
 
+    restDelete_File(userId: string,token:string,fileId:string)
+    {
+        let headers = new Headers();
+        //headers.append('Content-type', 'application/json');
+        headers.append('Accept', 'application/json');
+        if (token) headers.append('Authorization','Bearer ' + token); //'Authorization':'Bearer '
+
+
+        return this.http.delete(this.serverURL + '/' + fileId                                       //url req-main
+            //body
+        ,{headers:headers} //,({headers: new Headers({'Authorization':token}) })                               //({'Authorization':'Bearer ' + token})                 //header
+        //.retry(1)
+        ).map((response: Response) => response.json())
+    }
+
+
+    public restDownload_File(userId: string,token:string,fileObj:any)
+    {
+        let headers = new Headers();
+        //headers.append('Content-type', 'application/json');
+        headers.append('Accept', 'application/json');
+        if (token) headers.append('Authorization','Bearer ' + token); //'Authorization':'Bearer '
+
+        return this.http.get(fileObj.download                                       //url req-main
+            //body
+            ,{headers:headers} //,({headers: new Headers({'Authorization':token}) })                               //({'Authorization':'Bearer ' + token})                 //header
+            //.retry(1)
+        ).map((response: Response) => response.json())
+    }
 
 
     //--------------------------------------------------------------------------------

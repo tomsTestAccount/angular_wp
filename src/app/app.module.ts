@@ -12,7 +12,8 @@ import { MaterialModule } 		from '@angular/material/';
 
 import { CalendarModule }            from 'primeng/components/calendar/calendar';
 
-import { Ng2UploaderModule }        from 'ng2-uploader/ng2-uploader';
+//import { Ng2UploaderModule }        from 'ng2-uploader/ng2-uploader';
+import { NgUploaderModule }        from 'ngx-uploader';
 
 import  'hammerjs';
 
@@ -21,11 +22,12 @@ import {StartPageComponent} from './home/start-page.component';
 import { UserApplicationComponent }   from './lmu_uaForm/user-application.component';
 
 import {LoginComponent} from './login/rt-login.component';
-import {RtRegisterCompletion} from './register/rt-register-completion.component';
+//import {RtRegisterCompletion} from './register/rt-register-completion.component';
 
 import {getKeyValuePair}        from './_pipes/key-value.pipe';
 import {objValuesPipe}          from '../app/_pipes/key-value.pipe';
 import {rtFileUploaderComponent} from './rtForm/rt-file-uploader.component';
+
 import {rtInputComponent}       from './rtForm/rt-input.component';
 import {rtGridBoxAddComponent}     from './rtForm/rt-grid-box-add.component';
 
@@ -35,11 +37,6 @@ import { LmuUserPeComponent } 	from './lmu_uaForm/ua-pe.component';
 import { LmuUserOpeComponent } 	from './lmu_uaForm/ua-ope.component';
 import { LmuUserOiComponent } 	from './lmu_uaForm/ua-oi.component';
 
-
-// used to create fake backend
-//import {fakeBackendProvider}    from './mock-backend.component_ts.bak';
-//import { MockBackend, MockConnection } from '@angular/http/testing';
-//import { BaseRequestOptions } from '@angular/http';
 
 import { RestService } from './_services/rt-rest.service';
 import {AuthenticationService} from './_services/rt-authentication.service';
@@ -52,10 +49,9 @@ import {RtFormService} from './_services/rt-forms.service'
 import { AppComponent} 			from './app.component';
 
 import { AppLoginComponent} 			from './appLogin.component';
-//import { AppRoutingModule }             from './app-routing';
+import { AppRoutingModule }             from './app-routing';
 
-import {WindowRef} from './_services/windowRef.service'
-
+//import {WindowRef} from './_services/windowRef.service'
 //import { environment } from '../environments/environment';
 
 /*
@@ -71,19 +67,25 @@ if (environment.production == false) {
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
-        //AppRoutingModule,
+        MaterialModule,
         HttpModule,
-        MaterialModule.forRoot(),
-        //ModalModule.forRoot(),
         CalendarModule,
-        Ng2UploaderModule];
+        //Ng2UploaderModule,
+        NgUploaderModule,
+
+        AppRoutingModule,
+
+        //MaterialModule.forRoot(),
+        //ModalModule.forRoot(),
+        ];
 
     var declarationList = [
-        AppComponent,
-        //AppLoginComponent,
-        //StartPageComponent,
-        //LoginComponent,
+        //AppComponent,
+        AppLoginComponent,
+        StartPageComponent,
+        LoginComponent,
         //RtRegisterCompletion,
+
         UserApplicationComponent,
         LmuUserApdComponent,
         LmuUserPeComponent,
@@ -101,6 +103,7 @@ if (environment.production == false) {
         ServerConfigs,
         lmu_ua_formList,
         RtFormService,
+
         // providers used to create fake backend
         //fakeBackendProviderArray,
 
@@ -109,10 +112,11 @@ if (environment.production == false) {
         //BaseRequestOptions
         //Window
         //{provide: Window, useValue: window}
-        WindowRef
+        //WindowRef
         ];
-    //var bootstrapList = [AppLoginComponent];
-    var bootstrapList = [AppComponent];
+
+    var bootstrapList = [AppLoginComponent];
+    //var bootstrapList = [AppComponent];
 //}
 
 

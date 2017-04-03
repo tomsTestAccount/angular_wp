@@ -6,8 +6,8 @@
             [options]=options
             (onUpload)="handleUpload($event)"
             [ngClass]="{'file-over': hasBaseDropZoneOver}"
-            (onFileOver)="fileOverBase($event)">
-
+            (onFileOver)="fileOverBase($event)"
+            >
 
 
         <div class="flexContainer_row">
@@ -27,9 +27,9 @@
              [formGroup]=currentForm
 
              [ngClass]="{   'file-over-bg': hasBaseDropZoneOver ,
-                                    'ng-invalid' : uploadedDataArray.length == 0 && currentFormEntry.required ==true,
-                                    'ng-valid' : uploadedDataArray.length != 0,
-                                    'optional' : currentFormEntry.required == false && uploadedDataArray.length == 0
+                                    'ng-invalid' : localFileArray.length == 0 && currentFormEntry.required ==true,
+                                    'ng-valid' : localFileArray.length != 0,
+                                    'optional' : currentFormEntry.required == false && localFileArray.length == 0
                                     ,'formList':true}"
              required>
 
@@ -37,7 +37,7 @@
                           rowHeight="42px">
 
 
-                <md-grid-tile *ngIf="uploadedDataArray.length==0"
+                <md-grid-tile *ngIf="localFileArray.length==0"
                               [colspan]="3" [rowspan]="1">
                     <md-list [style.padding]="'0'">
                         <md-list-item class="myMdlist-item" [style.color]="'darkgrey'">
@@ -61,7 +61,7 @@
 
                     </md-list>
                 </md-grid-tile>
-                <md-grid-tile *ngIf="uploadedDataArray.length!=0"
+                <md-grid-tile *ngIf="localFileArray.length!=0"
                               class="my-grid-list-text-align-left"
                               [colspan]="3" [rowspan]="1"
                               [style.background]="'lightgrey'"
@@ -84,7 +84,7 @@
                 >
 
                     <div class="btn btn-sm"
-                         [ngClass]="{'btn_lmu_emptyFields' : uploadedDataArray.length==0, 'btn_lmu' : uploadedDataArray.length!=0 }"
+                         [ngClass]="{'btn_lmu_emptyFields' : localFileArray.length==0, 'btn_lmu' : localFileArray.length!=0 }"
                          >
 
 
@@ -98,10 +98,12 @@
                                    ngFileSelect
                                    [options]=options
                                    (onUpload)="handleUpload($event)"
-
+                                   [events]="startUploadEvent"
+                                   (change)="beforeUpload($event)"
                                    hidden="true"
                             />
 
+                            <!-- (beforeUpload)="beforeUpload($event)"-->
 
                         </label>
 
@@ -119,7 +121,7 @@
             <md-grid-list cols="4"
                           rowHeight="38px"
 
-                          *ngFor="let file of uploadedDataArray"
+                          *ngFor="let file of localFileArray"
                           [style.border-top]="'thin solid lightgrey'"
                           [style.border-radius]="'0'">
 
@@ -130,8 +132,14 @@
                         class="my-grid-list-text-align-left">
                     <md-list [style.padding]="'0'" [style.justify-content]="'flex-start'">
                         <md-list-item >
-                            <p  md-line class="form_gridList_mdList_mainParagraph_sm" [style.margin-bottom]="'0'">{{file.originalName}}</p>
-                            <p  md-line class="form_gridList_mdList_secParagraph_sm" [style.margin-bottom]="'0'"> {{file.endTime | date:'yyyy-MM-dd HH:mm:ss'}} , {{getFileSize(file.size)}} </p>
+                            <p  md-line class="form_gridList_mdList_mainParagraph_sm" [style.margin-bottom]="'0'">{{file.filename}}</p>
+                            <p  *ngIf="(file.download != undefined) && (file.size > 0)"  md-line class="form_gridList_mdList_secParagraph_sm" [style.margin-bottom]="'0'">
+
+                                {{getFileSize(file.size)}} ,
+                                <a href="{{file.download + '/' + file.filename}}"> Download </a>
+                                <!--<a (click)="downloadFile_envDev(file)"> Download</a>-->
+                            </p>
+                            <!-- {{file.created | date:'yyyy-MM-dd HH:mm:ss'}} , -->
                         </md-list-item>
                     </md-list>
                 </md-grid-tile>

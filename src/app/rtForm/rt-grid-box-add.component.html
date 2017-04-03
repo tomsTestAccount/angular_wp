@@ -14,7 +14,7 @@
                       'ng-valid' : isValValid ,
                       'formList':true}"
          required>
-        <md-grid-list *ngIf="(setObj.courses).length==0"
+        <md-grid-list *ngIf="(setObj.table).length==0"
                       cols={{gridOptions.allCols+2}} rowHeight={{gridOptions.rowHeight}}>
             <md-grid-tile [colspan]="gridOptions.allCols" [rowspan]="1">
                 <md-list [style.padding]="'0'">
@@ -26,13 +26,13 @@
                                 class="notvisibleInput"
                                 type="number"
                                 formControlName={{formEntry.key}}
-                                [(ngModel)]="setObj.courses"
+                                [(ngModel)]="setObj.table"
                                required/>
                         <input *ngIf="formEntry.required != true"
                                class="notvisibleInput"
                                type="number"
                                formControlName={{formEntry.key}}
-                               [(ngModel)]="setObj.courses"
+                               [(ngModel)]="setObj.table"
                                />
                         -->
                         <input *ngIf="formEntry.required == true"
@@ -56,7 +56,7 @@
             </md-grid-tile>
             <md-grid-tile [colspan]="2" [rowspan]="1" [style.background]="'snow'">
                 <button class="btn_lmu btn btn-sm"
-                     [ngClass]="{'btn_lmu_emptyFields' : setObj.courses.length==0, 'btn_lmu' : setObj.courses.length!=0 }"
+                     [ngClass]="{'btn_lmu_emptyFields' : setObj.table.length==0, 'btn_lmu' : setObj.table.length!=0 }"
                      (click)="addNewLine_grTbl('avgr2')"
                     disabled={{newAddObj}}>
                     <label class="formLabel_button">
@@ -70,7 +70,7 @@
             </md-grid-tile>
         </md-grid-list>
 
-        <md-grid-list *ngIf="(setObj.courses).length!=0"
+        <md-grid-list *ngIf="(setObj.table).length!=0"
                       cols={{gridOptions.allCols+2}} rowHeight={{gridOptions.rowHeight}}  >
             <md-grid-tile *ngFor="let cell of gridOptions.gridCells"
             [colspan]="cell.cols" [rowspan]="cell.rows"  [style.background]="'lightgrey'">
@@ -135,9 +135,9 @@
 
 
 
-        <div *ngIf="setObj.courses.length > 0" lang="en-US">
+        <div *ngIf="setObj.table.length > 0" lang="en-US">
         <md-grid-list cols="9" rowHeight="38px" class="form_gridListRow"
-                      *ngFor="let listObj of setObj.courses"
+                      *ngFor="let listObj of setObj.table"
                       [style.border-top]="'thin solid lightgrey'"
         >
 
@@ -173,7 +173,7 @@
                     <input type=number
                            class="form-control"
                            (input)="change_averageValue($event)"
-                           value={{setValue}}
+                           value={{setObj.average}}
                            placeholder={{averageCalculated}}
                            [style.text-align]="'center'"
                     />

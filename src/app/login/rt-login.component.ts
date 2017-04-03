@@ -12,6 +12,8 @@ import { RestService } from '../_services/rt-rest.service';
 //var html = require('./rt-login.component.html!text');
 //var css = require('./rt-login.component.css!text');
 
+const dbg_login = false;
+
 @Component({
     //moduleId: module.id,
     selector: 'rt-login-form',
@@ -155,7 +157,7 @@ export class LoginComponent implements OnInit{
 
 
         let routeParams = this.route.snapshot.params['where2go'];
-        console.log("routeParams = ",routeParams);
+        if (dbg_login) console.log("routeParams = ",routeParams);
 
         if (routeParams == 'out') this.loginRegister_toggle = "logout";
         else this.loginRegister_toggle = "login";
@@ -168,7 +170,7 @@ export class LoginComponent implements OnInit{
 
     login_register_change(evt):void
     {
-        console.log("loginRegister_toggle=",evt);
+        if (dbg_login) console.log("loginRegister_toggle=",evt);
         this.error = '';
         this.result = '';
         this.loginRegister_toggle = evt.value;
@@ -195,8 +197,8 @@ export class LoginComponent implements OnInit{
 
         this.returnUrl = gotoUrl || '/startPage';
 
-        console.log("In closeModal: this.returnUrl=",this.returnUrl);
-        console.log("In closeModal: params=",this.route.snapshot.params);
+        if (dbg_login) console.log("In closeModal: this.returnUrl=",this.returnUrl);
+        if (dbg_login) console.log("In closeModal: params=",this.route.snapshot.params);
 
         if (this.authenticationService.isAuthenticated())
         {
@@ -219,7 +221,7 @@ export class LoginComponent implements OnInit{
         this.loading = false;
         this.error = "";
         this.result = '';
-        console.log("login clicked");
+        if (dbg_login) console.log("login clicked");
         var userId = this.loginForm.controls['email'].value;
         this.authenticationService.login_getToken(userId, this.loginForm.controls['password'].value)
                 .then(response =>
@@ -229,7 +231,7 @@ export class LoginComponent implements OnInit{
 
                     this.result = 'You logged in successfully';
 
-                    this.authenticationService.auth_getUserData()
+                    /*this.authenticationService.auth_getUserData()
                         .then(response => {
 
                             this.authenticationService.setCurrentUser_local(response);
@@ -237,6 +239,7 @@ export class LoginComponent implements OnInit{
                         .catch(error => {
                             console.log("In login, auth_getUserData, error=",error);
                         });
+                    */
 
                     //this._router.navigate(['/userApplication']);
                     this.closeModal('/userApplication');
@@ -291,7 +294,7 @@ export class LoginComponent implements OnInit{
                     // set success message and pass true paramater to persist the message after redirecting to the login page
                    // this.alertService.success('Registration successful', true);
                     //this.router.navigate(['/login']);
-                    console.log("In register: data=",data);
+                    if (dbg_login) console.log("In register: data=",data);
                     this.error = '';
                     //this.result = "Your Account for '" + this.user4create.email + "' is declared ! Please check your mails to set the password and complete the registration process! ";
                     this.result = "Your Account for '" + this.user4create.email + "' is registered ! Please Login ";
@@ -320,7 +323,7 @@ export class LoginComponent implements OnInit{
 
 
     clearConfirmPwd(e){
-        console.log("password changed -> confirmPwd cleared");
+        if (dbg_login) console.log("password changed -> confirmPwd cleared");
         this.createAccountForm.controls['confirm_password'].patchValue('');
     }
 

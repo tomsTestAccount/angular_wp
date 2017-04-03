@@ -1,59 +1,9 @@
 
 
 
-<!--
-<div class="header">
-	<picture id="headerImg">
-		<source srcset="/images/kopfbild.png">
-		<img src="/images/kopfbild.png" alt="lmu_logos">
-	</picture>
-</div>
-
-<div class="header">
-
-
-	<img id="headerImg">
-
-	<img md-card-image src="/images/kopfbild.png">
-	<a id="lmu-logo" href="http://www.uni-muenchen.de/index.html" title="LMU - Ludwig-Maximilians-Universität München">
-        LMU - Ludwig-Maximilians-Universität München
-      </a>
-	<span>lmu - elite master program for data science</span>
-	<div class="headerDiv"></div>
-
-</div>
--->
-
-
 	<div class="userApplication_ContentContainer"> <!-- class="grid grid-pad">-->
-		<!--
-		<div class="db_componentsBar">
-			<a *ngFor="let db_comp of db_components"  (click)="select_comp4User(db_comp.name)"  class="col-1-4">
 
-				<div class="db_component">
-				  {{db_comp.title}}
-				</div>
-
-			</a>
-		</div>
-
-		<md-card>
-		 <md-card-content>
-			<div [ngSwitch]="dbComp_User">
-				<template [ngSwitchCase]="'dbComp_User_apd'"><lmu_user_apd></lmu_user_apd></template>
-				<div *ngSwitchCase="'dbComp_User_pe'">In dbComp_User_pe</div>
-				<div *ngSwitchCase="'dbComp_User_ope'">In dbComp_User_ope</div>
-				<div *ngSwitchCase="'dbComp_User_oi'">In dbComp_User_oi</div>
-				<div *ngSwitchDefault>In default</div>
-			</div>
-			<router-outlet></router-outlet>
-		 </md-card-content>
-		</md-card>
-		-->
-
-		<md-tab-group
-      mat-center-tabs="true"
-      id="uaTabGroup">
+		<md-tab-group mat-center-tabs="true" id="uaTabGroup">
 
 
 
@@ -68,7 +18,7 @@
 					</template>
 					<!--<template md-tab-content>-->
 
-					<form [formGroup]="main_lmu_ua_form">
+					<form *ngIf="isFormValueLoadedFromServer==true" [formGroup]="main_lmu_ua_form">
 
 						<md-card class="ua-cardBg">
 

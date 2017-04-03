@@ -18,7 +18,7 @@ import {AuthenticationService} from  '../_services/rt-authentication.service';
 //import { CountryList} from '../_models/countries';
 
 
-const dbgPrint = true;
+const dbgPrint = false;
 
 //for animations
 import {
@@ -41,22 +41,6 @@ import {timeout} from "rxjs/operator/timeout";
     //styles:[css]
 	templateUrl: 'user-application.component.html',
 	styleUrls: ['user-application.component.css'],
-	//for animations
-	/*animations: [
-		trigger('hoverState', [
-			state('inactive', style({
-				//backgroundColor: '#eee',
-				transform: 'scale(1)'
-			})),
-			state('active',   style({
-				//backgroundColor: '#cfd8dc',
-				transform: 'scale(1.1)'
-			})),
-		transition('inactive => active', animate('100ms ease-in')),
-		transition('active => inactive', animate('100ms ease-out'))
-		])
-	]
-	*/
 
 })
 
@@ -65,12 +49,7 @@ import {timeout} from "rxjs/operator/timeout";
 
 export class UserApplicationComponent implements OnInit,AfterViewInit {
 
-	//usermodel : UserModel; // = {uid:42,surname : "Dampf", givenName : "hans", gender : 'male', dateOfBirth : { day:1, month:4, year:1980}};
-
 	uasubmit : boolean;
-
-	//countries:any;
-	//qApd_answered = 0;
 
 	ua_sections  = [
             { title: " Applicant\'s Personal Details",
@@ -118,6 +97,8 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
 	isFormUpdated = false;
 
+	isFormValueLoadedFromServer = false;
+
 	//-------------------------------------------------------------------------------------------------------------------
 
 	constructor(private _fb: FormBuilder,
@@ -125,33 +106,36 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 				private _rtFormSrv: RtFormService
 						)
     {
-
-        /*this._rtFormSrv.subFormAnnounced_apd$.subscribe(
-            newform => {
-                (this.main_lmu_ua_form.controls['subFormGroup_apd']) = newform.formgroup;
-                if (dbgPrint) console.log("In apd_subscribe");
-            });
-        */
-
-        this._rtFormSrv.subFormIsUpdated$.subscribe(
-            isUpdated => {
-
-                this.main_lmu_ua_form = this.lmu_ua_form.init_mainForm();
-                if (dbgPrint) console.log("In subFormIsUpdated$ ",this.main_lmu_ua_form);
-                this.isFormUpdated = isUpdated;
-            });
-
-        if (dbgPrint) console.log("In UserApplicationComponent constructor");
-
-        //we get the formEntries here
-        this.apd_formObj = this.lmu_ua_form.buildFormObject_apd();
-        this.ac_formObj = this.lmu_ua_form.buildFormObject_ac();
-        this.ac2_formObj = this.lmu_ua_form.buildFormObject_ac2();
-        this.oi_formObj = this.lmu_ua_form.buildFormObject_oi();
+		/*this._rtFormSrv.subFormAnnounced_apd$.subscribe(
+		 newform => {
+		 (this.main_lmu_ua_form.controls['subFormGroup_apd']) = newform.formgroup;
+		 if (dbgPrint) console.log("In apd_subscribe");
+		 });
+		 */
 
 
-        //this.lmu_ua_form.init_mainForm();
-        this.main_lmu_ua_form = this.lmu_ua_form.get_mainForm();
+		this._rtFormSrv.subFormIsUpdated$.subscribe(
+			isUpdated => {
+				this.main_lmu_ua_form = this.lmu_ua_form.init_mainForm();
+				if (dbgPrint) console.log("In subFormIsUpdated$ ",this.main_lmu_ua_form);
+				this.isFormUpdated = isUpdated;
+
+			});
+
+		/*
+
+		if (dbgPrint) console.log("In UserApplicationComponent constructor");
+
+		//we get the formEntries here
+		this.apd_formObj = this.lmu_ua_form.buildFormObject_apd();
+		this.ac_formObj = this.lmu_ua_form.buildFormObject_ac();
+		this.ac2_formObj = this.lmu_ua_form.buildFormObject_ac2();
+		this.oi_formObj = this.lmu_ua_form.buildFormObject_oi();
+
+
+		//this.lmu_ua_form.init_mainForm();
+		this.main_lmu_ua_form = this.lmu_ua_form.get_mainForm();
+	*/
 
 
 	};
@@ -165,7 +149,28 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 	*/
 
     ngOnInit(): void {
+		/*this._rtFormSrv.subFormAnnounced_apd$.subscribe(
+		 newform => {
+		 (this.main_lmu_ua_form.controls['subFormGroup_apd']) = newform.formgroup;
+		 if (dbgPrint) console.log("In apd_subscribe");
+		 });
+		 */
 
+
+
+		if (dbgPrint) console.log("In UserApplicationComponent ngOnInit");
+
+		/*
+		//we get the formEntries here
+		this.apd_formObj = this.lmu_ua_form.buildFormObject_apd();
+		this.ac_formObj = this.lmu_ua_form.buildFormObject_ac();
+		this.ac2_formObj = this.lmu_ua_form.buildFormObject_ac2();
+		this.oi_formObj = this.lmu_ua_form.buildFormObject_oi();
+
+
+		//this.lmu_ua_form.init_mainForm();
+		this.main_lmu_ua_form = this.lmu_ua_form.get_mainForm();
+		*/
 
     }
 
@@ -180,21 +185,19 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
         this._authService.auth_getFormObject()
             .then(response => {
 
-                /*
-                //init the forms
+				//we get the formEntries here
+				this.apd_formObj = this.lmu_ua_form.buildFormObject_apd();
+				this.ac_formObj = this.lmu_ua_form.buildFormObject_ac();
+				this.ac2_formObj = this.lmu_ua_form.buildFormObject_ac2();
+				this.oi_formObj = this.lmu_ua_form.buildFormObject_oi();
 
-                this.lmu_ua_form.init_mainForm();
-                this.main_lmu_ua_form = this.lmu_ua_form.get_mainForm();
+				//this.lmu_ua_form.init_mainForm();
+				this.main_lmu_ua_form = this.lmu_ua_form.get_mainForm();
 
+				this.isFormValueLoadedFromServer = true;
 
-                this.apd_formObj.formgroup = <FormGroup>this.main_lmu_ua_form.controls['subFormGroup_apd'];
-                this.ac_formObj.formgroup = <FormGroup>this.main_lmu_ua_form.controls['subFormGroup_ac'];
-                this.ac2_formObj.formgroup = <FormGroup>this.main_lmu_ua_form.controls['subFormGroup_ac2'];
-                this.oi_formObj.formgroup = <FormGroup>this.main_lmu_ua_form.controls['subFormGroup_oi'];
+                if (this.dbgPrint) console.log("In user-application ngAfterViewInit2, after get data!",this.main_lmu_ua_form);
 
-                */
-
-                if (this.dbgPrint) console.log("In user-application ngAfterViewInit2, after get data!");
             });
 
         /*
@@ -288,7 +291,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
     }
 
-	setFormValues_AlreadyFilled()
+	private _setFormValues_AlreadyFilled()
 	{
         if (this.dbgFormValues) {
             console.log("In setFormValues_AlreadyFilled,this.main_lmu_ua_form.controls=", this.main_lmu_ua_form.controls);

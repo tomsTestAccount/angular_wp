@@ -24,7 +24,7 @@ import {
 //var html = require('./ua-pe.component.html!text');
 
 
-const dbgPrint_Pe =true;
+const dbgPrint_Pe =false;
 
 @Component({
 	//moduleId: module.id,
@@ -175,8 +175,7 @@ export class LmuUserPeComponent implements AfterViewInit{
                 formCtrls[key].value!== [] &&
                 formCtrls[key].value !== 'undefined')
             {
-                //if (dbgPrint_Pe)
-                    console.log("formCtrl.value = ", formCtrls[key].value," for ",key);
+                if (dbgPrint_Pe) console.log("formCtrl.value = ", formCtrls[key].value," for ",key);
                 this.ac2Open = true;
             }
         }

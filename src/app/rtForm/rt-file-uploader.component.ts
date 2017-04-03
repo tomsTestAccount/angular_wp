@@ -1,15 +1,20 @@
-import { Ng2UploaderModule } from 'ng2-uploader/ng2-uploader';
+//import { Ng2UploaderModule } from 'ng2-uploader/ng2-uploader';
+//import {UploadedFile} from "ng2-uploader/src/services/ng2-uploader";
+//import { NgUploaderModule } from 'ngx-uploader';
 
-import { Component,OnInit,EventEmitter,Input,Output ,NgZone,ElementRef} from '@angular/core';
+import { NgUploaderOptions, UploadedFile, UploadRejected } from 'ngx-uploader';
+
+import { Component,OnInit,EventEmitter,Input,Output ,NgZone,Inject} from '@angular/core';
 
 import {FormControl,FormGroup} from '@angular/forms';
 
 //import {Validators, FormGroup,FormControl,FormBuilder} from '@angular/forms';
 
 
-import {ServerConfigs} from '../_models/configFile';
+//import {ServerConfigs} from '../_models/configFile';
+import {AuthenticationService} from '../_services/rt-authentication.service'
 
-const dbgPrint = false;
+const dbgPrint = true;
 
 //import { ViewContainerRef } from '@angular/core';
 
@@ -27,16 +32,9 @@ const dbgPrint = false;
 })
 
 export class rtFileUploaderComponent implements OnInit
+//export class rtFileUploaderComponent
 {
 
-
-    /*
-    @Input() title : string = 'title string missing';
-    @Input() secParagraph : string = 'secParagrap string missing';
-    @Input() secParagraphArray : string[] = new Array();
-
-    @Input() compId : string;
-    */
 
     title : string = 'title string missing';
     secParagraph : string = 'secParagrap string missing';
@@ -44,7 +42,7 @@ export class rtFileUploaderComponent implements OnInit
 
     compId : string;
 
-    options: Object = {};
+    options: NgUploaderOptions;
 
     //@Output() uploadedDataRes : any = new Array();  //TODO: load via restApi (Mock first)
     //@Output('change') uploadedDataChanged = new EventEmitter();
@@ -54,7 +52,7 @@ export class rtFileUploaderComponent implements OnInit
 
     @Output() uploadedDataChanged = new EventEmitter();
 
-    zone: NgZone;
+    //zone: NgZone;
 
     showTooltip1 = false;
 
@@ -62,17 +60,12 @@ export class rtFileUploaderComponent implements OnInit
     fU_response: any = {};
 
     hasBaseDropZoneOver: boolean = false;
+    startUploadEvent: EventEmitter<string>;
+    previewData: any;
 
     bIsDDavailable: boolean;
 
-    //sectionName:string;
-/*
-    @Input() uploadedDataArray:any[];
-
-    @Input() required: boolean;
-    @Input() formCtrlName : string = 'formCtrlName string missing';
-*/
-    uploadedDataArray:any[];
+    localFileArray:any[];
 
     //--------------------------------------------
 
@@ -85,7 +78,7 @@ export class rtFileUploaderComponent implements OnInit
 
         //if (dbgPrint) console.log("givenForm=",givenForm);
         this.currentForm = <FormGroup>givenForm;
-        if (dbgPrint)  console.log("In rtFileUploaderComponent this.currentForm=",this.currentForm);
+        //if (dbgPrint)  console.log("In rtFileUploaderComponent this.currentForm=",this.currentForm);
 
     };
 
@@ -97,43 +90,34 @@ export class rtFileUploaderComponent implements OnInit
     };
 
 
-
-
+    fileUpload_url:string;
+    currentToken:string;
+    authSrv:AuthenticationService;
+    //srvCfgs:any;
     //----------------------------------------------------
 
     //constructor(compId:string,t:string,secP:string,fCN:string) {
-    constructor(srvCfg:ServerConfigs) {
+    constructor( //srvCfg:ServerConfigs,
+                authSrvInst:AuthenticationService,
+                @Inject(NgZone) private zone: NgZone) {
 
         this.zone = new NgZone({ enableLongStackTrace: false });
 
-        /*
-        if (this.uploadedData.length == 0) {
-            this.uploadedData = new Array();
-        }
-        */
 
-        //var fileUpload_url = 'http://' + ServerConfigs.fileUploadServer_ip + ':' + ServerConfigs.fileUploadServer_port + '/upload';
+        //this.srvCfgs = srvCfg;
 
-        var fileUpload_url = srvCfg.get_serverConfigs().url  + '/upload';
+        this.authSrv = authSrvInst;
 
+        this.currentToken = authSrvInst.auth_getCurrentToken();
 
-        if (dbgPrint) console.log("fileUpload_url= ",fileUpload_url);
-
-        if (dbgPrint) console.log("this.options= ",this.options);
-
-
-        if (this.options === {} ) {
-            this.options = {
-                url : fileUpload_url,
-                filterExtensions: true,
-                allowedExtensions: ['application/pdf'],  ////TODO: give the url via parameter (input?)
-                calculateSpeed: true,
-            };
-        }
+        this.startUploadEvent = new EventEmitter<string>();
 
         this.bIsDDavailable = false;
 
-        //this.uploadedDataArray = new Array();
+        //this.isDragDropAvailable();
+
+        this.localFileArray = new Array();
+
 
     }
 
@@ -143,17 +127,58 @@ export class rtFileUploaderComponent implements OnInit
 
 
     ngOnInit(): void {
-        this.isDragDropAvailable();
 
-        this.uploadedDataArray = this.currentForm.controls[this.currentFormEntry.key].value || new Array();//= this.formCtrlGroup.controls[this.formEntry.key].value; //TODO: handle data from restAPI here
+
         this.title = this.currentFormEntry.title;
         this.secParagraphArray =  this.currentFormEntry.secParagraphArray;
         this.compId = this.currentFormEntry.key;
-        this.options = this.currentFormEntry.options;
 
-        //console.log("In rt-file-uploader , formEntry=",this.formEntry);
-       // console.log("In rt-file-uploader , formgroup=",this.formgroup);
-        //console.log("this.uploadedDataArray=",this.uploadedDataArray);
+        //this.fileUpload_url = this.srvCfgs.get_serverConfigs().url + '/applications/' + this.srvCfgs.get_serverConfigs().userId + '/' + this.srvCfgs.get_serverConfigs().userId + '/' + this.currentFormEntry.key;
+        this.fileUpload_url = "not neccessary now"
+
+        this.options = new NgUploaderOptions({
+            url : this.fileUpload_url,
+            autoUpload: false,
+            //filterExtensions: true,
+            //allowedExtensions: ['application/pdf'],
+            calculateSpeed: true,
+            data:{
+                '@type': "File",
+                "title": "My file 666",
+                "file": {
+                    "data": "TG9yZW0gSXBzdW0u",
+                    "encoding": "base64",
+                    "filename": "test666.txt",
+                    "content-type": "application/pdf"}
+               },
+            //fieldName: 'file',
+            //fieldReset: true,
+            maxUploads: 1,
+            method: 'POST',
+            //multipart:false,
+            //previewUrl: 'preview',
+            customHeaders: {
+                'Authorization': 'Bearer ' + this.currentToken,
+                //'Content-Type':'application/json',
+                'Accept':'application/json'
+            },
+            plainJson: true,
+            withCredentials: false,
+            cors:false
+        });
+
+
+        //if (dbgPrint) console.log("fileUpload_url= ",this.fileUpload_url);
+
+
+        if (this.currentFormEntry.defaultValue.filename)
+        {
+
+            if (dbgPrint) console.log("this.currentFormEntry.defaultValue= ",this.currentFormEntry.defaultValue);
+            this.localFileArray[0] = this.currentFormEntry.defaultValue;
+            (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.localFileArray[0]);
+            if (dbgPrint) console.log(">this.currentForm.controls[this.currentFormEntry.key]= ",this.currentForm.controls[this.currentFormEntry.key]);
+        }
     }
 
 
@@ -173,10 +198,43 @@ export class rtFileUploaderComponent implements OnInit
         return +parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
 
+    beforeUpload(ev : Event) {
+
+        if (dbgPrint) console.log("In beforeUpload, e=", ev);
+
+
+        var file: File =  ev.target['files'][0];
+        var myReader: FileReader = new FileReader();
+
+        myReader.onloadend = (e) => {
+            let tmpB64String = myReader.result.split(',');
+            if (dbgPrint) console.log("tmpB64String.length",tmpB64String.length);
+            this.options['data']['file']['data'] = tmpB64String[1] ;
+            this.options['data']['file']['filename'] = file.name;
+            this.options['data']['title'] = file.name;
+
+
+            if (dbgPrint) console.log("file encoded");
+
+            if (this.localFileArray.length) this.deleteFile(this.localFileArray[0]);
+
+            this.localFileArray[0] =  this.options['data'].file;
+            (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.localFileArray[0]);
+
+            //we send data via formContent (for plone) though no extra file-upload here
+                //this.startUploadEvent.emit("startUpload");
+
+        }
+        myReader.readAsDataURL(file);
+
+    }
 
 
     handleUpload(data): void {
+
             this.zone.run(() => {
+
+                if (dbgPrint) console.log("In handleUpload, data=", data);
 
                 this.hasBaseDropZoneOver = null;
 
@@ -185,52 +243,108 @@ export class rtFileUploaderComponent implements OnInit
                 this.fU_progress = Math.floor(data.progress.percent / 100);
 
                 if (data && data.response) {
-                    //this.uploadedData.push(data);
 
-                    this.uploadedDataArray.push(data);
-                    //console.log("uploaded file=", data);
-                    //console.log("uploadedDataArray=", this.uploadedDataArray);
-                    if (dbgPrint) console.log("formgroup.controls[",this.currentFormEntry.key,"]=", this.currentForm.controls[this.currentFormEntry.key]);
+                    //this.localFileArray.push(data);
+                    //if (dbgPrint) console.log("localFileArray=", this.localFileArray);
+                    let respObj = JSON.parse(data.response);
 
-                    //(<FormControl>this.formCtrlGroup.controls[this.formCtrlName]).patchValue(this.uploadedDataArray);
-                    (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.uploadedDataArray);
+                    //if (respObj.file.size) respObj.file['size'] = respObj.file.size.toString();
+
+                    if (dbgPrint) console.log("respObj.file=", respObj.file);
+
+                    //if (dbgPrint) console.log("formgroup.controls[",this.currentFormEntry.key,"]=", this.currentForm.controls[this.currentFormEntry.key]);
+
+                    // we only allowed one file in the list
+
+                    if (this.localFileArray.length) this.deleteFile(this.localFileArray[0]);
+
+                    this.localFileArray[0] = (respObj.file);
+                    (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.localFileArray[0]);
+
                 }
             });
 
     }
 
-    fileOverBase(e:any):void {
-        this.hasBaseDropZoneOver = e;
+    handlePreviewData(data: any) {
+        this.previewData = data;
+
+        console.log("In handlePreviewData, this.previewData=", this.previewData);
     }
 
 
-    deleteFile(file:any):void
-    {
-        let index = this.uploadedDataArray.indexOf(file);
+    fileOverBase(e:any):void {
+        //console.log("In fileOverBase, e=", e);
+        this.hasBaseDropZoneOver = e;
+
+    }
+
+
+    deleteFile(file:any):void {
+
+        console.log("In defleteFile, file =",file);
+
+        let index = this.localFileArray.indexOf(file);
         if (index > -1) {
-            this.uploadedDataArray.splice(index, 1);
-            //this.uploadChanged(this.uploadedData);
+            this.localFileArray.splice(index, 1);
+
+            //let tmpSplitString = file.download.split('/@@');
+
+            //this.authSrv.auth_deleteFile_Server(tmpSplitString[0]);
+
+
+            /*let tmpIdString = '';
+
+            let tmpSplitString = file.download.split('/');
+
+            for (let i=0;i<tmpSplitString.length;i++)
+            {
+                let found_fileId =  tmpSplitString[i].indexOf('.pdf');
+                if (found_fileId != -1)
+                {
+                    console.log("found_fileId=",tmpSplitString[i]);
+                    this.authSrv.auth_deleteFile_Server(tmpSplitString[i]);
+                    break;
+                }
+            }
+            */
+
+            /*
+            this.options['data']['file']['data'] = null ;
+            this.localFileArray[0] =  this.options['data'].file;
+            */
+
+
+
+            var delObj2 = {
+                "content-type": "application/octet-stream",
+                "download": file['download'],
+                "filename": null,
+                "size": 0
+            };
+            (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(delObj2);  //only one fileObject used at the moment
         }
 
-        (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.uploadedDataArray);
+        //(<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.localFileArray);
 
         if (dbgPrint) console.log("formgroup.controls[",this.currentFormEntry.key,"]=", this.currentForm.controls[this.currentFormEntry.key]);
-        /*
-        if (this.uploadedDataArray.length == 0) {
-            console.log("uploadarray is empty! reset fromcontrol");
-            //(<FormControl>this.formCtrlGroup.controls[this.formCtrlName]).reset();
-            (<FormControl>this.formCtrlGroup.controls[this.formEntry.key]).reset();
-        }
-        else  console.log("uploadarray =",this.uploadedDataArray);
-        */
+
 
     }
 
+    /*
     uploadChanged(list:any) : void {
         if (dbgPrint)  console.log("In uploadChanged, list=",list)
         this.uploadedDataChanged.emit({
             value: this.uploadedData
         })
+    }
+    */
+
+
+    downloadFile_envDev(fileObj:any)
+    {
+        this.authSrv.auth_downloadFile_devEnv(fileObj);
     }
 
     //------------------- debug ---------------------------------------------

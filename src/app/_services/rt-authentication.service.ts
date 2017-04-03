@@ -23,8 +23,9 @@ const dbgPrint_user = false;
 const dbgPrint_userId = false;
 const dbgPrint_login = false;
 const dbgPrint_setFormObj = false;
-const dbgPrint_getFormObj = false;
+const dbgPrint_getFormObj = true;
 const dbgPrint_handleFormObj = false;
+const dbgPrint_handleFormObject2SendToServer = true;
 
 @Injectable()
 export class AuthenticationService {
@@ -119,8 +120,7 @@ export class AuthenticationService {
     }
 
 
-    auth_getUserData():any
-    {
+    public auth_getUserData():any {
         if (this._currentUserId && this._currentToken)
         {
             return new Promise((resolve, reject) => {
@@ -144,8 +144,7 @@ export class AuthenticationService {
     }
 
 
-    logout()
-    {
+    logout() {
 
         console.log("In authService-logout");
 
@@ -159,10 +158,10 @@ export class AuthenticationService {
         this._authenicated = false;
         this._currentFormObj = null;
         this._currentUser = null;
+        this._currentUserId = null;
     }
 
-    isAuthenticated()
-    {
+    isAuthenticated() {
 
         if (dbgPrint_user) console.log("this._currentUser=",this._currentUser);
         if (dbgPrint_user) console.log("this._currentUserId=",this._currentUserId);
@@ -217,7 +216,7 @@ export class AuthenticationService {
     setCurrentToken_local(token:string):boolean{
 
         let retValue=false;
-        console.log("In AuthenticationService,setCurrentToken_local: token=",token);
+        if (dbgPrint_login) console.log("In AuthenticationService,setCurrentToken_local: token=",token);
 
         let tempString = token;
         //JSON.stringify(tempString);
@@ -232,8 +231,11 @@ export class AuthenticationService {
         return retValue;
     }
 
-    auth_getCurrentUser():any
-    {
+    auth_getCurrentToken():any {
+        return this._currentToken;
+    }
+
+    auth_getCurrentUser():any {
 
         this._currentUser = (JSON.parse(localStorage.getItem('lmu_evfmsd_currentUser')));
 
@@ -241,8 +243,7 @@ export class AuthenticationService {
         return this._currentUser;
     }
 
-    auth_getCurrentUserId():any
-    {
+    auth_getCurrentUserId():any {
 
         this._currentUserId = (JSON.parse(localStorage.getItem('lmu_evfmsd_currentUserId')));
 
@@ -250,8 +251,7 @@ export class AuthenticationService {
         return this._currentUserId;
     }
 
-    auth_setCurrentUserId_local(userId:string):any
-    {
+    auth_setCurrentUserId_local(userId:string):any {
 
         this._currentUserId = userId;
         if (dbgPrint_userId) console.log("In auth_setCurrentUser,this._currentUserId",this._currentUserId);
@@ -260,51 +260,34 @@ export class AuthenticationService {
     }
 
     //-----------------------------------------------------------------------------------------------------------------
+    //TODO: put mapping functions (auth_handleFormObject4localWorking and auth_handleFormObject4SendToServer) to lmu_ua_formList.ts-class
 
-
-
-    auth_getFormObject():any
-    {
-
-
+    public auth_getFormObject():any {
 
         return new Promise((resolve, reject) => {
+
             if (dbgPrint_getFormObj) console.log("In authService 1,auth_getFormObject,this._currentFormObj=", this._currentFormObj);
 
-            if (dbgPrint_getFormObj) console.log("In authService 1,auth_getFormObject,localStorage.getItem('currentUaObject'=", localStorage.getItem('currentUaObject'));
-
-            if ((!this._currentFormObj)
+            if ( (!this._currentFormObj)
                 || (this._currentFormObj === null)
                 || (typeof this._currentFormObj !== 'object')
                 || (Object.keys(this._currentFormObj).length === 0)) {
 
-                let tmpUa = localStorage.getItem('currentUaObject');
+                    //return new Promise((resolve, reject) => {
+                        this._auth_getFormObject_Server(this._currentUserId)
+                            .then(responseConvert4Local => {
 
-                if ((!tmpUa)
-                    || (tmpUa === null)
-                    || (typeof tmpUa !== 'object')
-                    || (Object.keys(tmpUa).length === 0)) {
+                                    //this.auth_setFormObj(this._currentFormObj);
+                                    this._currentFormObj = responseConvert4Local;
 
-                    if (dbgPrint_getFormObj) console.log("tmpUa 1=", tmpUa);
+                                    if (dbgPrint_getFormObj) {
+                                        console.log("In auth_getFormObject,after auth_getFormObject_Server response,this._currentFormObj=", this._currentFormObj);
+                                    }
 
-                   // return new Promise((resolve, reject) => {
-                        this.auth_getFormObject_Server(this._currentUserId)
-                            .then(response => {
-                                if (response) {
-
-                                    if (dbgPrint_getFormObj) console.log("In auth_getFormObject,after auth_getFormObject_Server response=",
-                                        response, "this._currentFormObj=", this._currentFormObj);
-                                    this.auth_setFormObj(this._currentFormObj);
-                                    resolve(this._currentFormObj);
-                                }
-                                /*else {
-                                 }
-                                 if (dbgPrint_getFormObj) console.log("In auth_getFormObject,after auth_getFormObject_Server response=", response);
-                                 //this.auth_setFormObj({});
-                                 */
+                                    resolve(responseConvert4Local);
                             })
                             .catch(exp => {
-                                    console.log("in auth_getFormObject, error at auth_getFormObject_Server , err=", exp);
+                                    console.log("ERROR in auth_getFormObject, error at auth_getFormObject_Server , err=", exp);
                                     //this.auth_setFormObj({});
                                     //return {};
                                     resolve({});
@@ -312,242 +295,132 @@ export class AuthenticationService {
                             );
                     //});
 
-                }
+                //});
+                /*
                 else //found valid obj for currentUser in localStorage
                 {
                     //this.auth_setFormObj(tmpUa);
-                    this._currentFormObj = JSON.parse(tmpUa);
+                    //this._currentFormObj = JSON.parse(tmpUa);
                     resolve(this._currentFormObj);
                 }
+                */
             }
             else resolve(this._currentFormObj);
         });
 
     }
 
-    //to get valid formObject to work with on client-site (subFormGroup)
-    private auth_handleFormObject4localWorking(formObjFromServer:any) {
 
-        if (dbgPrint_handleFormObj) console.log("In auth_handleFormObject4localWorking formObjFromServer=",formObjFromServer);
-
-
-
-        var uaObject = {
-                subFormGroup_apd: {},
-                subFormGroup_ac: {},
-                subFormGroup_ac2: {},
-                subFormGroup_oi: {},
-            };
-            //check if formObject is valid
-            if ((typeof formObjFromServer === 'object') && (Object.keys(formObjFromServer).length !== 0))
-            {
-
-                console.log("formObjFromServer",formObjFromServer);
-                for (var p in formObjFromServer)
-                {
-                    //console.log("p=",p);
-                    this._lmuForms.set_formEntryValue(p.toString(),formObjFromServer[p]);
-                }
-
-
-                this._rtFormSrv.subFormsUpdated(true);
-
-                //let formEntries_ac = this._lmuForms.get_form_ac();
-
-
-                uaObject = {
-                    subFormGroup_apd: {
-                        firstname:formObjFromServer.firstname,
-                        lastname:formObjFromServer.lastname,
-                        gender:formObjFromServer.gender,
-                        dateOfbirth:formObjFromServer.dateOfbirth,
-                        nationality:formObjFromServer.nationality,
-                        street:formObjFromServer.street,
-                        postalcode:formObjFromServer.postalcode,
-                        residence:formObjFromServer.residence,
-                        country:formObjFromServer.country,
-                        phone:formObjFromServer.phone,
-                        phone2:formObjFromServer.phone2,
-                        email:formObjFromServer.email,
-                        email2:formObjFromServer.email2,
-                        homepage:formObjFromServer.homepage,
-                    },
-                    subFormGroup_ac: {
-
-
-
-
-                        ac_education:formObjFromServer.ac_education,
-                        ac_institution:formObjFromServer.ac_institution,
-                        ac_level:formObjFromServer.ac_level,
-                        copy_of_tor:formObjFromServer.copy_of_tor,
-                        //degree_conferral_date: degree_conferral_date,
-                        //copy_of_certificate: copy_of_certificate,
-
-
-                    },
-
-                    subFormGroup_ac2: {},
-                    subFormGroup_oi: {},
-
-                }
-
-
-            }
-            else
-            {
-                console.log("formObjFromServer is empty!!!!");
-                uaObject = {
-                    subFormGroup_apd: {},
-                    subFormGroup_ac: {},
-                    subFormGroup_ac2: {},
-                    subFormGroup_oi: {},
-                };
-
-
-            }
-
-        return uaObject;
-    };
-
-    private auth_getFormObject_Server(currentUserId:string):any{
+    private _auth_getFormObject_Server(currentUserId:string):any{
 
         if (dbgPrint_getFormObj)  console.log("1 In  rt-auth-service: auth_getFormObject_Server ,this._currentUserId=",this._currentUserId);
 
         let retValue=false;
 
-        this._currentUserId = 'mueller'; //Todo
+        //this._currentUserId = 'mueller'; //Todo
 
         return new Promise((resolve, reject) => {
             this._rtRestService.restGet_formObject(this._currentUserId, this._currentToken)
                 .subscribe(
                     response => {
 
-
-                       // if (dbgPrint_getFormObj) console.log("In auth_getFormObject_Server after rest-call, response=",response);
-
-                        let uaObject = response; //JSON.parse(response);
+                        //if (dbgPrint_getFormObj)
+                        console.log("In auth_getFormObject_Server after rest-call, response=",response);
 
 
-                        if (dbgPrint_getFormObj) console.log("In auth_getFormObject_Server after rest-call, uaObject=",uaObject);
+                        var convertedUaObject = this._lmuForms.handleServerFormObject4localWorking(response);
 
+                        this._rtFormSrv.subFormsUpdated(true);
 
-
-
-                        /*
-                        if (!uaObject || Object.keys(uaObject).length === 0)  //NO object found at server
-                        {
-
-                            uaObject = {
-                                subFormGroup_apd: {},
-                                subFormGroup_ac: {},
-                                subFormGroup_ac2: {},
-                                subFormGroup_oi: {},
-                            }
-
-                            if (dbgPrint_getFormObj) console.log("1 NOT found !!! an uaObj for current user at server");
-                        }
-                        else {
-
-                            let tmpObj: any = uaObject;
-                            //uaObject = JSON.parse(tmpObj);
-
-                            if (dbgPrint_getFormObj) console.log("Found uaObj for current user at server, =", uaObject);
-
-                            if (typeof uaObject !== 'object') {
-                                uaObject = {
-                                    subFormGroup_apd: {},
-                                    subFormGroup_ac: {},
-                                    subFormGroup_ac2: {},
-                                    subFormGroup_oi: {},
-                                }
-
-                                if (dbgPrint_getFormObj) console.log("Found uaObj for current user at server,but s not an object.\ " +
-                                    "So we have redefine it=", uaObject);
-
-                            }
-
-
-
-                        }
-                         */
-
-                        var sortedUaObject = this.auth_handleFormObject4localWorking(uaObject);
-                        this.auth_setFormObj(sortedUaObject);
-                        resolve(true);
+                        //this._currentFormObj= convertedUaObject;//this.auth_setFormObj(convertedUaObject);
+                        resolve(convertedUaObject);
                     },
                     err => {
                         // Log errors are catched in REST-Service
                         //console.log(err);
-                        if (dbgPrint_getFormObj) console.log("2 NOT found !!! an uaObj for current user at server, err=",err);
+                        //console.log("2 NOT found !!! an uaObj for current user at server, err=",err);
+                        console.log("Err in auth_getFormObject_Server for restGet_formObject");
 
                         reject(false);
                     });
         });
 
-    }
+    };
+
 
     //------------------------------------------------------------------------------------------------------------
 
-    auth_setFormObj(uaObj:any,sendToServer:boolean=false)
+    //TODO: put mapping functions (auth_handleFormObject4localWorking and auth_handleFormObject4SendToServer) to lmu_ua_formList.ts-class
+
+    auth_setFormObj(uaObjLocal:any,sendToServer:boolean=false)
     {
-        //console.log("In authService, auth_setFormObj 1:given uaObj=",uaObj);
+        if (dbgPrint_setFormObj) console.log("In authService, auth_setFormObj 1:given uaObj=",uaObjLocal);
 
-        var tmpUaObj = "";
-        if (uaObj.subFormGroup_apd[0] != undefined) tmpUaObj = uaObj.subFormGroup_apd[0];
-        else tmpUaObj = uaObj;   //.subFormGroup_apd;
+        this._currentFormObj = uaObjLocal;
 
-        if (typeof tmpUaObj !== 'object') uaObj = JSON.parse(tmpUaObj) ;
-
-        this._currentFormObj = tmpUaObj;
-
-        if (dbgPrint_setFormObj)console.log("In authService, auth_setFormObj 2 ,tmpUaObj=",tmpUaObj);
-
-
-        //Important --> localStorage use json-format
-            let tmpString: string = JSON.stringify(tmpUaObj);
-            tmpString = tmpString.replace(/\//g, '-');
-            if (dbgPrint_setFormObj) console.log("In auth_setFormObj, tmpString",tmpString);
-
-            //this._currentUser['uaObj'] = tmpString;
-            //this.setCurrentUser_local(this._currentUser);
-
-
-            //let tmpString = this._currentFormObj;
-
-            localStorage.setItem('currentUaObject', tmpString );//JSON.stringify(tmpString));
-
-
-        if (sendToServer) this.auth_setFormObj_Server(tmpString);
-
-    }
-
-    private auth_setFormObj_Server(stringifyObj)
-    {
-
-        //var localStorage_formObj = localStorage.getItem('currentUaObject');
-
-        this._rtRestService.restPatch_formObject(this._currentUserId,this._currentToken,this._currentFormObj)
-            .subscribe(
-                (data) => {console.log("set UaObj to server successfull with data=",data)}, //this.data = data, // Reach here if res.status >= 200 && <= 299
-                (err) => {console.log("set UaObj to server failure , err=",err)}); // Reach here if fails;
-
+        //Important --> localStorage use json-format (-->stringify)  !!!!We can't do that anymore , cause of user qouta --> fileUpload in uaFormObject !!!
         /*
-        if (dbgPrint_setFormObj) console.log("In auth_setFormObj_Server this._currentUser",this._currentUser);
-        if (dbgPrint_setFormObj) console.log("In auth_setFormObj_Server stringifyObj=",stringifyObj);
+            let tmpLocalObjString: string = JSON.stringify(uaObjLocal);
 
-        this._rtRestService.restPost_setUaObject(this._currentUser,stringifyObj)
-            .subscribe(
-                (data) => {console.log("set UaObj to server successfull with data=",data)}, //this.data = data, // Reach here if res.status >= 200 && <= 299
-                (err) => {console.log("set UaObj to server failure , err=",err)}); // Reach here if fails;
-*/
+            if (dbgPrint_setFormObj) console.log("In auth_setFormObj, tmpLocalObjString",tmpLocalObjString);
+
+            localStorage.setItem('currentUaObject', tmpLocalObjString );
+        */
+
+        let uaObj4Server = this._lmuForms.handleFormObject2SendToServer(uaObjLocal);
+
+        if (dbgPrint_setFormObj)console.log("In authService, auth_setFormObj 2 ,uaObj4Server=",uaObj4Server);
+
+        if (sendToServer) this.auth_setFormObj_Server(uaObj4Server);
+
+    }
+
+
+    private auth_setFormObj_Server(obj2Server?:any)
+    {
+
+       // var localObj = localStorage.getItem('currentUaObject');
+        if (Object.keys(obj2Server).length === 0)
+        {
+            console.log("ERROR in auth_setFormObj_Server, localObj is empty !!!!");
+        }
+        else
+        {
+            this._rtRestService.restPatch_formObject(this._currentUserId, this._currentToken, obj2Server)
+                .subscribe(
+                    (data) => {
+                        console.log("set UaObj to server successfull with data=", data)
+                    }, //this.data = data, // Reach here if res.status >= 200 && <= 299
+                    (err) => {
+                        console.log("set UaObj to server failure , err=", err)
+                    }); // Reach here if fails;
+        }
+
     }
 
 
     //------------------------------------------------------------------------------------------------------------
 
+    auth_deleteFile_Server(fileId:string)
+    {
+        this._rtRestService.restDelete_File(this._currentUserId,this._currentToken,fileId)
+            .subscribe(
+                (data) => {console.log("delete obj=",fileId," from server successfull")}, //this.data = data, // Reach here if res.status >= 200 && <= 299
+                (err) => {console.log("delete obj=",fileId," from server failure , err=",err)}); // Reach here if fails;
 
+    }
 
+    //---------------------------------------------------------------------------------------------------------------
+
+    public auth_downloadFile_devEnv(fileObj:any)
+    {
+        console.log("this._currentToken = ",this._currentToken);
+
+        this._rtRestService.restDownload_File(this._currentUserId,this._currentToken,fileObj)
+            .subscribe(
+                (data) => {console.log("donwload data=",data," from server successfull")}, //this.data = data, // Reach here if res.status >= 200 && <= 299
+                (err) => {console.log("donwload for fileObj=",fileObj," from server failure , err=",err)}); // Reach here if fails;
+    }
 
 }
 
