@@ -17,7 +17,7 @@ import {
     animate
 } from '@angular/core';
 
-const dbgPrint = true;
+const dbgPrint = false;
 
 //var html = require('./rt-grid-box-add.component.html!text');
 //var css = require('./rtForm.css!text');
@@ -60,7 +60,7 @@ export class rtGridBoxAddComponent implements OnInit
 
     //currentUaFormObj : any;
 
-    averageCalculated = '0.0';
+    averageCalculated = 0.0;
     //avrgValueSet : number;
 
     setObj : any ;
@@ -108,7 +108,7 @@ export class rtGridBoxAddComponent implements OnInit
                 {
 
                     this.setObj.table = tmpObj.table;
-                    this.setObj.average = tmpObj.average;
+                    this.setObj.average = parseFloat(tmpObj.average);
                 }
             }
         }
@@ -218,13 +218,14 @@ export class rtGridBoxAddComponent implements OnInit
 
 
     calculate_average(){
-        let sumValues:number = 0;
+        let sumValues:number = 0.0;
 
         for (let i=0;i<this.setObj.table.length;i++) {
 
-            sumValues = sumValues + parseFloat(this.setObj.table[i].grade.value);
+            let currNum : number = parseFloat(this.setObj.table[i].grade.value);
+            sumValues = sumValues + currNum;
 
-            this.averageCalculated = (sumValues/(i+1)).toFixed(1);
+            this.averageCalculated = parseFloat((sumValues/(i+1)).toFixed(1));
 
 
             if (dbgPrint) console.log("sumValues=",sumValues,i,this.setObj.table[i]);
@@ -238,12 +239,10 @@ export class rtGridBoxAddComponent implements OnInit
         //newObj[currentColEntry.id].value = evt.target.value;
         let tmpSetValue:string = '0.0';
 
-        if (evt!= undefined ) tmpSetValue = parseFloat(evt.target.value).toFixed(1);
-        else tmpSetValue =   parseFloat(this.averageCalculated).toFixed(1);
+        if (evt!= undefined ) tmpSetValue = evt.target.value;
+        else tmpSetValue =  this.averageCalculated.toFixed(1);
 
-
-        //this.setObj.courses = this.tmpAddArray;
-        this.setObj.average = tmpSetValue;
+        this.setObj.average = parseFloat(tmpSetValue).toFixed(1);
 
         //console.log("in change_averageValue,this.setObj.average=",this.setObj.average);
 
@@ -253,9 +252,9 @@ export class rtGridBoxAddComponent implements OnInit
             this.calculate_average();
 
             //evt.srcE.placeholder = this.averageCalculated;
-            this.setObj.average = '';
-            (<FormControl>this.formgroup.controls[this.formEntry.key]).setValue('');
-            this.isValValid;
+            this.setObj.average = 0.0;
+            (<FormControl>this.formgroup.controls[this.formEntry.key]).setValue(0.0);
+            this.isValValid = false;
         }
         else
         {

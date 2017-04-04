@@ -87,14 +87,14 @@ export class RtFormService {
         var found_require = false;
         var found_minLength = 0;
 
-        var vallArary = [];
+        var validatorArray = [];
 
        for (var i = 0;i<stringArray.length;i++)
        {
            if (stringArray[i].indexOf('required')!=-1)
            {
                found_require = true;
-               vallArary.push(Validators.required);
+               validatorArray.push(Validators.required);
                //break;
            }
            else if (stringArray[i].indexOf('minLength')!=-1)
@@ -102,15 +102,47 @@ export class RtFormService {
                var splitString = stringArray[i].split('=');
                found_minLength = splitString[splitString.length-1];
                //console.log("found_minLength =",found_minLength );
-               vallArary.push(Validators.minLength(found_minLength));
+               validatorArray.push(Validators.minLength(found_minLength));
            }
+           else if (stringArray[i].indexOf('maxLength')!=-1)
+           {
+               var splitString = stringArray[i].split('=');
+               let found_maxLength = splitString[splitString.length-1];0
+               //console.log("found_maxLength =",found_maxLength );
+               validatorArray.push(Validators.minLength(found_maxLength));
+           }
+           else if (stringArray[i].indexOf('length')!=-1)
+           {
+               var splitString = stringArray[i].split('=');
+               let found_Length = splitString[splitString.length-1];
+               //console.log("found_Length =",found_Length );
+               validatorArray.push(Validators.minLength(found_Length));
+               validatorArray.push(Validators.maxLength(found_Length));
+           }
+           else if (stringArray[i].indexOf('validateFileUpload')!=-1)
+           {
+               validatorArray.push(this.rtValidators.validateFileUpload);
+           }
+           else if (stringArray[i].indexOf('validateCourseList')!=-1)
+           {
+               validatorArray.push(this.rtValidators.validateCourseList);
+           }
+           else if (stringArray[i].indexOf('validateEmail')!=-1)
+           {
+               validatorArray.push(this.rtValidators.validateEmail);
+           }
+           else if (stringArray[i].indexOf('validateNumberNotZero')!=-1)
+           {
+               validatorArray.push(this.rtValidators.validateNumberNotZero);
+           }
+
 
        }
 
-           //console.log("vallArary=",vallArary);
+           //console.log("validatorArray=",validatorArray);
 
 
-        return Validators.compose(vallArary);
+        return Validators.compose(validatorArray);
     }
 
 
@@ -134,22 +166,29 @@ export class RtFormService {
                    // console.log("entry=", entry);
             }
 
-            if (entry.type == 'fileUpload' || entry.type == 'grid-box-add')
+
+            /*if (entry.type == 'fileUpload')
             {
-                group[entry.key] = new FormControl(entry.defaultValue || '', entry.key.validators); //TODO: validator
+                group[entry.key] = new FormControl(entry.defaultValue || '',this.getFunctionCallFromString(entry.validators) ); //entry.key.validators); //TODO: validator
+            }
+            else if (entry.type == 'grid-box-add')
+            {
+                group[entry.key] = new FormControl(entry.defaultValue || '',this.getFunctionCallFromString(entry.validators) );
             }
             else if (entry.key =='firstname')
             {
                 group[entry.key] = new FormControl(entry.defaultValue || '', Validators.compose([Validators.required,Validators.minLength(3)])); //TODO: validator
             }
+
             else
+            */
             {
                 //console.log("entry=", entry);
                 //Validators.compose([Validators.required,Validators.minLength(3)])
                 group[entry.key] = new FormControl(entry.defaultValue || '', this.getFunctionCallFromString(entry.validators) ); //TODO: validator
             }
 
-        })
+        });
 
         return new FormGroup(group);
         //return new FormArray(group);

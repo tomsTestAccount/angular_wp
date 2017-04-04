@@ -14,7 +14,7 @@ import {FormControl,FormGroup} from '@angular/forms';
 //import {ServerConfigs} from '../_models/configFile';
 import {AuthenticationService} from '../_services/rt-authentication.service'
 
-const dbgPrint = true;
+const dbgPrint = false;
 
 //import { ViewContainerRef } from '@angular/core';
 
@@ -171,13 +171,14 @@ export class rtFileUploaderComponent implements OnInit
         //if (dbgPrint) console.log("fileUpload_url= ",this.fileUpload_url);
 
 
-        if (this.currentFormEntry.defaultValue.filename)
+        if (this.currentFormEntry.defaultValue)
         {
-
-            if (dbgPrint) console.log("this.currentFormEntry.defaultValue= ",this.currentFormEntry.defaultValue);
-            this.localFileArray[0] = this.currentFormEntry.defaultValue;
-            (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.localFileArray[0]);
-            if (dbgPrint) console.log(">this.currentForm.controls[this.currentFormEntry.key]= ",this.currentForm.controls[this.currentFormEntry.key]);
+            if (this.currentFormEntry.defaultValue.filename) {
+                if (dbgPrint) console.log("this.currentFormEntry.defaultValue= ", this.currentFormEntry.defaultValue);
+                this.localFileArray[0] = this.currentFormEntry.defaultValue;
+                (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.localFileArray[0]);
+                if (dbgPrint) console.log(">this.currentForm.controls[this.currentFormEntry.key]= ", this.currentForm.controls[this.currentFormEntry.key]);
+            }
         }
     }
 
@@ -317,7 +318,7 @@ export class rtFileUploaderComponent implements OnInit
 
 
             var delObj2 = {
-                "content-type": "application/octet-stream",
+                //"content-type": "application/octet-stream",
                 "download": file['download'],
                 "filename": null,
                 "size": 0

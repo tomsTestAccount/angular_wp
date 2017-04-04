@@ -352,7 +352,7 @@ export class AuthenticationService {
 
     //TODO: put mapping functions (auth_handleFormObject4localWorking and auth_handleFormObject4SendToServer) to lmu_ua_formList.ts-class
 
-    auth_setFormObj(uaObjLocal:any,sendToServer:boolean=false)
+    auth_setFormObj(uaObjLocal:any,sendToServer:boolean=false):any
     {
         if (dbgPrint_setFormObj) console.log("In authService, auth_setFormObj 1:given uaObj=",uaObjLocal);
 
@@ -371,30 +371,34 @@ export class AuthenticationService {
 
         if (dbgPrint_setFormObj)console.log("In authService, auth_setFormObj 2 ,uaObj4Server=",uaObj4Server);
 
-        if (sendToServer) this.auth_setFormObj_Server(uaObj4Server);
+        if (sendToServer) return this.auth_setFormObj_Server(uaObj4Server);
 
     }
 
 
-    private auth_setFormObj_Server(obj2Server?:any)
+    private auth_setFormObj_Server(obj2Server?:any):any
     {
 
        // var localObj = localStorage.getItem('currentUaObject');
-        if (Object.keys(obj2Server).length === 0)
-        {
-            console.log("ERROR in auth_setFormObj_Server, localObj is empty !!!!");
-        }
-        else
-        {
-            this._rtRestService.restPatch_formObject(this._currentUserId, this._currentToken, obj2Server)
-                .subscribe(
-                    (data) => {
-                        console.log("set UaObj to server successfull with data=", data)
-                    }, //this.data = data, // Reach here if res.status >= 200 && <= 299
-                    (err) => {
-                        console.log("set UaObj to server failure , err=", err)
-                    }); // Reach here if fails;
-        }
+        return new Promise((resolve, reject) => {
+            if (Object.keys(obj2Server).length === 0) {
+                console.log("ERROR in auth_setFormObj_Server, localObj is empty !!!!");
+                reject("ERROR in auth_setFormObj_Server, localObj is empty !!!!");
+            }
+            else {
+
+                this._rtRestService.restPatch_formObject(this._currentUserId, this._currentToken, obj2Server)
+                    .subscribe(
+                        (data) => {
+                            console.log("set UaObj to server successfull with data=", data);
+                            resolve(data);
+                        }, //this.data = data, // Reach here if res.status >= 200 && <= 299
+                        (err) => {
+                            console.log("set UaObj to server failure , err=", err);
+                            reject(err);
+                        }); // Reach here if fails;
+            }
+        });
 
     }
 

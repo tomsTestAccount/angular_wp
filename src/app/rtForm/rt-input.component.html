@@ -167,9 +167,10 @@
         </div>
 
         <div    *ngSwitchCase="'email'">
-            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
-                                                 'formFrame_valid' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value != '',
-                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value == ''}">
+            <div class="form-group" [ngClass]="{  'formFrame_optional' : formEntry.required == false && !formgroup.controls[formEntry.key].valid,
+                                                 'formFrame_invalid' : formgroup.controls[formEntry.key].invalid && formgroup.controls[formEntry.key].dirty,
+                                                 'formFrame_valid' : formgroup.controls[formEntry.key].valid
+                                                 }">
                 <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
                 <input *ngIf="formEntry.required == true"
                         type={{formEntry.type}}
@@ -195,7 +196,7 @@
         </div>
 
         <div *ngSwitchCase="'fileUpload'">
-          <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
+            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
                                                  'formFrame_valid' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value.length != 0,
                                                     'formFrame_optional' : formEntry.required == false &&  formgroup.controls[formEntry.key].value.length == 0}">
 
@@ -203,28 +204,8 @@
                                                 [formgroup]=formgroup
                                                 [formEntry] = formEntry>
                               </rt-file-uploader>
-            <!--
 
-                            <file-upload
-                                    [showFileNameInput]="true"
-                                    allowedTypes="image/*"
-                                    uploadButtonText="Upload File"
-                                    [(ngModel)]]="someProperty">
-
-                            </file-upload>
-
-
-                              <file-upload
-                                      [showFileNameInput]="true"
-                                      allowedTypes="image/*"
-                                      uploadButtonText="Upload File"
-                                      >
-
-                              </file-upload>
-              -->
-
-
-              <!--</div>-->
+            </div>
         </div>
 
         <div *ngSwitchCase="'checkBox'">
@@ -238,6 +219,7 @@
                     </md-checkbox>
 
                         <!--
+
                         <md-icon *ngIf="formEntry.infoText != invalid"
                                  class="infoIcon"
                                  [ngClass]="{'isInfoActive' : showTooltip}"
@@ -246,6 +228,7 @@
                                  (mouseleave)="showTooltip=false" >
                             info_outline
                         </md-icon>
+
                         -->
                         <i *ngIf="formEntry.infoText != invalid"
                            class="mdi mdi-information-outline mdi-24px"
@@ -260,13 +243,11 @@
                                 <label class="infoText"> {{formEntry.infoText}} </label>
                             </div>
                         </div>
-
-
                 </div>
             </div>
         </div>
 
-    </div>
+
 
 </div>
 

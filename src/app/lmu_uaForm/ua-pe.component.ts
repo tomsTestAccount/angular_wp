@@ -56,14 +56,16 @@ export class LmuUserPeComponent implements AfterViewInit{
 
 	peForm_inner : FormGroup;
 
-	countries : any;
 
 	usermodel : any;
 
+	showTooltip1 = false;
+
+	avgr2Object_formModel : any;
 	/***************file upload *****************************
 	 * TODO: build directive-component for that, because at the moment code is redundant
 	 *
-	 * */
+
 
 	//uploadFile: any;
 
@@ -71,7 +73,7 @@ export class LmuUserPeComponent implements AfterViewInit{
 
 	//--------------------------------------------
 
-	showTooltip1 = false;
+
 	fU_progress: number = 0;
 	fU_response: any = {};
 
@@ -96,7 +98,7 @@ export class LmuUserPeComponent implements AfterViewInit{
 	/*
 		avgr2_courseObj : Object;
 		avgr2_courselist : Object[];
-	*/
+
 
 	//avgr2_courseObj : {name:String, ects:Number, grade:Number};
 
@@ -104,7 +106,7 @@ export class LmuUserPeComponent implements AfterViewInit{
 
 	avgr2_courseList : Object[] ;
 
-	avgr2Object_formModel : any;
+
 
 	avgr2_newCourseObj : Object ;
 	//----------------------------------------------------
@@ -128,6 +130,7 @@ export class LmuUserPeComponent implements AfterViewInit{
 
 	formEntries:Object[];
 
+	* */
 	rtValidators = new rtFormValidators;
 	//----------------------------------------------------
 
@@ -139,6 +142,9 @@ export class LmuUserPeComponent implements AfterViewInit{
 
 	//ac2_formObj:cFormObject;
     ac2Open = false;
+
+	degreeCertAvailable:boolean=true;
+
 	//----------------------------------------------------
 
 
@@ -298,237 +304,6 @@ export class LmuUserPeComponent implements AfterViewInit{
 		e.stopPropagation();
 	}
 
-	//----------- for file upload -----------------------------------------------
-/*
-	bIsDDavailable = false;
-
-	isDragDropAvailable(){
-		var div = document.createElement('div');
-		this.bIsDDavailable = ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
-		//console.log("bIsDDavailable=",this.bIsDDavailable);
-	}
-
-	getFileSize(bytes:number):string{
-		if(bytes == 0) return '0 Byte';
-		var k = 1000;
-		var decimals = 2;
-		var dm = decimals || 3;
-		var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-		var i = Math.floor(Math.log(bytes) / Math.log(k));
-		return +parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-	}
-
-
-	//------ for degreeCertificate
-
-	handleUpload_degreeUpload(data): void {
-		this.zone.run(() => {
-
-			this.hasBaseDropZoneOver = null;
-
-			this.fU_response = data;
-
-			this.fU_progress = Math.floor(data.progress.percent / 100);
-
-			if (data && data.response)
-			{
-				this.uploadedData_Degree.push(data);
-				console.log("uploaded file=",data);
-			}
-		});
-
-
-
-
-	}
-
-	fileOverBase_degreeUpload(e:any):void {
-		this.hasBaseDropZoneOver = e;
-
-		//this.style.background = 'blue';
-		//this.pRnd.setElementStyle(this.pEl.nativeElement, 'backgroundColor', 'green');
-	}
-
-
-	delete_degreeUpload(file:any):void{
-		//console.log("delete file=",file);
-		let index = this.uploadedData_Degree.indexOf(file);
-		if (index > -1) {
-			this.uploadedData_Degree.splice(index, 1);
-		}
-	}
-
-	//--------------- for transcript of records or other proof of grades
-
-	handleUpload_transcriptOrOtherGrades(data): void {
-		this.zone.run(() => {
-
-			this.hasBaseDropZoneOver2 = null;
-
-			this.fU_response2 = data;
-
-			this.fU_progress2 = Math.floor(data.progress.percent / 100);
-
-			if (data && data.response)
-			{
-				this.uploadedData_transcriptOrOtherGrades.push(data);
-				console.log("uploaded file=",data);
-			}
-		});
-
-
-
-
-	}
-
-	fileOverBase_transcriptOrOtherGrades(e:any):void {
-		this.hasBaseDropZoneOver2 = e;
-
-		//this.style.background = 'blue';
-		//this.pRnd.setElementStyle(this.pEl.nativeElement, 'backgroundColor', 'green');
-	}
-
-
-	delete_transcriptOrOtherGrades(file:any):void{
-		//console.log("delete file=",file);
-		let index = this.uploadedData_transcriptOrOtherGrades.indexOf(file);
-		if (index > -1) {
-			this.uploadedData_transcriptOrOtherGrades.splice(index, 1);
-		}
-	}
-*/
-	//------------------- avgr2 --------------------------------------------
-/*
-	addNewLine_grTbl(courseType:string):void {
-
-		//let tmpObj : Avgr2Obj = {name:"",ects:0,grade:0};
-		let tmpObj = {name:"",ects:0,grade:0,courseComplete:false};
-
-		if (courseType == 'avgr2')
-		{
-			//this.avgr2_courseList.push(tmpObj);
-			this.avgr2_newCourseObj = tmpObj;
-			this.avgr2_courseComplete = false;
-		}
-		else if (courseType == 'avgr3')
-		{
-			//this.avgr2_courseList.push(tmpObj);
-			this.avgr3_newCourseObj = tmpObj;
-			this.avgr3_courseComplete = false;
-		}
-
-	}
-
-	cancelNewLine_grTbl(courseType:string):void{
-
-		if (courseType == 'avgr2') this.avgr2_newCourseObj = null;
-		else if (courseType == 'avgr3') this.avgr3_newCourseObj = null;
-	}
-
-
-	addCourseToList(courseType:string):void {
-		if (courseType == 'avgr2')
-		{
-			this.avgr2_courseList.push(this.avgr2_newCourseObj);
-			this.avgr2_newCourseObj = null;
-		}
-		else if (courseType == 'avgr3')
-		{
-			this.avgr3_courseList.push(this.avgr3_newCourseObj);
-			this.avgr3_newCourseObj = null;
-		}
-	}
-
-	deleteCourseFromList(courseType:string,courseItem):void {
-		if (courseType == 'avgr2') {
-			//console.log("delete courseItem=", courseItem);
-			let index = this.avgr2_courseList.indexOf(courseItem);
-			if (index > -1) {
-				this.avgr2_courseList.splice(index, 1);
-			}
-		}
-		else if (courseType == 'avgr3')
-		{
-			//console.log("delete courseItem=", courseItem);
-			let index = this.avgr3_courseList.indexOf(courseItem);
-			if (index > -1) {
-				this.avgr3_courseList.splice(index, 1);
-			}
-		}
-
-	}
-
-
-	change_courseName(obj:Object,evt):void{
-		//console.log("change Name=", evt.target.value);
-		obj['name'] =  evt.target.value;
-		//console.log("change Name=", course);
-		this.checkNewCourseObj(obj);
-	}
-
-	change_courseECTS(obj:Object,evt):void{
-		//console.log("change Name=", evt.target.value);
-		obj['ects'] =  evt.target.value;
-		//console.log("change Name=", course);
-		this.checkNewCourseObj(obj);
-	}
-
-	change_courseGrade(obj:Object,evt):void{
-		//console.log("change Name=", evt.target.value);
-		obj['grade'] =  evt.target.value;
-		//console.log("change Name=", course);
-		this.checkNewCourseObj(obj);
-	}
-
-	checkNewCourseObj(obj:Object):void{
-		if (obj['name'] !='' && obj['ects']!=0 && obj['grade']!=0)
-		{
-			obj['courseComplete'] = true;
-		}
-		else { obj['courseComplete'] = false}
-	}
-*/
-	/*
-	//------------------- proofEnglish -------------------------------------
-
-	handleUpload(section:string,data): void {
-		if (section=='proofEnglish') {
-			this.zone.run(() => {
-
-				this.hasBaseDropZoneOver3 = null;
-
-				this.fU_response3 = data;
-
-				this.fU_progress3 = Math.floor(data.progress.percent / 100);
-
-				if (data && data.response) {
-					this.uploadedData_proofEnglish.push(data);
-					console.log("uploaded file=", data);
-				}
-			});
-		}
-
-	}
-
-	fileOverBase(section:string,e:any):void {
-		if (section=='proofEnglish') {
-			this.hasBaseDropZoneOver3 = e;
-		}
-
-	}
-
-
-	deleteFile(section:string,file:any):void{
-		//console.log("delete file=",file);
-		if (section=='proofEnglish') {
-			let index = this.uploadedData_proofEnglish.indexOf(file);
-			if (index > -1) {
-				this.uploadedData_proofEnglish.splice(index, 1);
-			}
-		}
-	}
-
-*/
 
 	//------------------- debug ---------------------------------------------
 

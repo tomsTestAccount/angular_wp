@@ -7,6 +7,8 @@ import { FormGroup,FormControl,FormBuilder }        from '@angular/forms';
 
 //import 'rxjs/add/operator/toPromise';
 
+const dbgPrint_Validation = false;
+
 @Injectable()
 export class rtFormValidators {
 
@@ -22,10 +24,26 @@ export class rtFormValidators {
 
             retValue = (c.value.length == 0) ? {notValid: true} : null;
 
-            console.log("In validateArray, c=",c, ', c.value.length=', c.value.length);
+            //console.log("In validateArray, c=",c, ', c.value.length=', c.value.length);
         }
 
-        console.log("Idsafsd c=",c, ', c.value.length=', c.value.length);
+        if (dbgPrint_Validation) console.log("Idsafsd c=",c, ', c.value.length=', c.value.length);
+
+        return retValue
+
+    }
+
+    validateFileUpload(c: FormControl) {
+
+        let retValue = {notValid: true};
+        if (c != null) {
+
+            retValue = (c.value.filename == null) ? {notValid: true} : null;
+
+            //if (dbgPrint_Validation) console.log("In validateArray, c=",c, ',c.value[0].filename =', c.value.filename);
+        }
+
+        if (dbgPrint_Validation) console.log("In validateFileUpload c=",c, ', c.value.length=', c.value.length);
 
         return retValue
 
@@ -34,18 +52,54 @@ export class rtFormValidators {
     validateCourseList(c: FormControl) {
 
         let retValue = {notValid: true};
-        if (c.value['avrValue'] != null) {
+        if ( (c.value['average'] != null) && (c.value['table'].length != 0) ) {
 
-            retValue = isNaN(c.value['avrValue']) ? {notValid: true} : null;
+            let numValue = parseFloat(c.value['average']);
+            retValue = (isNaN(numValue) || (numValue<=0)) ? {notValid: true} : null;
 
+            //console.log("In validateCourseList, c=",c, ', retValue=', retValue);
         }
 
-        console.log("In validateCourseList, c=",c, ', retValue=', retValue);
+        if (dbgPrint_Validation) console.log("In validateCourseList, c=",c, ', retValue=', retValue);
 
         return retValue
 
     }
 
+    validateEmail(c: FormControl) {
+
+        let retValue = {notValid: true};
+
+        if ( (c.value != null) ) {
+
+            var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            //console.log(" re.test(c.value)=", re.test(c.value));
+            retValue = re.test(c.value) ? null : {notValid: true} ;
+        }
+
+        if (dbgPrint_Validation) console.log("In validateEmail, c=",c, ', retValue=', retValue);
+
+        return retValue
+
+    }
+
+    validateNumberNotZero(c: FormControl) {
+
+        let retValue = {notValid: true};
+        if ( (c.value != null)  ) {
+
+            let numValue = parseFloat(c.value);
+            retValue = (isNaN(numValue) || (numValue<=0)) ? {notValid: true} : null;
+
+            //console.log("In validateCourseList, c=",c, ', retValue=', retValue);
+        }
+
+        if (dbgPrint_Validation) console.log("In validateNumberNotZero, c=",c, ', retValue=', retValue);
+
+        return retValue
+
+    }
 
     validatePasswordConfirm(cConfirm: FormControl)
     {

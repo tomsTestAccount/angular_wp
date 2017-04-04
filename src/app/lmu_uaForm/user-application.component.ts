@@ -8,17 +8,22 @@ import {rtFormValidators}  from '../_services/rt-form-validators.service';
 import {lmu_ua_formList} from'../_models/lmu_ua_formList';
 import { RtFormService ,cFormObject} from '../_services/rt-forms.service';
 
+
+
 //import {UserService} from '../_services/rt-user.service';
-import { User } from '../_models/user';
+//import { User } from '../_models/user';
 
 //import {Router,ActivatedRoute} from '@angular/router';
 
 import {AuthenticationService} from  '../_services/rt-authentication.service';
 
-//import { CountryList} from '../_models/countries';
-
+//import {MdDialog} from '@angular/material';
+//import { uaFormDialog} from '../modal/uaFormModal.component';
+import {DialogsService} from '../_services/dialogs.services'
 
 const dbgPrint = false;
+const dbgPrint_save = true;
+const dbgPrint_formChanged = true;
 
 //for animations
 import {
@@ -43,7 +48,6 @@ import {timeout} from "rxjs/operator/timeout";
 	styleUrls: ['user-application.component.css'],
 
 })
-
 
 
 
@@ -99,12 +103,23 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
 	isFormValueLoadedFromServer = false;
 
+	public dialogResult: any;
+
+	//public formChangedEntries: any[] = [];
+	public formChangedEntries = {
+		subFormGroup_ac: {0:{}},
+		subFormGroup_ac2: {0:{}},
+		subFormGroup_apd: {0:{}},
+		subFormGroup_oi: {0:{}},
+
+	};
 	//-------------------------------------------------------------------------------------------------------------------
 
 	constructor(private _fb: FormBuilder,
 				private _authService:AuthenticationService,
-				private _rtFormSrv: RtFormService
-						)
+				private _rtFormSrv: RtFormService,
+				private dialogsService: DialogsService
+				)
     {
 		/*this._rtFormSrv.subFormAnnounced_apd$.subscribe(
 		 newform => {
@@ -121,21 +136,6 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 				this.isFormUpdated = isUpdated;
 
 			});
-
-		/*
-
-		if (dbgPrint) console.log("In UserApplicationComponent constructor");
-
-		//we get the formEntries here
-		this.apd_formObj = this.lmu_ua_form.buildFormObject_apd();
-		this.ac_formObj = this.lmu_ua_form.buildFormObject_ac();
-		this.ac2_formObj = this.lmu_ua_form.buildFormObject_ac2();
-		this.oi_formObj = this.lmu_ua_form.buildFormObject_oi();
-
-
-		//this.lmu_ua_form.init_mainForm();
-		this.main_lmu_ua_form = this.lmu_ua_form.get_mainForm();
-	*/
 
 
 	};
@@ -182,7 +182,12 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
 		this.uasubmit = false;
 
-        this._authService.auth_getFormObject()
+		this.dialogsService.loading('Your data is loading ... ');
+		//this.dialogsService.info('TITLE','Your data is loading ... ');
+
+
+
+		this._authService.auth_getFormObject()
             .then(response => {
 
 				//we get the formEntries here
@@ -196,103 +201,128 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
 				this.isFormValueLoadedFromServer = true;
 
+
+				this.dialogsService.closeDialog();
+
+				// subscribe to form changes
+				this.subscribeToFormChanges();
+
+
                 if (this.dbgPrint) console.log("In user-application ngAfterViewInit2, after get data!",this.main_lmu_ua_form);
 
             });
 
-        /*
-         this.apd_formObj.formgroup = <FormGroup>this.main_lmu_ua_form.controls['subFormGroup_apd'];
-         this.ac_formObj.formgroup = <FormGroup>this.main_lmu_ua_form.controls['subFormGroup_ac'];
-         this.ac2_formObj.formgroup = <FormGroup>this.main_lmu_ua_form.controls['subFormGroup_ac2'];
-         this.oi_formObj.formgroup = <FormGroup>this.main_lmu_ua_form.controls['subFormGroup_oi'];
-         */
 
-        //let currentUser= this._authService.auth_getCurrentUser();
-        //if (dbgPrint) console.log("In user-application ngOnInit , currentUser=",currentUser);
+	}
+
+	lastValue = {};
+	/*private subscribeToFormChanges() {
 
 
-        /*
-         this.currentUaObj = this._authService.auth_getFormObject();
+		// initialize stream
+		//const myFormStatusChanges$ = this.main_lmu_ua_form.controls['subFormGroup_apd'].statusChanges;
+		var myFormValueChanges$ = this.main_lmu_ua_form.controls['subFormGroup_apd'].valueChanges;
 
-         if (dbgPrint) console.log("In user-application ngOnInit , currentUaObject=",this.currentUaObj);
-
-
-         if (this.currentUaObj) {
-         if (Object.keys(this.currentUaObj).length !== 0) {
-         if (dbgPrint) console.log("In user-application ngOnInit: this.main_lmu_ua_form=", this.main_lmu_ua_form);
-         this.setFormValues_AlreadyFilled();
-         }
-         }
-         */
-
-
-        /*
-         if (Object.keys(this.currentUaObj).length === 0) //check if empty
-         {
-
-         this._authService.getUaObjectByRest(currentUser);
-         }
-         else //if (!this.changeDetected)
-         {
-         this.setFormValues_AlreadyFilled();
-         }
-         */
-
-        //this.main_lmu_ua_form.valueChanges.subscribe(data => this.formValueChanged(data));
+		// subscribe to the stream
+		//myFormStatusChanges$.subscribe(x => this.events.push({ event: 'STATUS_CHANGED', object: x }));
+		myFormValueChanges$.subscribe(x => {
+			this.events.push({event: 'VALUE_CHANGED', object: x})
+			this.lastValue = x[0];
+			console.log("in ValueChanged x = ",x,x[1]);
+			console.log("form=",this.main_lmu_ua_form.controls['subFormGroup_apd']);
+		});
 
 
+	}*/
 
-        /*
-        if (this._authService.isAuthenticated)
-        {
-            let currentUserId = this._authService.auth_getCurrentUserId();
-            if (dbgPrint) console.log("In user-application ngOnInit , user is authenticated,currentUserId=",currentUserId);
-        }
-        else
-        {
-            if (dbgPrint) console.log("In user-application ngOnInit , user is NOT authenticated !!!");
-        }
+	private init_formChangedEntries() {
 
+	this.formChangedEntries = {
+		subFormGroup_ac: {0: {}},
+		subFormGroup_ac2: {0: {}},
+		subFormGroup_apd: {0: {}},
+		subFormGroup_oi: {0: {}},
+	}
 
-        //this.currentUaObj = this._authService.auth_getFormObject()
-        this._authService.auth_getFormObject().then(response =>
-        {
-            this.currentUaObj = response;
-
-            if (dbgPrint) console.log("In user-application ngOnInit , currentUaObject=",this.currentUaObj);
-
-            if (this.currentUaObj) {
-                if (Object.keys(this.currentUaObj).length !== 0) {
-                    if (dbgPrint) console.log("In user-application ngOnInit: this.main_lmu_ua_form=", this.main_lmu_ua_form);
-                    this.setFormValues_AlreadyFilled();
-
-                    if (dbgPrint) console.log("this.main_lmu_ua_form.controls['subFormGroup_apd']=",this.main_lmu_ua_form.controls['subFormGroup_apd']);
-
-                }
-            }
-            else
-            {
-
-            }
+};
 
 
-
-        });
-        .catch(exp => {
-         console.log("in auth_getFormObject, error at auth_getFormObject_Server , err=", exp);
-         //this.auth_setFormObj({});
-         return {};
-         }
-         );
+	private subscribeToFormChanges() {
 
 
-        */
+		console.log("form=",this.main_lmu_ua_form.controls['subFormGroup_apd']);
+
+	 // initialize stream
+		for (let fControl in  (<FormControl>this.main_lmu_ua_form.controls['subFormGroup_apd']['controls'][0]['controls']))
+		{
+			//let castVar = (<FormControl>fControl);
+			this.main_lmu_ua_form.controls['subFormGroup_apd']['controls'][0]['controls'][fControl].valueChanges
+				.subscribe(x => {
+					this.formChangedEntries.subFormGroup_apd[0][fControl] = x;
+				//this.formChangedEntries.push({event: 'VALUE_CHANGED', object: fControl})
+				//this.lastValue = x[0];
+				//console.log("in ValueChanged x = ",x);
+				//console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_apd']['controls'][0]['controls'][fControl]);
+			});
+		}
+
+		for (let fControl in  (<FormControl>this.main_lmu_ua_form.controls['subFormGroup_ac']['controls'][0]['controls']))
+		{
+			//let castVar = (<FormControl>fControl);
+			this.main_lmu_ua_form.controls['subFormGroup_ac']['controls'][0]['controls'][fControl].valueChanges
+                .subscribe(x => {
+					this.formChangedEntries.subFormGroup_ac[0][fControl] = x;
+					//this.formChangedEntries.push({event: 'VALUE_CHANGED', object: fControl})
+					//this.lastValue = x[0];
+					//console.log("in ValueChanged x = ",x);
+					console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_ac']['controls'][0]['controls'][fControl]);
+				});
+		}
+
+		for (let fControl in  (<FormControl>this.main_lmu_ua_form.controls['subFormGroup_ac2']['controls'][0]['controls']))
+		{
+			//let castVar = (<FormControl>fControl);
+			this.main_lmu_ua_form.controls['subFormGroup_ac2']['controls'][0]['controls'][fControl].valueChanges
+                .subscribe(x => {
+					this.formChangedEntries.subFormGroup_ac2[0][fControl] = x;
+					//this.formChangedEntries.push({event: 'VALUE_CHANGED', object: fControl})
+					//this.lastValue = x[0];
+					//console.log("in ValueChanged x = ",x);
+					//console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_ac2']['controls'][0]['controls'][fControl]);
+				});
+		}
+
+		for (let fControl in  (<FormControl>this.main_lmu_ua_form.controls['subFormGroup_oi']['controls'][0]['controls']))
+		{
+			//let castVar = (<FormControl>fControl);
+			this.main_lmu_ua_form.controls['subFormGroup_oi']['controls'][0]['controls'][fControl].valueChanges
+                .subscribe(x => {
+					this.formChangedEntries.subFormGroup_oi[0][fControl] = x;
+					//this.formChangedEntries.push({event: 'VALUE_CHANGED', object: fControl})
+					//this.lastValue = x[0];
+					//console.log("in ValueChanged x = ",x);
+					//console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_oi']['controls'][0]['controls'][fControl]);
+				});
+		}
+
+		/*
+	 var myFormValueChanges$ = this.main_lmu_ua_form.controls['subFormGroup_apd'].valueChanges;
+
+	 // subscribe to the stream
+	 //myFormStatusChanges$.subscribe(x => this.events.push({ event: 'STATUS_CHANGED', object: x }));
+	 myFormValueChanges$.subscribe(x => {
+	 this.events.push({event: 'VALUE_CHANGED', object: x})
+	 this.lastValue = x[0];
+	 console.log("in ValueChanged x = ",x,x[1]);
+	 console.log("form=",this.main_lmu_ua_form.controls['subFormGroup_apd']);
+	 });
+	 */
 
 
-    }
+	 }
 
-	private _setFormValues_AlreadyFilled()
-	{
+
+	private _setFormValues_AlreadyFilled() {
         if (this.dbgFormValues) {
             console.log("In setFormValues_AlreadyFilled,this.main_lmu_ua_form.controls=", this.main_lmu_ua_form.controls);
             console.log("In setFormValues_AlreadyFilled,this.currentUaObj=", this.currentUaObj);
@@ -334,35 +364,47 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
         if (dbgPrint) console.log("this.main_lmu_ua_form.controls['subFormGroup_apd']=",this.main_lmu_ua_form.controls['subFormGroup_apd']);
 	}
 
-	select_comp4User(current_ua_sec: string)
-	{
+	select_comp4User(current_ua_sec: string) {
         if (dbgPrint) console.log("In select_comp4User, current_dbComp_user=",current_ua_sec);
 		this.curr_ua_sec = current_ua_sec;
 	}
 
-	saveFormObj()
-	{
+	saveFormObj() {
 
 		//this._rtRestService.setUaObject(this._authService.auth_getCurrentUser(),this.main_lmu_ua_form.value);
 
-        if (dbgPrint) console.log("In saveFormObj, this.main_lmu_ua_form.value=",this.main_lmu_ua_form.value);
+        if (dbgPrint_save) console.log("In saveFormObj, this.main_lmu_ua_form=",this.main_lmu_ua_form.value);
+		if (dbgPrint_save) console.log("In saveFormObj, this.formChangedEntries=",this.formChangedEntries);
 
-        this._authService.auth_setFormObj(this.main_lmu_ua_form.value,true);
+
+        this._authService.auth_setFormObj(this.formChangedEntries,true)
+			.then(response => {console.log("Save Data Successful",response)})
+			.catch(err => {
+				this.dialogsService.info('Save Data Error:' + err.statusText ,err._body);
+				//console.log("In saveFormObj err=",err)
+			}) ;
+
 		this.changeDetected = false;
+		this.init_formChangedEntries();
 	}
 
 
+	public openDialog() {
+		this.dialogsService
+            .confirm('Confirm Dialog', 'Are you sure you want to do this?')
+            .subscribe(res => this.dialogResult = res);
+	}
 
 
 
 	status_apd: boolean = false;
 	onFormEvent_apd(status_apd)
 	{
-		//TODO: olny call this function when value was changed --> form
+		//TODO: only call this function when value was changed --> form
 
 		this.uasubmit = status_apd;
 		this.ua_sections[0]['answerMissing']++;
-        if (dbgPrint) console.log("In onFormEvent_apd this.uasubmit= ",this.uasubmit);
+        if (dbgPrint_formChanged) console.log("In onFormEvent_apd this.uasubmit= ",this.uasubmit);
 	}
 
 

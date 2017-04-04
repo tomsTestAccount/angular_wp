@@ -36,18 +36,19 @@ export class rtInputComponent implements OnInit {
        //console.log("formEntry=",this.formEntry);
        // console.log("formgroup=",this.formgroup);
 
-        this.dateValue =  new Date("01-08-2016");
+        //this.dateValue =  new Date("01-08-2016");
     }
 
     ngOnInit(): void {
 
-        this.valObj = this.formgroup.controls[this.formEntry.key].value;
+        /*this.valObj = this.formgroup.controls[this.formEntry.key].value;
         if( Object.prototype.toString.call( this.valObj ) === '[object Array]' ) {
             this.tmpArray = this.formgroup.controls[this.formEntry.key].value;
         }
+        */
 
-
-        this.dateValue =  new Date("01-08-2016");
+        /*
+        this.dateValue =  new Date("04-04-2017");
 
         if (this.formEntry.key == "dateOfBirth")
         {
@@ -55,6 +56,7 @@ export class rtInputComponent implements OnInit {
             this.dateValue =  new Date(this.formgroup.controls["dateOfBirth"].value);
             //console.log("this.dateValue =",this.dateValue.value);
         }
+        */
     }
 
 

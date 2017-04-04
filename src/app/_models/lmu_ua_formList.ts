@@ -13,7 +13,7 @@ var fileUploadUrl="";
 
 const dbgPrint = false;
 const dbgPrint_handle4local = false;
-const dbgPrint_handle4server = false;
+const dbgPrint_handle4server = true;
 
 //TODO: todo rename class and file ( it isn't a list anymore. it's a class with init- and mapping-functions, a.s.o
 
@@ -119,7 +119,7 @@ var formEntries_apd = [
         key: 'email',
         title: 'Email Address *',
         type: 'email',
-        validators: ['required','minLength=3'],
+        validators: ['required','validateEmail'],
         required: true
     },
     {
@@ -127,7 +127,7 @@ var formEntries_apd = [
         key: 'email2',
         title: 'Other Email Address (optional)',
         type: 'email',
-        //validators: ['required','minLength=3'],
+        validators: ['validateEmail'],
         required: false
     },
     {
@@ -135,7 +135,7 @@ var formEntries_apd = [
         key: 'homepage',
         title: 'Homepage (optional)',
         type: 'text',
-        //validators: ['required','minLength=3'],
+        validators: ['required','validateEmail'],
         required: false
     }
 ];
@@ -172,7 +172,7 @@ var formEntries_ac = [
         key: 'degree_conferral_date',
         title: 'Degree Conferral Date *',
         type: 'date',
-        validators: ' Validators.compose([Validators.required,this.rtValidators.validateArray])',
+        validators: ['required','length=10'],
         secParagraphArray: ['Please indicate the date (day/month/year) in which you \
                         received or expect to receive the degree mentioned above:'],
         required: true
@@ -182,6 +182,7 @@ var formEntries_ac = [
         key: 'degreeCertAvailable',
         title: '',
         type: 'checkbox',
+        validators: ['required'],
         required: true
     },
     {
@@ -189,7 +190,7 @@ var formEntries_ac = [
         key: 'copy_of_certificate',
         title: 'Copy of Degree Certificate (e.g. Bachelor) *',
         type: 'fileUpload',
-        validators: ' Validators.compose([Validators.required,this.rtValidators.validateArray])',
+        validators: ['required','validateFileUpload'],
         secParagraphArray: ['Please upload a PDF copy of your degree certificate'],
         options: {
             url: fileUploadUrl,//fileUploadURL,
@@ -203,7 +204,7 @@ var formEntries_ac = [
         key: 'copy_of_tor',
         title: 'Transcript of Records or Other Proof of Grades *',
         type: 'fileUpload',
-        validators: ' Validators.compose([Validators.required,this.rtValidators.validateArray])',
+        validators: ['required','validateFileUpload'],
         secParagraphArray: ['Please upload your Transcript of Records (or other proof of grades) in PDF format. \
                         The transcript must include at least 30 ECTS in Computational Methods \
                         and 30 ECTS in Data-Based Modelling (see below)'],
@@ -219,7 +220,7 @@ var formEntries_ac = [
         key: 'av_grade1',
         title: 'Average Grade of the Best Performance = AvGr1 *',
         type: 'number',
-        validators: ['required','minLength=3'],
+        validators: ['required','validateNumberNotZero'],
         secParagraphArray: [`Please calculate the average grade from the best performance (equivalent to 150 ECTS) and enter this in the field below.`,
             `Note: Applicants whose Transcript of Records does not include ECTS: A 6-semester study program equals a workload of 180 ECTS.`,
             `Divide this workload between the different courses you took during your study program and upload your calculation at the end of this online application in the field Other documents`],
@@ -228,7 +229,7 @@ var formEntries_ac = [
     {
         key: 'av_grade2',
         title: 'Computational Methods = AvGr2 *',
-        validators: 'Validators.compose([Validators.required,this.rtValidators.validateCourseList])',
+        validators: ['required','validateCourseList'],
         secParagraphArray: ['Please enter the courses you attended in Computational Methods', '(this includes, for example, informatics, database-orientated methods, computational statistics, optimisation)'],
         type: 'grid-box-add',
         averageId:'average', //need for iteration in component.ts, has to be distinct for that entry //TODO: not using at the moment. average-objectmember in rest-object and component is named "average"
@@ -274,7 +275,7 @@ var formEntries_ac = [
         title: 'Data-Based Modelling = AvGr 3 *',
         secParagraphArray: ['Please enter the courses you attended in Data-Based Modelling', ' (this includes, for example, statistics, data mining, probability theory, machine learning)'],
         type: 'grid-box-add',
-        validators: 'Validators.compose([Validators.required,this.rtValidators.validateCourseList])',
+        validators: ['required','validateCourseList'],
         averageId:'average', //need for iteration in component.ts, has to be distinct for that entry
         showAverage: true,
         options: {
@@ -316,7 +317,7 @@ var formEntries_ac = [
         key: 'src_bachelor',
         title: "Institution at which Bachelor's Degree was Received *",
         type: 'select',
-        validators: ' Validators.compose([Validators.required,this.rtValidators.validateArray])',
+        validators: ['required'],
         options: [
             {
                 name: 'LMU'
@@ -337,7 +338,7 @@ var formEntries_ac = [
         key: 'lang_cert',
         title: 'Proof of English Language Proficiency *',
         type: 'fileUpload',
-        validators: ' Validators.compose([Validators.required,this.rtValidators.validateArray])',
+        validators: ['required','validateFileUpload'],
         options: {
             url: fileUploadUrl,// fileUploadURL,
             filterExtensions: true,
@@ -354,7 +355,7 @@ var formEntries_oi = [
         key: 'essay',
         title: 'Essay "Data Science * ',
         type: 'fileUpload',
-        validators: ' Validators.compose([Validators.required,this.rtValidators.validateArray])',
+        validators: ['required','validateFileUpload'],
         secParagraphArray: ['Please submit a PDF file with an essay on Data Science in which you should look at the developments and perspectives of Data Science as well as your planned area of specialisation, and your previous experience.',
             'The essay musst not exceed 1,000 words'],
         options: {
@@ -369,7 +370,7 @@ var formEntries_oi = [
         key: 'further_certificates',
         title: 'Other documents *',
         type: 'fileUpload',
-        validators: ' Validators.compose([Validators.required,this.rtValidators.validateArray])',
+        validators: ['required','validateFileUpload'],
         secParagraphArray: ['Please upload any other certificates regarding internships, vocational training, computer courses, past working experience, etc.,', ' as well as your ECTS calculation document within a single PDF file.'],
         options: {
             url: fileUploadUrl,// fileUploadURL,
@@ -378,20 +379,18 @@ var formEntries_oi = [
             calculateSpeed: true,
         },
         required: true
-    }
-    ,
+    },
     {
         key: 'other_info',
         title: 'Any other information  *',
-        validators: ['required','minLength=3'],
+        validators: ['required','minLength=5'],
         type: 'textarea',
         required: true
-    }
-    ,
+    },
     {
         key: 'spec_interview_prov',
         title: 'Special provisions for the interview needed? (e.g. because of disability): *',
-        validators: ['required','minLength=3'],
+        validators: ['required','minLength=2'],
         type: 'textarea',
         required: true
     },
@@ -400,7 +399,7 @@ var formEntries_oi = [
         title: ' I want to receive email notifications ',
         infoText: 'You will be notified of the outcome of the aptitude assessment procedure by email. If you wish to be notified by mail, please select this field.',
         type: 'checkBox',
-        validators: ' Validators.compose([Validators.required])',
+        //validators: ['validateEmail'],
         required: false
     }
 
@@ -734,6 +733,7 @@ export class lmu_ua_formList {
     private _conversionsAndChecks4Obj2Server(o:any,p:any)
     {
 
+        console.log("o[",p,"] = ",o[p]);
 
         var retStruct={
             delete:false,
@@ -744,11 +744,16 @@ export class lmu_ua_formList {
 
         let newObj = JSON.parse(JSON.stringify(o[p])); //o[p];  we have to deep copy that object, because other components need the localUaObj still
 
-        //console.log("newObj = ",newObj);
 
-        //delete all empty fields (set to nullon server)
-        if ( ( newObj === '') || (Object.keys(newObj).length === 0) ) retStruct.delete = true; //return null;
+        console.log("newObj = ",newObj);
 
+        //delete all empty fields (set to null on server)
+        /*
+        if ( ( newObj === '') || (Object.keys(newObj).length === 0) )
+        {
+            retStruct.delete = true;
+        }
+        */
 
         if (typeof newObj === 'object')
         {
@@ -783,7 +788,7 @@ export class lmu_ua_formList {
                 {
                     if (newObj[p2] === null) {
                         retStruct.delete = true;
-                        //retStruct.send = false;
+                        retStruct.value = newObj;
                         console.log("newObj =", newObj);
                     }
                     else if ( (newObj['download'] !== undefined) )//&& (newObj[p2] instanceof String) )              //we got parameter 'data' () here (for i.e. file-upload)
@@ -794,12 +799,12 @@ export class lmu_ua_formList {
             }
         }
 
-        retStruct.value = JSON.parse(JSON.stringify(newObj));
+        if (retStruct.delete == false) retStruct.value = newObj;//JSON.parse(JSON.stringify(newObj));
 
         return retStruct;
     }
 
-    //TODO: put in lmu-model-class
+
     public handleFormObject2SendToServer(uaObjLocal:any) {
 
         //if (dbgPrint_handleFormObject2SendToServer) console.log("In auth_handleFormObject4localWorking uaObjLocal=",uaObjLocal);

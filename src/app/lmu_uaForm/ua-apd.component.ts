@@ -152,171 +152,14 @@ export class LmuUserApdComponent implements OnInit {
 	}
 
 
-/*
-	toFormGroup(entries:any){				//TODO: build own rt-form-service for that stuff
 
-		//console.log("entries=",entries);
-
-		let group:any = {};
-
-		//console.log("this.currentForm=",this.currentForm.entries);
-
-		entries.forEach(entry => {
-			console.log("entry=",entry.key);
-		 group[entry.key]= new FormControl(entry.key.defaultValue || '',entry.key.validators);
-		 })
-
-
-
-		return new FormGroup(group);
-	}
-
-*/
-/*
-	buildFormObject(): void {
-
-
-
-            this.apdForm = this.fb.group({
-                //'surname': '',
-                'lastname': ['', Validators.compose([Validators.minLength(3)])],
-                //'surname': ['', Validators.minLength(3)],
-                'givenname': ['', Validators.compose([Validators.required,Validators.minLength(3)])],
-                'gender': ['', Validators.compose([Validators.required,Validators.minLength(3)])],
-                'nationality': ['', Validators.compose([Validators.required,Validators.minLength(3)])],
-                'dateOfBirth2': ['', Validators.compose([Validators.required,Validators.minLength(3)])],
-                'address1': ['', Validators.compose([Validators.required,Validators.minLength(3)])],
-                'address2': ['', Validators.compose([Validators.required,Validators.minLength(3)])],
-                'address3': ['', Validators.compose([Validators.required,Validators.minLength(3)])],
-                'address4': ['', Validators.compose([Validators.required,Validators.minLength(3)])],
-                'phoneNumber': ['', Validators.compose([Validators.required,Validators.minLength(3)])],
-                //'phoneNumber2': ['', Validators.compose([Validators.maxLength(20),Validators.minLength(3)])],
-                'phoneNumber2': ['', Validators.compose([Validators.maxLength(20),Validators.minLength(3)])],
-                'email': ['', Validators.compose([Validators.required,Validators.minLength(3)])]
-            });
-
-            //this.apdForm.valueChanges.subscribe(data => this.onFormValueChanged(data));
-            this.apdForm.statusChanges.subscribe(data => this.onFormStatusChanged(data));
-
-
-            this.formgroup = this.apdForm;
-            this.formEntries = [
-                {   //formgroup : this.apdForm,
-                    key : 'lastname',
-                    title : 'Surname / Family Name *',
-                    type: 'text',
-                    required: true
-                },
-                {   //formgroup : this.apdForm,
-                    key : 'givenname',
-                    title : 'First Name(s) / Given Name(s) *',
-                    type: 'text',
-                    required: true
-                },
-                {   //formgroup : this.apdForm,
-                    key : 'gender',
-                    title : 'Gender *',
-                    type: 'select',
-                    options : [
-                        {
-                            name : 'male'
-                        },
-                        {
-                            name : 'female'
-                        }
-                    ],
-                    required: true
-                },{
-                    //formgroup : this.apdForm,
-                    key : 'dateOfBirth2',
-                    title : 'Date of Birth *',
-                    type: 'date',
-                    required: true
-                },
-                {
-                    //formgroup : this.apdForm,
-                    key : 'nationality',
-                    title : 'Country of Nationality *',
-                    type: 'select',
-                    options : this.countries,
-                    required: true
-                },
-                {
-                    //formgroup : this.apdForm,
-                    key : 'address1',
-                    title : 'Street Name and House Number *',
-                    type: 'text',
-                    required: true
-                },
-                {
-                    //formgroup : this.apdForm,
-                    key : 'address2',
-                    title : 'Postcode / ZIP Code *',
-                    type: 'text',
-                    required: true
-                },
-                {
-                    //formgroup : this.apdForm,
-                    key : 'address3',
-                    title : 'Place of Residence  *',
-                    type: 'text',
-                    required: true
-                },
-                {
-                    //formgroup : this.apdForm,
-                    key : 'address4',
-                    title : 'Country of Residence *',
-                    type: 'select',
-                    options : this.countries,
-                    required: true
-                },
-                {
-                    //formgroup : this.apdForm,
-                    key : 'phoneNumber',
-                    title : 'Phonenumber  *',
-                    type: 'number',
-                    required: true
-                },
-                {
-                    //formgroup : this.apdForm,
-                    key : 'phoneNumber2',
-                    title : 'other Phonenumber  (optional)',
-                    type: 'number',
-                    required: false
-                },
-                {
-                    //formgroup : this.apdForm,
-                    key : 'email',
-                    title : 'Email Address *',
-                    type: 'email',
-                    required: true
-                }
-
-            ];
-
-
-
-
-		let currentUserObj = JSON.parse(localStorage.getItem('currentUser'));
-
-		if (currentUserObj) {
-
-			//console.log("In apdForm, currentUserObj=",currentUserObj);
-
-			this.currentFormObject.formgroup.controls['lastname'].patchValue(currentUserObj['lastName']);
-			this.currentFormObject.formgroup.controls['firstname'].patchValue(currentUserObj['firstName']);
-			this.currentFormObject.formgroup.controls['email'].patchValue(currentUserObj['email']);
-		}
-
-	}
-*/
-/*
 	onFormValueChanged(data)
 	{
 		console.log("onValueChanged",data);
 	}
-*/
-/*
+
+
+	/*
 	onFormStatusChanged(data)
 	{
 		var tmpStatus = false;
@@ -349,6 +192,7 @@ export class LmuUserApdComponent implements OnInit {
 		console.log("InngOnChanges , changes=",changes);
 	}
 	*/
+
 
 	/*
 	@Input() set myUnless(condition: boolean) {
