@@ -767,15 +767,21 @@ export class lmu_ua_formList {
         console.log("newObj = ",newObj);
 
         //delete all empty fields (set to null on server)
-
-        if ( ( newObj === '') || (Object.keys(newObj).length === 0) )
+        if ( (typeof newObj === 'string') || (typeof newObj === 'array') )
         {
-            retStruct.delete = true;
+            if (( newObj.length === 0) ) {
+                retStruct.delete = true;
+                console.log("In check for delete , newObj = ", newObj);
+            }
         }
 
-
-        if (typeof newObj === 'object')
+        else if (typeof newObj === 'object')
         {
+            if ((Object.keys(newObj).length === 0))
+            {
+                retStruct.delete = true;
+                console.log("In check for delete 2, newObj = ", newObj);
+            }
 
             for (let p2 in newObj)
             {

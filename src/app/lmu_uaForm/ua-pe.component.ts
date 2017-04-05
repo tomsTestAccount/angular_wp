@@ -117,7 +117,7 @@ export class LmuUserPeComponent implements AfterViewInit{
 				{
 					if (this.currentFormEntries[i].defaultValue.filename != null)
 					{
-						setTimeout(()=> {			//bugfix for angular.io changeDetection in Dev-Mode see issue #6005 (EXCEPTION: Expression has changed after it was checked)
+						setTimeout(()=> {			//bugfix for angular.io changeDetection in Dev-Mode; see issue #6005 (EXCEPTION: Expression has changed after it was checked)
 							this.degreeCertAvailable = true
 						},1);
 
