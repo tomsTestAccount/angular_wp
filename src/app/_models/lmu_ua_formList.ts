@@ -53,7 +53,13 @@ var formEntries_apd = [
         key: 'dateofbirth',
         title: 'Date of Birth *',
         type: 'date',
-        validators: ['required','minLength=3'],
+        validators: ['required','minLength=8'],
+        options: {
+            dateFormat: "yy-mm-dd",
+            dataType: "string",
+            yearRange: "1970:2010",
+            placeholder: "yyyy-mm-dd"
+        },
         required: true
     },
     {
@@ -172,12 +178,18 @@ var formEntries_ac = [
         key: 'degree_conferral_date',
         title: 'Degree Conferral Date *',
         type: 'date',
-        validators: ['required','length=10'],
+        validators: ['required','minLength=8'],
+        options: {
+            dateFormat: "yy-mm-dd",
+            dataType: "string",
+            yearRange: "2000:2017",
+            placeholder: "yyyy-mm-dd"
+        },
         secParagraphArray: ['Please indicate the date (day/month/year) in which you \
                         received or expect to receive the degree mentioned above:'],
         required: true
     },
-    {
+    /*{
         //will not be used by rtForms mechanism --> Todo : create subForm method here for copy_of_certificate above
         key: 'degreeCertAvailable',
         title: '',
@@ -185,6 +197,7 @@ var formEntries_ac = [
         validators: ['required'],
         required: true
     },
+    */
     {
 
         key: 'copy_of_certificate',
@@ -411,7 +424,7 @@ var formEntries_ac2 = [
         key: 'ac_education2',
         title: 'Academic Education *',
         type: 'textarea',
-        validators: ['required','minLength=3'],
+        validators: ['minLength=3'],
         required: false
     },
     {
@@ -419,7 +432,7 @@ var formEntries_ac2 = [
         key: 'ac_level2',
         title: 'Academic Level *',
         type: 'textarea',
-        validators: ['required','minLength=3'],
+        validators: ['minLength=3'],
         required: false
     },
     {
@@ -427,7 +440,7 @@ var formEntries_ac2 = [
         key: 'ac_institution2',
         title: 'Academic Institution *',
         type: 'textarea',
-        validators: ['required','minLength=3'],
+        validators: ['minLength=3'],
         required: false
     },
     {
@@ -435,7 +448,13 @@ var formEntries_ac2 = [
         key: 'degree_conferral_date2',
         title: 'Degree Conferral Date *',
         type: 'date',
-        validators: ['required','minLength=3'],
+        options: {
+            dateFormat: "yy-mm-dd",
+            dataType: "string",
+            yearRange: "2000:2017",
+            placeholder: "yyyy-mm-dd"
+        },
+        validators: ['minLength=8'],
         required: false
     },
     {
@@ -443,7 +462,7 @@ var formEntries_ac2 = [
         key: 'copy_of_certificate2',
         title: 'Copy of Degree Certificate *',
         type: 'fileUpload',
-        validators: 'Validators.compose([Validators.required, this.rtValidators.validateArray])',
+        validators: ['validateFileUpload'],
         options: {
             url: fileUploadUrl,// fileUploadURL,
             filterExtensions: true,
@@ -748,12 +767,12 @@ export class lmu_ua_formList {
         console.log("newObj = ",newObj);
 
         //delete all empty fields (set to null on server)
-        /*
+
         if ( ( newObj === '') || (Object.keys(newObj).length === 0) )
         {
             retStruct.delete = true;
         }
-        */
+
 
         if (typeof newObj === 'object')
         {

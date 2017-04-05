@@ -47,7 +47,6 @@ export class rtFileUploaderComponent implements OnInit
     //@Output() uploadedDataRes : any = new Array();  //TODO: load via restApi (Mock first)
     //@Output('change') uploadedDataChanged = new EventEmitter();
 
-
     uploadedData : any = new Array();
 
     @Output() uploadedDataChanged = new EventEmitter();
@@ -317,13 +316,16 @@ export class rtFileUploaderComponent implements OnInit
 
 
 
-            var delObj2 = {
+            var delObj = {
                 //"content-type": "application/octet-stream",
                 "download": file['download'],
                 "filename": null,
                 "size": 0
             };
-            (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(delObj2);  //only one fileObject used at the moment
+
+            //var delObj2 = {};  //TODO: ask Max, because set formObject-value = null from type 'file' isn't accepted by plone-server at the moment ??
+
+            (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(delObj);  //only one fileObject used at the moment
         }
 
         //(<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.localFileArray);

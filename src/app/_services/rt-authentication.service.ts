@@ -23,9 +23,8 @@ const dbgPrint_user = false;
 const dbgPrint_userId = false;
 const dbgPrint_login = false;
 const dbgPrint_setFormObj = false;
-const dbgPrint_getFormObj = true;
-const dbgPrint_handleFormObj = false;
-const dbgPrint_handleFormObject2SendToServer = true;
+const dbgPrint_getFormObj = false;
+
 
 @Injectable()
 export class AuthenticationService {

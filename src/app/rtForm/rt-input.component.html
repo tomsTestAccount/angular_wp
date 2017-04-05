@@ -71,39 +71,64 @@
                 <br />
                 <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
                 </label>
+                <div >
+                    <p-calendar
+                            [id]="formEntry.key"
+                            formControlName={{formEntry.key}}
+                            [dateFormat]= "formEntry.options.dateFormat"
+                            [dataType]= "formEntry.options.dataType "
+                            [yearRange]= "formEntry.options.yearRange"
+                            [minDate]="minDate"
+                            [maxDate]="maxDate"
+                            [placeholder]= "formEntry.options.placeholder"
+                            [monthNavigator]="true"
+                            [yearNavigator]="true"
+                            [defaultDate]="valueAsDate"
+                    >
+                    </p-calendar>
+
+                    <input *ngIf="formEntry.required == true" class="notvisibleInput" formControlName={{formEntry.key}} value={{formgroup.controls[formEntry.key].value}} required>
+                    <input *ngIf="formEntry.required == undefined || formEntry.required == false" class="notvisibleInput" formControlName={{formEntry.key}} value={{formgroup.controls[formEntry.key].value}}>
+                </div>
+                <!--
                 <div *ngIf="formEntry.required == true">
                     <p-calendar
                             [id]="formEntry.key"
                             formControlName={{formEntry.key}}
-
-                            dateFormat="yy-mm-dd"
+                            [dateFormat]= "formEntry.options.dateFormat"
+                            [dataType]= "formEntry.options.dataType "
+                            [yearRange]= "formEntry.options.yearRange"
+                            [minDate]="minDate"
+                            [maxDate]="maxDate"
+                            [placeholder]= "formEntry.options.placeholder"
                             [monthNavigator]="true"
                             [yearNavigator]="true"
-                            dataType="string"
-                            yearRange="1950:2010"
-                            placeholder= "yyyy.mm.dd"
-                            [defaultDate]="dateValue"
-                            required>
+                            [defaultDate]="valueAsDate"
+                            >
                     </p-calendar>
 
                     <input class="notvisibleInput" formControlName={{formEntry.key}} value={{formgroup.controls[formEntry.key].value}} required>
 
                 </div>
+
                 <div *ngIf="formEntry.required == undefined ||  formEntry.required == false">
                     <p-calendar
-                                [id]="formEntry.key"
-                                formControlName={{formEntry.key}}
-                                dateFormat="yy-mm-dd"
-                                [monthNavigator]="true"
-                                [yearNavigator]="true"
-                                dataType="string"
-                                yearRange="1950:2010"
-                                [defaultDate]="dateValue"
-                                placeholder= "yyyy-mm-dd"
+                            [id]="formEntry.key"
+                            formControlName={{formEntry.key}}
+                            [dateFormat]= "formEntry.options.dateFormat"
+                            [dataType]= "formEntry.options.dataType "
+                            [yearRange]= "formEntry.options.yearRange"
+                            [minDate]="minDate"
+                            [maxDate]="maxDate"
+                            [placeholder]= "formEntry.options.placeholder"
+                            [monthNavigator]="true"
+                            [yearNavigator]="true"
+                            [defaultDate]="valueAsDate"
                                 >
                     </p-calendar>
                     <input class="notvisibleInput" formControlName={{formEntry.key}} value={{formgroup.controls[formEntry.key].value}} >
                 </div>
+                -->
 
             </div>
         </div>
@@ -247,13 +272,6 @@
             </div>
         </div>
 
-
+    </div>
 
 </div>
-
-<!--
-
-[ngClass]="{'required':formEntry.required}" >
-<div class="errorMessage" *ngIf="!isValid">{{formEntry.label}} is required</div>
-
--->

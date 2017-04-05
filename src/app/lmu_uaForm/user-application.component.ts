@@ -23,7 +23,7 @@ import {DialogsService} from '../_services/dialogs.services'
 
 const dbgPrint = false;
 const dbgPrint_save = true;
-const dbgPrint_formChanged = true;
+const dbgPrint_formChanged = false;
 
 //for animations
 import {
@@ -275,7 +275,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 					//this.formChangedEntries.push({event: 'VALUE_CHANGED', object: fControl})
 					//this.lastValue = x[0];
 					//console.log("in ValueChanged x = ",x);
-					console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_ac']['controls'][0]['controls'][fControl]);
+					//console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_ac']['controls'][0]['controls'][fControl]);
 				});
 		}
 

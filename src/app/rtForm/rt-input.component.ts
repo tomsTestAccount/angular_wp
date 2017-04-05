@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { FormGroup,FormControl,FormBuilder }        from '@angular/forms';
 
+const dbgPrint_dateEntry=false;
+
 @Component({
     //moduleId: module.id,
     selector: 'rt-input',
@@ -10,12 +12,12 @@ import { FormGroup,FormControl,FormBuilder }        from '@angular/forms';
     templateUrl: 'rt-input.component.html',
     styleUrls: ['rtForm.css']
 })
-
-
 export class rtInputComponent implements OnInit {
 
 
-    dateValue : Date;
+    valueAsDate : Date;
+    minDate : Date;
+    maxDate : Date;
 
     tmpArray : any[];
     valObj: any;
@@ -33,10 +35,7 @@ export class rtInputComponent implements OnInit {
 
     constructor()
     {
-       //console.log("formEntry=",this.formEntry);
-       // console.log("formgroup=",this.formgroup);
 
-        //this.dateValue =  new Date("01-08-2016");
     }
 
     ngOnInit(): void {
@@ -57,17 +56,25 @@ export class rtInputComponent implements OnInit {
             //console.log("this.dateValue =",this.dateValue.value);
         }
         */
+
+        if (this.formEntry.type == 'date')
+        {
+            if (dbgPrint_dateEntry) console.log("Input-entry: DATE, this.formEntry=",this.formEntry);
+            //this.formEntry.defaultValue = null;
+            this.valueAsDate = new Date(this.formEntry.defaultValue);
+
+            if (this.formEntry.options.minDate === undefined)
+            {
+                this.minDate = new Date(this.formEntry.options.minDate);
+            }
+            else this.minDate = new Date("1970-01-01");
+
+
+            this.maxDate = new Date("2010-01-01");
+
+        }
     }
 
-
-
-    onChangeDate(e:any,controlName:string):void{
-        //this.opeForm.controls.copyOfDegreeCert_ope._onChange(e);
-        //(<FormControl>this.opeForm.controls['copyOfDegreeCert_ope']).patchValue(e.value);
-        console.log((<FormControl>this.formgroup[controlName]));
-        console.log("e=",e);
-        //console.log("this.peForm=",this.peForm);
-    }
 
     toggleInfo(e:any):void{
         this.showTooltip = !this.showTooltip;
