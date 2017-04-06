@@ -1,4 +1,4 @@
-import {Validators, FormGroup, FormControl, FormBuilder, FormArray, FormGroupName, AbstractControl} from '@angular/forms';
+import {Validators, FormGroup, FormControl } from '@angular/forms';
 import {rtFormValidators}  from '../_services/rt-form-validators.service';
 import { Injectable } from '@angular/core';
 import { Subject }    from 'rxjs/Subject';
@@ -29,38 +29,9 @@ export class RtFormService {
 
     //---------------- subForm- services --------------------------------
 
-    // Observable sources
-    private subFormObject_apd = new Subject<cFormObject>();
-    private subFormObject_ac = new Subject<cFormObject>();
-    private subFormObject_oi = new Subject<cFormObject>();
-    private subFormObject_ac2 = new Subject<cFormObject>();
+
     private subFormIsUpdated = new Subject<boolean>();
-
-    //announcements
-    subFormAnnounced_apd$ = this.subFormObject_apd.asObservable();
-    subFormAnnounced_ac$ = this.subFormObject_ac.asObservable();
-    subFormAnnounced_oi$ = this.subFormObject_oi.asObservable();
-    subFormAnnounced_ac2$ = this.subFormObject_ac2.asObservable();
-
     subFormIsUpdated$ = this.subFormIsUpdated.asObservable();
-
-    // Service commands
-    prepareSubForm_apd(subForm: cFormObject) {
-        this.subFormObject_apd.next(subForm);
-    }
-
-    prepareSubForm_ac(subForm: cFormObject) {
-        this.subFormObject_ac.next(subForm);
-    }
-
-    prepareSubForm_ac2(subForm: cFormObject) {
-        this.subFormObject_ac2.next(subForm);
-    }
-
-    prepareSubForm_oi(subForm: cFormObject) {
-        this.subFormObject_oi.next(subForm);
-    }
-
     subFormsUpdated(bVal : boolean) {
         this.subFormIsUpdated.next(bVal);
     }
@@ -141,7 +112,6 @@ export class RtFormService {
 
            //console.log("validatorArray=",validatorArray);
 
-
         return Validators.compose(validatorArray);
     }
 
@@ -157,90 +127,19 @@ export class RtFormService {
         //'address2': ['', Validators.compose([Validators.required,Validators.minLength(3)])],
 
         entries.forEach(entry => {
-            if (entry.defaultValue != undefined) {
-
-                /*if (entry.key === 'dateofbirth') {
-                    entry.defaultValue = entry.defaultValue.replace('-','/');
-                 //console.log("entry=", entry);
-                }*/
-                   // console.log("entry=", entry);
-            }
-
-
-            /*if (entry.type == 'fileUpload')
-            {
-                group[entry.key] = new FormControl(entry.defaultValue || '',this.getFunctionCallFromString(entry.validators) ); //entry.key.validators); //TODO: validator
-            }
-            else if (entry.type == 'grid-box-add')
-            {
-                group[entry.key] = new FormControl(entry.defaultValue || '',this.getFunctionCallFromString(entry.validators) );
-            }
-            else if (entry.key =='firstname')
-            {
-                group[entry.key] = new FormControl(entry.defaultValue || '', Validators.compose([Validators.required,Validators.minLength(3)])); //TODO: validator
-            }
-
-            else
-            */
-            {
                 //console.log("entry=", entry);
                 //Validators.compose([Validators.required,Validators.minLength(3)])
-                group[entry.key] = new FormControl(entry.defaultValue || '', this.getFunctionCallFromString(entry.validators) ); //TODO: validator
-            }
+                let defaultValue = '';
+                if (entry.defaultValue !== undefined) defaultValue = entry.defaultValue;
+                group[entry.key] = new FormControl(defaultValue, this.getFunctionCallFromString(entry.validators) );
+
 
         });
 
         return new FormGroup(group);
-        //return new FormArray(group);
-    }
-
-    /*
-    addFormArray2Group(entries: any,required:boolean,parentForm:FormGroup) {
-
-
-        let formControlGroup: any = {};
-        //let formControlGroup: [FormControl] = [];
-
-        //console.log("this.currentForm=", this.currentForm.entries);
-
-        //'address2': ['', Validators.compose([Validators.required,Validators.minLength(3)])],
-
-
-
-        let formArray:FormArray;
-        if (required) formArray = new FormArray(formControlGroup,Validators.compose([Validators.required]));
-        else formArray= new FormArray(formControlGroup);
-
-        return parentForm;
-    }
-    */
-
-
-
-    /*
-    buildForm(entries:[any],required:boolean):FormGroup{
-
-
-        //let formObj= new cFormObject(name,entries,required);
-
-        let form:FormGroup;
-        //form = this.toFormGroup(entries);
-
-
-        //let formArray:FormArray;
-
-        form = this.addFormArray2Group(entries,required,form);
-
-        //formArray.setParent(form);
-
-        //form. = 'dsjhdg';
-
-
-
-        return form;
 
     }
-    */
+
 
 
 }

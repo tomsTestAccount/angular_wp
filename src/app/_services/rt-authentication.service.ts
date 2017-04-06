@@ -47,7 +47,7 @@ export class AuthenticationService {
 
     constructor(private _rtRestService : RestService
                ,private _lmuForms : lmu_ua_formList
-                ,private _rtFormSrv: RtFormService
+                //,private _rtFormSrv: RtFormService
     ){
 
 
@@ -285,11 +285,9 @@ export class AuthenticationService {
 
                                     resolve(responseConvert4Local);
                             })
-                            .catch(exp => {
-                                    console.log("ERROR in auth_getFormObject, error at auth_getFormObject_Server , err=", exp);
-                                    //this.auth_setFormObj({});
-                                    //return {};
-                                    resolve({});
+                            .catch(err => {
+                                    console.log("ERROR in auth_getFormObject, error at auth_getFormObject_Server , err=", err);
+                                    reject(err);
                                 }
                             );
                     //});
@@ -321,27 +319,29 @@ export class AuthenticationService {
         return new Promise((resolve, reject) => {
             this._rtRestService.restGet_formObject(this._currentUserId, this._currentToken)
                 .subscribe(
-                    response => {
+                    (response) => {
 
                         //if (dbgPrint_getFormObj)
                         console.log("In auth_getFormObject_Server after rest-call, response=",response);
 
-
                         var convertedUaObject = this._lmuForms.handleServerFormObject4localWorking(response);
 
-                        this._rtFormSrv.subFormsUpdated(true);
 
-                        //this._currentFormObj= convertedUaObject;//this.auth_setFormObj(convertedUaObject);
+                        //this._rtFormSrv.subFormsUpdated(true);
+
+
                         resolve(convertedUaObject);
                     },
-                    err => {
+                    (err) => {
                         // Log errors are catched in REST-Service
                         //console.log(err);
                         //console.log("2 NOT found !!! an uaObj for current user at server, err=",err);
-                        console.log("Err in auth_getFormObject_Server for restGet_formObject");
+                        console.log("Err in auth_getFormObject_Server for restGet_formObject",err);
 
-                        reject(false);
+                        reject(err);
                     });
+
+
         });
 
     };
@@ -382,7 +382,7 @@ export class AuthenticationService {
         return new Promise((resolve, reject) => {
             if (Object.keys(obj2Server).length === 0) {
                 console.log("ERROR in auth_setFormObj_Server, localObj is empty !!!!");
-                reject("ERROR in auth_setFormObj_Server, localObj is empty !!!!");
+                reject("ERROR: Nothing is sent because no changes were detected , obj is empty !");
             }
             else {
 

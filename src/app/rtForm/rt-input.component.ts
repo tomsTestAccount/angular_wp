@@ -32,6 +32,7 @@ export class rtInputComponent implements OnInit {
     //get isValid() { return this.form.controls[this.question.key].valid; }
     showTooltip =  false;
 
+    //entryErrorString : any;
 
     constructor()
     {
@@ -57,6 +58,9 @@ export class rtInputComponent implements OnInit {
         }
         */
 
+
+
+
         if (this.formEntry.type == 'date')
         {
             if (dbgPrint_dateEntry) console.log("Input-entry: DATE, this.formEntry=",this.formEntry);
@@ -81,5 +85,34 @@ export class rtInputComponent implements OnInit {
         e.stopPropagation();
     }
 
+
+    entryErrorString() {
+
+        let retValue =  "Not an valid input : ";
+        let errorInfos = "";
+
+        if (this.formgroup.controls[this.formEntry.key].errors)
+        {
+            let errRef =  this.formgroup.controls[this.formEntry.key].errors;
+
+            console.log("errType=",errRef);
+
+            for (let errType in errRef)
+            {
+                //console.log("errType=",errType);
+                //retValue += errType.toString + '/n';
+
+                for (let errReason in errRef[errType])
+                {
+                    errorInfos += ' ,' + errReason.toString()  + ":" + errRef[errType][errReason].toString();
+                }
+                break;
+            }
+        }
+
+        errorInfos = errorInfos.slice(2,errorInfos.length);
+        retValue = retValue + errorInfos;
+        return retValue;
+    }
 
 }

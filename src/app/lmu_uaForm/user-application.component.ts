@@ -16,14 +16,13 @@ import { RtFormService ,cFormObject} from '../_services/rt-forms.service';
 //import {Router,ActivatedRoute} from '@angular/router';
 
 import {AuthenticationService} from  '../_services/rt-authentication.service';
-
-//import {MdDialog} from '@angular/material';
-//import { uaFormDialog} from '../modal/uaFormModal.component';
+import {ServerConfigs} from '../_models/configFile';
 import {DialogsService} from '../_services/dialogs.services'
 
 const dbgPrint = false;
 const dbgPrint_save = true;
-const dbgPrint_formChanged = false;
+const dbgPrint_formChanged = true;
+const dbgPrint_formEntryChanged = false;
 
 //for animations
 import {
@@ -38,6 +37,8 @@ import {timeout} from "rxjs/operator/timeout";
 
 //var html = require('./user-application.component.html!text');
 //var css = require('./user-application.component.css!text');
+
+
 
 @Component({
 	//moduleId: module.id,
@@ -93,8 +94,6 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
 	currentUaObj:any;
 
-	dbgPrint =true;
-
     dbgFormValues =false;
 
 	changeDetected=false;
@@ -113,64 +112,55 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 		subFormGroup_oi: {0:{}},
 
 	};
+
+
+	summaryPage_href :string;
+
 	//-------------------------------------------------------------------------------------------------------------------
 
 	constructor(private _fb: FormBuilder,
 				private _authService:AuthenticationService,
-				private _rtFormSrv: RtFormService,
+				//private _rtFormSrv: RtFormService,
+				serverConfs: ServerConfigs,
 				private dialogsService: DialogsService
 				)
     {
-		/*this._rtFormSrv.subFormAnnounced_apd$.subscribe(
-		 newform => {
-		 (this.main_lmu_ua_form.controls['subFormGroup_apd']) = newform.formgroup;
-		 if (dbgPrint) console.log("In apd_subscribe");
-		 });
-		 */
 
+		let serverURL = serverConfs.get_serverConfigs().url;
+		let userId = serverConfs.get_serverConfigs().userId;
+		this.summaryPage_href = serverURL + '/applications/' + userId + '/' + userId ;
 
-		this._rtFormSrv.subFormIsUpdated$.subscribe(
+		//console.log("this.summaryPage_href =",this.summaryPage_href );
+
+		//detect changes for form made by server --> detect when download form-data finished
+		/*this._rtFormSrv.subFormIsUpdated$.subscribe(
 			isUpdated => {
-				this.main_lmu_ua_form = this.lmu_ua_form.init_mainForm();
-				if (dbgPrint) console.log("In subFormIsUpdated$ ",this.main_lmu_ua_form);
-				this.isFormUpdated = isUpdated;
 
+				setTimeout(()=> {
+					this.main_lmu_ua_form = this.lmu_ua_form.init_mainForm();
+					if (dbgPrint)console.log("In subFormIsUpdated$ ", this.main_lmu_ua_form);
+
+					// subscribe to form changes, so we can detect the formEntries that were changed --> and send only these ones
+					//this.subscribeToFormEntriesChanges();
+
+					//set event the view is waiting for
+					//this.isFormUpdated = isUpdated;
+
+					//close loading dialog
+					this.dialogsService.closeDialog();
+				},31000);
 			});
-
-
+		*/
 	};
 
 
-	/*formValueChanged(data:any)
-	{
-		console.log("value changed, this.main_lmu_ua_form=",this.main_lmu_ua_form);
-		this.changeDetected = true;
-	}
-	*/
 
     ngOnInit(): void {
-		/*this._rtFormSrv.subFormAnnounced_apd$.subscribe(
-		 newform => {
-		 (this.main_lmu_ua_form.controls['subFormGroup_apd']) = newform.formgroup;
-		 if (dbgPrint) console.log("In apd_subscribe");
-		 });
-		 */
-
-
 
 		if (dbgPrint) console.log("In UserApplicationComponent ngOnInit");
 
-		/*
-		//we get the formEntries here
-		this.apd_formObj = this.lmu_ua_form.buildFormObject_apd();
-		this.ac_formObj = this.lmu_ua_form.buildFormObject_ac();
-		this.ac2_formObj = this.lmu_ua_form.buildFormObject_ac2();
-		this.oi_formObj = this.lmu_ua_form.buildFormObject_oi();
 
 
-		//this.lmu_ua_form.init_mainForm();
-		this.main_lmu_ua_form = this.lmu_ua_form.get_mainForm();
-		*/
 
     }
 
@@ -178,79 +168,69 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
     ngAfterViewInit(): void {
 
 
-        if (this.dbgPrint) console.log("In user-application ngAfterViewInit!");
+        if (dbgPrint) console.log("In user-application ngAfterViewInit!");
 
 		this.uasubmit = false;
 
 		this.dialogsService.loading('Your data is loading ... ');
 		//this.dialogsService.info('TITLE','Your data is loading ... ');
 
-
-
 		this._authService.auth_getFormObject()
             .then(response => {
 
-				//we get the formEntries here
-				this.apd_formObj = this.lmu_ua_form.buildFormObject_apd();
+				if (dbgPrint)console.log("In user-application ngAfterViewInit2, after get data, response=!",response);
+
+				//we get the pre-defined formEntries here
+				/*this.apd_formObj = this.lmu_ua_form.buildFormObject_apd();
 				this.ac_formObj = this.lmu_ua_form.buildFormObject_ac();
 				this.ac2_formObj = this.lmu_ua_form.buildFormObject_ac2();
 				this.oi_formObj = this.lmu_ua_form.buildFormObject_oi();
+				*/
 
-				//this.lmu_ua_form.init_mainForm();
-				this.main_lmu_ua_form = this.lmu_ua_form.get_mainForm();
+				//init mainForm  --> the really data downloaded from server is get via event-subscription in constructor !
+				this.main_lmu_ua_form = this.lmu_ua_form.init_mainForm();
 
-				this.isFormValueLoadedFromServer = true;
+				//we get the pre-defined formEntries here
+				 this.apd_formObj = this.lmu_ua_form.apd_formObj;
+				 this.ac_formObj = this.lmu_ua_form.ac_formObj;
+				 this.ac2_formObj = this.lmu_ua_form.ac2_formObj;
+				 this.oi_formObj = this.lmu_ua_form.oi_formObj;
 
+				console.log("this.apd_formObj=",this.apd_formObj);
 
+				// subscribe to form changes, so we can detect the formEntries that were changed --> and send only these ones
+				this.subscribeToFormEntriesChanges();
+
+				//set event the view is waiting for
+				this.isFormUpdated = true;
+
+				//close loading dialog
 				this.dialogsService.closeDialog();
 
-				// subscribe to form changes
-				this.subscribeToFormChanges();
+                if (dbgPrint) console.log("In user-application ngAfterViewInit2, after get data!",this.main_lmu_ua_form);
 
-
-                if (this.dbgPrint) console.log("In user-application ngAfterViewInit2, after get data!",this.main_lmu_ua_form);
-
-            });
+            })
+			.catch(err => {
+				this.dialogsService.info('Error for retrieving data from server, err= ',err);
+			});
 
 
 	}
 
-	lastValue = {};
-	/*private subscribeToFormChanges() {
-
-
-		// initialize stream
-		//const myFormStatusChanges$ = this.main_lmu_ua_form.controls['subFormGroup_apd'].statusChanges;
-		var myFormValueChanges$ = this.main_lmu_ua_form.controls['subFormGroup_apd'].valueChanges;
-
-		// subscribe to the stream
-		//myFormStatusChanges$.subscribe(x => this.events.push({ event: 'STATUS_CHANGED', object: x }));
-		myFormValueChanges$.subscribe(x => {
-			this.events.push({event: 'VALUE_CHANGED', object: x})
-			this.lastValue = x[0];
-			console.log("in ValueChanged x = ",x,x[1]);
-			console.log("form=",this.main_lmu_ua_form.controls['subFormGroup_apd']);
-		});
-
-
-	}*/
-
-	private init_formChangedEntries() {
-
-	this.formChangedEntries = {
-		subFormGroup_ac: {0: {}},
-		subFormGroup_ac2: {0: {}},
-		subFormGroup_apd: {0: {}},
-		subFormGroup_oi: {0: {}},
+	private reset_formChangedEntries() {
+		this.formChangedEntries = {
+			subFormGroup_ac: {0: {}},
+			subFormGroup_ac2: {0: {}},
+			subFormGroup_apd: {0: {}},
+			subFormGroup_oi: {0: {}},
 	}
 
 };
 
+	private subscribeToFormEntriesChanges() {
 
-	private subscribeToFormChanges() {
 
-
-		console.log("form=",this.main_lmu_ua_form.controls['subFormGroup_apd']);
+		if (dbgPrint_formEntryChanged) console.log("form=",this.main_lmu_ua_form.controls['subFormGroup_apd']);
 
 	 // initialize stream
 		for (let fControl in  (<FormControl>this.main_lmu_ua_form.controls['subFormGroup_apd']['controls'][0]['controls']))
@@ -262,7 +242,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 				//this.formChangedEntries.push({event: 'VALUE_CHANGED', object: fControl})
 				//this.lastValue = x[0];
 				//console.log("in ValueChanged x = ",x);
-				//console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_apd']['controls'][0]['controls'][fControl]);
+				 if (dbgPrint_formEntryChanged) console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_apd']['controls'][0]['controls'][fControl]);
 			});
 		}
 
@@ -275,7 +255,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 					//this.formChangedEntries.push({event: 'VALUE_CHANGED', object: fControl})
 					//this.lastValue = x[0];
 					//console.log("in ValueChanged x = ",x);
-					//console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_ac']['controls'][0]['controls'][fControl]);
+					if (dbgPrint_formEntryChanged) console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_ac']['controls'][0]['controls'][fControl]);
 				});
 		}
 
@@ -288,7 +268,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 					//this.formChangedEntries.push({event: 'VALUE_CHANGED', object: fControl})
 					//this.lastValue = x[0];
 					//console.log("in ValueChanged x = ",x);
-					//console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_ac2']['controls'][0]['controls'][fControl]);
+					if (dbgPrint_formEntryChanged) console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_ac2']['controls'][0]['controls'][fControl]);
 				});
 		}
 
@@ -301,11 +281,18 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 					//this.formChangedEntries.push({event: 'VALUE_CHANGED', object: fControl})
 					//this.lastValue = x[0];
 					//console.log("in ValueChanged x = ",x);
-					//console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_oi']['controls'][0]['controls'][fControl]);
+					if (dbgPrint_formEntryChanged) console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_oi']['controls'][0]['controls'][fControl]);
 				});
 		}
 
-		/*
+
+	 }
+
+	 /*
+	private subscribeToFormStatusChanges() {
+
+	 // initialize stream
+	 //const myFormStatusChanges$ = this.main_lmu_ua_form.controls['subFormGroup_apd'].statusChanges;
 	 var myFormValueChanges$ = this.main_lmu_ua_form.controls['subFormGroup_apd'].valueChanges;
 
 	 // subscribe to the stream
@@ -316,55 +303,19 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 	 console.log("in ValueChanged x = ",x,x[1]);
 	 console.log("form=",this.main_lmu_ua_form.controls['subFormGroup_apd']);
 	 });
+
+
+	 }*/
+
+
+	/*formValueChanged(data:any)
+	 {
+	 console.log("value changed, this.main_lmu_ua_form=",this.main_lmu_ua_form);
+	 this.changeDetected = true;
+	 }
 	 */
 
-
-	 }
-
-
-	private _setFormValues_AlreadyFilled() {
-        if (this.dbgFormValues) {
-            console.log("In setFormValues_AlreadyFilled,this.main_lmu_ua_form.controls=", this.main_lmu_ua_form.controls);
-            console.log("In setFormValues_AlreadyFilled,this.currentUaObj=", this.currentUaObj);
-
-            console.log("In setFormValues_AlreadyFilled,this.currentUaObj.subFormGroup_apd=", this.currentUaObj.subFormGroup_apd);
-            console.log("In setFormValues_AlreadyFilled,this.currentUaObj.subFormGroup_ac=", this.currentUaObj.subFormGroup_ac);
-            console.log("In setFormValues_AlreadyFilled,this.currentUaObj.subFormGroup_ac2=", this.currentUaObj.subFormGroup_ac2);
-            console.log("In setFormValues_AlreadyFilled,this.currentUaObj.subFormGroup_oi=", this.currentUaObj.subFormGroup_oi);
-        }
-
-        this.main_lmu_ua_form.controls['subFormGroup_apd'].patchValue(this.currentUaObj.subFormGroup_apd);
-        this.main_lmu_ua_form.controls['subFormGroup_ac'].patchValue(this.currentUaObj.subFormGroup_ac);
-        this.main_lmu_ua_form.controls['subFormGroup_oi'].patchValue(this.currentUaObj.subFormGroup_oi);
-        this.main_lmu_ua_form.controls['subFormGroup_ac2'].patchValue(this.currentUaObj.subFormGroup_ac2);
-
-
-        /*
-        var tmp_apdSubForm = <FormGroup>this.main_lmu_ua_form.controls['subFormGroup_apd']['controls']['0'];
-        if (dbgPrint) console.log("tmp_apdSubForm=",tmp_apdSubForm);
-
-        for (var p in this.currentUaObj.subFormGroup_apd) {
-            tmp_apdSubForm.controls[p.toString()].patchValue(this.currentUaObj.subFormGroup_apd[p.toString()]);
-        }
-        */
-
-
-        /*
-        var tmp_apdSubForm = <FormGroup>this.main_lmu_ua_form.controls['subFormGroup_apd']['controls']['0'];
-        for (var p in this.currentUaObj.subFormGroup.pe) {
-            tmp_apdSubForm.controls[p.toString()].patchValue(this.currentUaObj.subFormGroup_apd[p.toString()]);
-        }
-        */
-
-        //var tmp_apdForm : FormGroup = <FormGroup>(this.main_lmu_ua_form.controls['subFormGroup_apd']);
-        //tmp_apdForm.controls['firstname'].patchValue(this.currentUaObj.subFormGroup_apd.firstname);
-
-        //this.main_lmu_ua_form.controls['subFormGroup_apd'].controls['firstname'].patchValue(this.currentUaObj.subFormGroup_apd.firstname);
-
-        if (dbgPrint) console.log("this.main_lmu_ua_form.controls['subFormGroup_apd']=",this.main_lmu_ua_form.controls['subFormGroup_apd']);
-	}
-
-	select_comp4User(current_ua_sec: string) {
+	select_subFormTab(current_ua_sec: string) {
         if (dbgPrint) console.log("In select_comp4User, current_dbComp_user=",current_ua_sec);
 		this.curr_ua_sec = current_ua_sec;
 	}
@@ -380,24 +331,23 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
         this._authService.auth_setFormObj(this.formChangedEntries,true)
 			.then(response => {console.log("Save Data Successful",response)})
 			.catch(err => {
-				this.dialogsService.info('Save Data Error:' + err.statusText ,err._body);
+				if (err.statusText) this.dialogsService.info('Save Data Error:' + err.statusText ,err._body);
+				else this.dialogsService.info('Save Data Error:',err);
 				//console.log("In saveFormObj err=",err)
 			}) ;
 
 		this.changeDetected = false;
-		this.init_formChangedEntries();
+		this.reset_formChangedEntries();
 	}
 
 
-	public openDialog() {
-		this.dialogsService
-            .confirm('Confirm Dialog', 'Are you sure you want to do this?')
-            .subscribe(res => this.dialogResult = res);
+	submitForm()
+	{
+		this.saveFormObj();
+		console.log("this.summaryPage_href =",this.summaryPage_href );
 	}
 
-
-
-	status_apd: boolean = false;
+	//status_apd: boolean = false;
 	onFormEvent_apd(status_apd)
 	{
 		//TODO: only call this function when value was changed --> form
@@ -415,7 +365,9 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 	//---------------------- dbg
 
 	showDbg(){
-		//console.log("this.main_lmu_ua_form=",this.main_lmu_ua_form);
+
+		console.log("In user-application ngAfterViewInit2, after get data!",this.main_lmu_ua_form);
+		/*//console.log("this.main_lmu_ua_form=",this.main_lmu_ua_form);
 		let currUsers = JSON.parse(localStorage.getItem('users'));
         console.log("In showDbg, localStorage.getItem('users')=",currUsers);
 
@@ -428,7 +380,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
         console.log("In showDbg, localStorage.getItem('currentUaObject')=",currUaObj);
 
         //currUaObj = JSON.parse(localStorage.getItem('currentUaObject'));
-
+		*/
 	}
 
 }

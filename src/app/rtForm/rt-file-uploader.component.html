@@ -1,15 +1,17 @@
-
+<!--
     <div
             id={{compId}}
+
 
             ngFileDrop
             [options]=options
             (onUpload)="handleUpload($event)"
             [ngClass]="{'file-over': hasBaseDropZoneOver}"
             (onFileOver)="fileOverBase($event)"
+            (change)="beforeUpload($event)"
             >
-
-
+            -->
+    <div>
         <div class="flexContainer_row">
             <div class="flexContainer_col">
                 <div>
@@ -18,7 +20,7 @@
                 <div>
                     <label class="secParagraph" *ngFor="let text of secParagraphArray" > {{text}}
                     </label>
-                    <label class="secParagraph">Browse for file or drag it here</label>
+                    <label class="secParagraph">Browse for file</label>
                 </div>
             </div>
 
@@ -70,7 +72,7 @@
                     <md-list [style.padding]="'0'"  layout="row" layout-align="center center">
                         <md-list-item>
                             <p  md-line class="form_gridList_mdList_mainParagraph" [style.margin-bottom]="'0'">File Name</p>
-                            <p  md-line class="form_gridList_mdList_secParagraph" [style.margin-bottom]="'0'"> Saving Date, Size </p>
+                            <p  md-line class="form_gridList_mdList_secParagraph" [style.margin-bottom]="'0'"> Size , Download Link </p>
                         </md-list-item>
                     </md-list>
                 </md-grid-tile>

@@ -13,7 +13,7 @@ var fileUploadUrl="";
 
 const dbgPrint = false;
 const dbgPrint_handle4local = false;
-const dbgPrint_handle4server = true;
+const dbgPrint_handle4server = false;
 
 //TODO: todo rename class and file ( it isn't a list anymore. it's a class with init- and mapping-functions, a.s.o
 
@@ -57,7 +57,7 @@ var formEntries_apd = [
         options: {
             dateFormat: "yy-mm-dd",
             dataType: "string",
-            yearRange: "1970:2010",
+            yearRange: "1970:1999",
             placeholder: "yyyy-mm-dd"
         },
         required: true
@@ -117,7 +117,7 @@ var formEntries_apd = [
         key: 'phone2',
         title: 'other Phonenumber  (optional)',
         type: 'number',
-        validators: ['required','minLength=3'],
+        validators: ['minLength=3'],
         required: false
     },
     {
@@ -141,7 +141,7 @@ var formEntries_apd = [
         key: 'homepage',
         title: 'Homepage (optional)',
         type: 'text',
-        validators: ['required','validateEmail'],
+        validators: ['minLength=5'],
         required: false
     }
 ];
@@ -151,7 +151,7 @@ var formEntries_ac = [
         key: 'ac_education',
         title: 'Academic Education *',
         type: 'textarea',
-        validators: ['required','minLength=3'],
+        validators: ['minLength=3'],
         secParagraphArray: ['Please enter your previous or your current study program:'],
         required: true
     },
@@ -189,13 +189,15 @@ var formEntries_ac = [
                         received or expect to receive the degree mentioned above:'],
         required: true
     },
-    /*{
-        //will not be used by rtForms mechanism --> Todo : create subForm method here for copy_of_certificate above
-        key: 'degreeCertAvailable',
+    /*
+    {
+
+        ignored4Server:true, //will not be used for formObject send to server --> only to enable/disable ''copy_of_certificate'-validation  //TODO: create an more general mechanism (formarray/formgroup,etc..)
+        key: 'copy_of_certificate_availableCheckbox',
         title: '',
         type: 'checkbox',
-        validators: ['required'],
-        required: true
+        //validators: ['required'],
+        required: false
     },
     */
     {
@@ -523,15 +525,12 @@ export class lmu_ua_formList {
 
         // we will initialize our main-lmu-ua-form here
         this.main_lmu_ua_form = this._fb.group({
-            /*apd_formArray: this._fb.group({'apd_form':
-             [this.apd_formObj.formgroup,Validators.required]}
-             ),
-             */
 
-            subFormGroup_apd: this._fb.group([this.apd_formObj.formgroup,Validators.required]),
-            subFormGroup_ac: this._fb.group([this.ac_formObj.formgroup,Validators.required]),
-            subFormGroup_oi: this._fb.group([this.oi_formObj.formgroup,Validators.required]),
-            subFormGroup_ac2: this._fb.group([this.ac2_formObj.formgroup,Validators.required])
+            //TODO: define required validator-values (if necessary) for each subform in form-definition-list
+            subFormGroup_apd: this._fb.group([this.apd_formObj.formgroup]), //,Validators.required]),
+            subFormGroup_ac: this._fb.group([this.ac_formObj.formgroup]),
+            subFormGroup_oi: this._fb.group([this.oi_formObj.formgroup]),
+            subFormGroup_ac2: this._fb.group([this.ac2_formObj.formgroup])
 
         });
 
@@ -548,16 +547,14 @@ export class lmu_ua_formList {
 
     //--------------------------------------------------------------------------------------------------
 
-     buildFormObject_apd():cFormObject {
+    buildFormObject_apd():cFormObject {
 
          let formGroup =  this.formSrv.toFormGroup(this.get_formEntries_apd());
 
          if (dbgPrint) console.log("In buildFormObject_apd,this.get_formEntries_apd=",formEntries_apd);
 
-
          return new cFormObject(formGroup,this.get_formEntries_apd());
      }
-
 
     buildFormObject_ac():cFormObject {
 
@@ -657,7 +654,7 @@ export class lmu_ua_formList {
 
     private _set_formEntryValue4Local(key:string,value:any) {
 
-        //TODO: make this more general , i.e. this._handleFormEntry4GridBox to this.handleSpecialEntries
+        //TODO: make this more general , i.e. this._handleFormEntry4GridBox to this.handleSpecialEntries --> see i.e. ac2 handleFileUploads, too
 
         for (var i=0; i<formEntries_apd.length;i++)
         {
@@ -691,12 +688,12 @@ export class lmu_ua_formList {
         }
         for (var i=0; i<formEntries_oi.length;i++)
         {
-            //console.log("Search for ",v);
+
             if (key.toString() === formEntries_oi[i]['key'])
             {
 
-
                 formEntries_oi[i]['defaultValue']=value;
+
                 return;
             }
         }
@@ -709,9 +706,24 @@ export class lmu_ua_formList {
                 if (formEntries_ac2[i].type === 'grid-box-add')
                 {
                     value =  this._handleFormEntry4GridBox(formEntries_ac2[i],value);
+
+                }
+                else if (formEntries_ac2[i].type === 'fileUpload')
+                {
+                    if (value)
+                    {
+                        if (value.filename == null)
+                        {
+                            value = null;
+                        }
+
+                    }
                 }
 
+
                 formEntries_ac2[i]['defaultValue']=value;
+                console.log("Set Default-Value for ",formEntries_ac2[i].key, " = ",value);
+
                 return;
             }
         }
@@ -749,8 +761,7 @@ export class lmu_ua_formList {
     // ----------------------------- handle Objects 4 sending to server-----------------------------------------------------------------------
 
 
-    private _conversionsAndChecks4Obj2Server(o:any,p:any)
-    {
+    private _conversionsAndChecks4Obj2Server(o:any,p:any) {
 
         console.log("o[",p,"] = ",o[p]);
 
@@ -764,14 +775,14 @@ export class lmu_ua_formList {
         let newObj = JSON.parse(JSON.stringify(o[p])); //o[p];  we have to deep copy that object, because other components need the localUaObj still
 
 
-        console.log("newObj = ",newObj);
+        if (dbgPrint_handle4server) console.log("newObj = ",newObj);
 
         //delete all empty fields (set to null on server)
         if ( (typeof newObj === 'string') || (typeof newObj === 'array') )
         {
             if (( newObj.length === 0) ) {
                 retStruct.delete = true;
-                console.log("In check for delete , newObj = ", newObj);
+                if (dbgPrint_handle4server)  console.log("In check for delete , newObj = ", newObj);
             }
         }
 
@@ -780,7 +791,7 @@ export class lmu_ua_formList {
             if ((Object.keys(newObj).length === 0))
             {
                 retStruct.delete = true;
-                console.log("In check for delete 2, newObj = ", newObj);
+                if (dbgPrint_handle4server)  console.log("In check for delete 2, newObj = ", newObj);
             }
 
             for (let p2 in newObj)
@@ -898,8 +909,6 @@ export class lmu_ua_formList {
         if (dbgPrint_handle4server) console.log("tmpUaObj2Server=",tmpUaObj2Server);
         return tmpUaObj2Server;
     };
-
-
 
 
     // ----------------------------------------------------------------------------------------------------

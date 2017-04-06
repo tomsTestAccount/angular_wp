@@ -8,7 +8,7 @@
 
 
 				<md-tab *ngFor="let ua_sec of ua_sections"
-                (click)="select_comp4User(ua_sec.name)"
+                (click)="select_subFormTab(ua_sec.name)"
                 id="uaTab_+{{ua_sec.name}}">
 					<template md-tab-label>{{ua_sec.title}}
 					<!--<span class="num">
@@ -18,7 +18,7 @@
 					</template>
 					<!--<template md-tab-content>-->
 
-					<form *ngIf="isFormValueLoadedFromServer==true" [formGroup]="main_lmu_ua_form">
+					<form *ngIf="isFormUpdated==true" [formGroup]="main_lmu_ua_form">
 
 						<md-card class="ua-cardBg">
 
@@ -31,7 +31,7 @@
                              [setFormEntries]="ac_formObj.formEntries"
                               [setForm2]="main_lmu_ua_form.controls['subFormGroup_ac2']"
                               [setFormEntries2]="ac2_formObj.formEntries">
-                </lmu_user_pe>
+                				</lmu_user_pe>
 
 								<lmu_user_oi *ngIf="ua_sec.name=='dbComp_User_oi'" [setForm]="main_lmu_ua_form.controls['subFormGroup_oi']" [setFormEntries]="oi_formObj.formEntries"></lmu_user_oi>
 							</md-card-content>
@@ -51,11 +51,16 @@
 
 
 							<div align="center" class="uacard-footer">
-								<button md-button type="button">Back</button>
+								<!--<button md-button type="button">Back</button>-->
 								<button md-button type="button" (click)="saveFormObj()">Save</button>
-								<button md-button type="button">Next</button>
-								<button md-button type="submit" [disabled]="!main_lmu_ua_form.valid">Submit</button>
-								<button md-button type="submit" (click)="showDbg()">Submit_dbg</button>
+								<!--<button md-button type="button">Next</button>-->
+								<!--<button md-button type="submit" [disabled]="!main_lmu_ua_form.valid">
+									Submit
+								</button>
+								-->
+								<!--<a href="{{summaryPage_href}}" [disabled]="!main_lmu_ua_form.valid"></a>-->
+								<!--<button class="md-primary" href="{{summaryPage_href}}" [disabled]="!main_lmu_ua_form.valid" target="_blank">Submit</button>-->
+								<button md-button type="button" (click)="showDbg()">Submit_dbg</button>
 							</div>
 						</div>
 

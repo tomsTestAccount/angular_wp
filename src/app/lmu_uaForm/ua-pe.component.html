@@ -16,28 +16,40 @@
 
             <div [ngSwitch]="formEntry.key" >
 
-                <!-- used here,because of to not handling that case in default-case-->
-                <div *ngSwitchCase="'degreeCertAvailable'">
+                <!-- used here,because to ignore that entry as an standalone entry-->
+                <div *ngSwitchCase="'copy_of_certificate_availableCheckbox'">
                     <!--do nothing for that formcontrol-element at the moment, because it is handled by 'copy_of_certificate' below-->
                 </div>
 
+                <!--
                 <div *ngSwitchCase="'copy_of_certificate'"
                      class="form-group"
-                     [ngClass]="{ 'formFrame_invalid' : !currentForm.controls[formEntry.key].valid && degreeCertAvailable == true,
-                                'formFrame_valid' : currentForm.controls[formEntry.key].valid  ||  degreeCertAvailable == false}"
+                     [ngClass]="{ 'formFrame_invalid' : currentForm.controls[formEntry.key].invalid && currentForm.controls['copy_of_certificate_availableCheckbox'].value == true,
+                                'formFrame_valid' : currentForm.controls[formEntry.key].valid  ||  currentForm.controls['copy_of_certificate_availableCheckbox'].value == false}"
                      >
+                    <div>
+                    <md-checkbox formControlName="copy_of_certificate_availableCheckbox"  align="start" [(ngModel)]="currentForm.controls['copy_of_certificate_availableCheckbox'].value">
+                               <label class="lbl-form_main"> Degree Certificate available ? </label>
+                            </md-checkbox>
 
+
+
+                 -->
+
+
+                <div *ngSwitchCase="'copy_of_certificate'"
+                         class="form-group"
+                     [ngClass]="{ 'formFrame_invalid' :  currentForm.controls[formEntry.key].invalid,
+                                    'formFrame_valid' : degreeCertAvailable == false || !currentForm.controls[formEntry.key].invalid
+                                    }"
+                         >
                     <div>
 
-                            <md-checkbox  align="start" [(ngModel)]="degreeCertAvailable" [ngModelOptions]="{standalone: true}">
-                               <label class="lbl-form_main"> Degree Certificate available ? </label>
-                            </md-checkbox>
+                        <md-checkbox  align="start"  [(ngModel)]="degreeCertAvailable" [ngModelOptions]="{standalone: true}" (click)="toggle_degreeCertAvailable(this)">
+                           <label class="lbl-form_main"> Degree Certificate available ? </label>
+                        </md-checkbox>
 
-                        <!--
-                                <md-checkbox formControlName="degreeCertAvailable" align="start" [(ngModel)]="currentForm.controls['degreeCertAvailable'].value">
-                               <label class="lbl-form_main"> Degree Certificate available ? </label>
-                            </md-checkbox>
-                        -->
+
                         <i class="mdi mdi-information-outline mdi-24px"
                            [ngClass]="{'isInfoActive' : showTooltip1}"
                            (click)="toggleInfo($event)"
@@ -54,13 +66,14 @@
 
                     </div>
 
-
-                        <rt-file-uploader *ngIf="degreeCertAvailable == true"
+                    <div  [hidden]="!degreeCertAvailable">
+                        <rt-file-uploader
                                           [formgroup]= currentForm
                                           [formEntry] = formEntry
 
                         ></rt-file-uploader>
 
+                    </div>
 
                 </div>
 
@@ -89,11 +102,11 @@
 
     <div  [ngClass]="{'formFrame_optional' : true}">
 
-        <md-checkbox align="start" [(ngModel)]="ac2Open" [checked]="ac2Open">
+        <md-checkbox align="start" [(ngModel)]="ac2_hasValues" [ngModelOptions]="{standalone: true}" [checked]="ac2_hasValues">
             <label class="lbl-form_main"> Other previous education available ? (optional) </label>
         </md-checkbox>
 
-        <form [hidden]="!ac2Open"
+        <form [hidden]="!ac2_hasValues"
               [formGroup]="currentForm2" name="ac2_form">
 
             <div *ngFor="let formEntry of currentFormEntries2">

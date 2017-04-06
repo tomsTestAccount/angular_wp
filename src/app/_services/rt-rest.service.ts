@@ -7,6 +7,7 @@ import {Observable} from "rxjs/Observable";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/timeout';
+import 'rxjs/add/observable/throw';
 
 import {ServerConfigs} from '../_models/configFile';
 //import {Body} from "@angular/http/src/body";
@@ -152,7 +153,8 @@ export class RestService {
 
 
     //get user application form entries
-    restGet_formObject(userId: string, token:string):Observable<any> {
+
+    restGet_formObject(userId: string, token:string):Observable<{}> {
 
         if (!userId) userId = this.userId;
 
@@ -161,15 +163,13 @@ export class RestService {
         if (token) headers.append('Authorization','Bearer ' + token); //'Authorization':'Bearer '
 
         if (dbgPrint_getUser) console.log("in restService,auth_getFormObject: userId=",userId);
+
         return this.http.get(this.serverURL + '/applications/'+ userId +'/'+userId              //url req-main
                                                                             //url req-sub
-            ,{headers:headers}  // ,({headers: new Headers({'Authorization':token}) }) //({'Authorization':'Bearer ' + token})                                          //header
-            //.retry(1)
-        )//.timeout(1000)
-            .map((response: Response) => response.json())
-            //.catch((error:any) => Observable.throw(error.json().error || 'Unknown Server error at "restGet_getUserData" '))
+            ,{headers:headers}                                     //header
+        )   .map((response: Response) => response.json())
+            //.catch((error:any) =>  Observable.throw(error.json().error || 'Unknown Server error at "restGet_getUserData"! See Debug-Console for more Information '))
             ;
-
     }
 
     //patch user application form entries
@@ -191,7 +191,9 @@ export class RestService {
             ,body                                                                            //(userData)                                                                        //body
             ,{headers:headers} //,({headers: new Headers({'Authorization':token}) })                               //({'Authorization':'Bearer ' + token})                 //header
             //.retry(1)
-        ).map((response: Response) => response.json())
+        )
+            .map((response: Response) => response.json())
+            //.catch((error:any) => Observable.throw(error.json().error || 'Unknown Server error at "restGet_getUserData" '))
             //.catch((error:any) => Observable.throw(error.json().error || 'Unknown Server error at "restGet_getUserData" '))
             ;
 

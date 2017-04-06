@@ -1,10 +1,6 @@
-//import { Ng2UploaderModule } from 'ng2-uploader/ng2-uploader';
-//import {UploadedFile} from "ng2-uploader/src/services/ng2-uploader";
-//import { NgUploaderModule } from 'ngx-uploader';
-
 import { NgUploaderOptions, UploadedFile, UploadRejected } from 'ngx-uploader';
 
-import { Component,OnInit,EventEmitter,Input,Output ,NgZone,Inject} from '@angular/core';
+import { Component,OnInit,AfterViewInit,EventEmitter,Input,Output ,NgZone,Inject} from '@angular/core';
 
 import {FormControl,FormGroup} from '@angular/forms';
 
@@ -31,7 +27,7 @@ const dbgPrint = false;
 
 })
 
-export class rtFileUploaderComponent implements OnInit
+export class rtFileUploaderComponent implements AfterViewInit,OnInit
 //export class rtFileUploaderComponent
 {
 
@@ -44,12 +40,9 @@ export class rtFileUploaderComponent implements OnInit
 
     options: NgUploaderOptions;
 
-    //@Output() uploadedDataRes : any = new Array();  //TODO: load via restApi (Mock first)
-    //@Output('change') uploadedDataChanged = new EventEmitter();
+    //uploadedData : any = new Array();
 
-    uploadedData : any = new Array();
-
-    @Output() uploadedDataChanged = new EventEmitter();
+    //@Output() uploadedDataChanged = new EventEmitter();
 
     //zone: NgZone;
 
@@ -125,7 +118,13 @@ export class rtFileUploaderComponent implements OnInit
     //---------------------------------------------------
 
 
-    ngOnInit(): void {
+    ngAfterViewInit(): void {
+
+    };
+
+
+
+    ngOnInit():void{
 
 
         this.title = this.currentFormEntry.title;
@@ -133,7 +132,7 @@ export class rtFileUploaderComponent implements OnInit
         this.compId = this.currentFormEntry.key;
 
         //this.fileUpload_url = this.srvCfgs.get_serverConfigs().url + '/applications/' + this.srvCfgs.get_serverConfigs().userId + '/' + this.srvCfgs.get_serverConfigs().userId + '/' + this.currentFormEntry.key;
-        this.fileUpload_url = "not neccessary now"
+        this.fileUpload_url = "not neccessary here, because of fileUpload via stringStream in formObject";
 
         this.options = new NgUploaderOptions({
             url : this.fileUpload_url,
@@ -173,7 +172,8 @@ export class rtFileUploaderComponent implements OnInit
         if (this.currentFormEntry.defaultValue)
         {
             if (this.currentFormEntry.defaultValue.filename) {
-                if (dbgPrint) console.log("this.currentFormEntry.defaultValue= ", this.currentFormEntry.defaultValue);
+                //if (dbgPrint)
+                    console.log("this.currentFormEntry.defaultValue= ", this.currentFormEntry.defaultValue);
                 this.localFileArray[0] = this.currentFormEntry.defaultValue;
                 (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.localFileArray[0]);
                 if (dbgPrint) console.log(">this.currentForm.controls[this.currentFormEntry.key]= ", this.currentForm.controls[this.currentFormEntry.key]);

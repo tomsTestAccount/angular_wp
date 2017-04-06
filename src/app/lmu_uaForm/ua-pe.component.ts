@@ -17,6 +17,7 @@ import {
   transition,
   animate
 } from '@angular/core';
+import {ValidateFn} from "codelyzer/walkerFactory/walkerFn";
 
 
 const dbgPrint_ac =false;
@@ -47,7 +48,7 @@ export class LmuUserPeComponent implements AfterViewInit{
 
 	avgr2Object_formModel : any;
 
-    ac2Open = false;
+    ac2_hasValues = false;
 
 	degreeCertAvailable:boolean=false;
 
@@ -85,7 +86,7 @@ export class LmuUserPeComponent implements AfterViewInit{
                 formCtrls[key].value !== 'undefined')
             {
                 if (dbgPrint_ac2) console.log("formCtrl.value = ", formCtrls[key].value," for ",key);
-                this.ac2Open = true;
+                this.ac2_hasValues = true;
             }
         }
 
@@ -118,9 +119,8 @@ export class LmuUserPeComponent implements AfterViewInit{
 					if (this.currentFormEntries[i].defaultValue.filename != null)
 					{
 						setTimeout(()=> {			//bugfix for angular.io changeDetection in Dev-Mode; see issue #6005 (EXCEPTION: Expression has changed after it was checked)
-							this.degreeCertAvailable = true
+							this.degreeCertAvailable = true;
 						},1);
-
 
 					}
 				}
@@ -128,10 +128,43 @@ export class LmuUserPeComponent implements AfterViewInit{
 
 		}
 
-        if (dbgPrint_ac) console.log("In LmuUserPeComponent,ngAfterViewInit this.ac2Open",this.ac2Open);
+		this.toggle_degreeCertAvailable();
+
+        if (dbgPrint_ac) console.log("In LmuUserPeComponent,ngAfterViewInit this.ac2_hasValues",this.ac2_hasValues);
 	}
 
 
+	nullValidator(c: FormControl) {
+	return null;
+	}
+
+	toggle_degreeCertAvailable(this_component?)
+	{
+		//if (this_component) console.log("this_component",this_component);
+		setTimeout(()=> {			//bugfix for angular.io changeDetection in Dev-Mode; see issue #6005 (EXCEPTION: Expression has changed after it was checked)
+			//this.degreeCertAvailable = !this.degreeCertAvailable;
+			if (!this.degreeCertAvailable )
+			{
+				//this.currentForm.setControl('copy_of_certificate', new FormControl(''));
+				//this.currentForm.removeControl('copy_of_certificate');
+
+				//this.currentForm.controls['copy_of_certificate'].clearValidators();
+				//this.currentForm.controls['copy_of_certificate'].setValidators(Validators.nullValidator);
+
+				this.currentForm.controls['copy_of_certificate'].disable();
+			}
+			else {
+				//this.currentForm.addControl('copy_of_certificate', new FormControl('', Validators.required));
+				//this.currentForm.setControl('copy_of_certificate', new FormControl('', Validators.required));
+				//nullValidator : ValidateFn;
+
+				//this.currentForm.controls['copy_of_certificate'].setValidators(Validators.required);
+
+				this.currentForm.controls['copy_of_certificate'].enable();
+			}
+		},1);
+
+	}
 
 
 	formInputValid(formInput:string)

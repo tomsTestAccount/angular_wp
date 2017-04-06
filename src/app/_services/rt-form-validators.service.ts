@@ -1,25 +1,19 @@
 import { Injectable } from '@angular/core';
 
+import {FormControl, Validators, AbstractControl,FormGroup}  from '@angular/forms';
 
-import { Headers, Http } from '@angular/http';
-
-import { FormGroup,FormControl,FormBuilder }        from '@angular/forms';
-
-//import 'rxjs/add/operator/toPromise';
 
 const dbgPrint_Validation = false;
 
 @Injectable()
 export class rtFormValidators {
 
-
-
     constructor() { }
 
 
     validateArray(c: FormControl) {
 
-        let retValue = {notValid: true};
+        let retValue = null; //= {notValid: true};
         if (c != null) {
 
             retValue = (c.value.length == 0) ? {notValid: true} : null;
@@ -35,8 +29,8 @@ export class rtFormValidators {
 
     validateFileUpload(c: FormControl) {
 
-        let retValue = {notValid: true};
-        if (c != null) {
+        let retValue = null; // {notValid: true};
+        if (c.value != null) {
 
             retValue = (c.value.filename == null) ? {notValid: true} : null;
 
@@ -51,12 +45,15 @@ export class rtFormValidators {
 
     validateCourseList(c: FormControl) {
 
-        let retValue = {notValid: true};
+        let retValue = null; //{notValid: true};
         if ( (c.value['average'] != null) && (c.value['table'].length != 0) ) {
 
             let numValue = parseFloat(c.value['average']);
-            retValue = (isNaN(numValue) || (numValue<=0)) ? {notValid: true} : null;
+            //retValue = (isNaN(numValue) || (numValue<=0)) ? {notValid: true} : null;
 
+            if (isNaN(numValue)) retValue = {notValid:{input: 'is not a number'}};
+            else if (numValue<=0) retValue = {notValid:{input: 'is less than/equals zero '}};
+            else retValue = null;
             //console.log("In validateCourseList, c=",c, ', retValue=', retValue);
         }
 
@@ -66,19 +63,23 @@ export class rtFormValidators {
 
     }
 
-    validateEmail(c: FormControl) {
+    validateEmail(c: FormControl)  {
 
-        let retValue = {notValid: true};
+        let retValue = null;
 
-        if ( (c.value != null) ) {
+        let required = c.parent; //validator;
+
+        if ( (c.value != null) && (c.value != '') ) {
 
             var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
             //console.log(" re.test(c.value)=", re.test(c.value));
-            retValue = re.test(c.value) ? null : {notValid: true} ;
+            retValue = re.test(c.value) ? null : {notValid:{email: ' wrong email address notation'}} ;
         }
 
-        if (dbgPrint_Validation) console.log("In validateEmail, c=",c, ', retValue=', retValue);
+
+
+        if (dbgPrint_Validation) console.log("In validateEmail, c=",c, ', retValue=', retValue, required);
 
         return retValue
 
@@ -86,11 +87,14 @@ export class rtFormValidators {
 
     validateNumberNotZero(c: FormControl) {
 
-        let retValue = {notValid: true};
+        let retValue = null; //= {notValid: true};
         if ( (c.value != null)  ) {
 
             let numValue = parseFloat(c.value);
-            retValue = (isNaN(numValue) || (numValue<=0)) ? {notValid: true} : null;
+            if (isNaN(numValue)) retValue = {notValid:{input: 'is not a number'}};
+            else if (numValue<=0) retValue = {notValid:{input: 'is less than/equals zero '}};
+            else retValue = null;
+
 
             //console.log("In validateCourseList, c=",c, ', retValue=', retValue);
         }
@@ -128,6 +132,20 @@ export class rtFormValidators {
         }
         return retValue;
     }
+
+
+
+    validateGroup_CheckboxEnabled(group: FormGroup)
+    {
+        /*
+        const range = group.controls[0].find(r => r.id === Number(group.value.range));
+        if(range && (group.value.specificValue < range.min || group.value.specificValue > range.max)) {
+            return {
+                outsideRange: true
+            };
+        }
+        */
+    };
 
 
 /*
