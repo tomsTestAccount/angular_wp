@@ -16,7 +16,9 @@
 					</span>
 					-->
 					</template>
-					<!--<template md-tab-content>-->
+					<!--<template md-tab-content>
+					[mainForm]="main_lmu_ua_form"
+					-->
 
 					<form *ngIf="isFormUpdated==true" [formGroup]="main_lmu_ua_form">
 
@@ -24,16 +26,17 @@
 
 							<md-card-content class="uacard-content" >
 
-								<lmu_user_apd *ngIf="ua_sec.name=='dbComp_User_apd'" [setForm]="main_lmu_ua_form.controls['subFormGroup_apd']" [setFormEntries]="apd_formObj.formEntries" (onFormEvent_apd)="onFormEvent_apd($event)"></lmu_user_apd>
+								<lmu_user_apd *ngIf="ua_sec.name=='dbComp_User_apd'"  [setForm]="main_lmu_ua_form.controls['subFormGroup_apd']" [setFormEntries]="apd_formObj.formEntries" (onFormEvent_apd)="onFormEvent_apd($event)"></lmu_user_apd>
 
 								<lmu_user_pe *ngIf="ua_sec.name=='dbComp_User_pe'"
+
                              [setForm]="main_lmu_ua_form.controls['subFormGroup_ac']"
                              [setFormEntries]="ac_formObj.formEntries"
                               [setForm2]="main_lmu_ua_form.controls['subFormGroup_ac2']"
                               [setFormEntries2]="ac2_formObj.formEntries">
                 				</lmu_user_pe>
 
-								<lmu_user_oi *ngIf="ua_sec.name=='dbComp_User_oi'" [setForm]="main_lmu_ua_form.controls['subFormGroup_oi']" [setFormEntries]="oi_formObj.formEntries"></lmu_user_oi>
+								<lmu_user_oi *ngIf="ua_sec.name=='dbComp_User_oi'"  [setForm]="main_lmu_ua_form.controls['subFormGroup_oi']" [setFormEntries]="oi_formObj.formEntries"></lmu_user_oi>
 							</md-card-content>
 
 							<md-card-footer class="uacard-footer">
@@ -55,12 +58,20 @@
 
 							<div align="center" class="uacard-footer">
 
+								<!--
 								<button *ngIf="!changeDetected"
 										md-button type="save" [disabled]="true">
 									Save
 								</button>
 								<button *ngIf="changeDetected"
 										type="button"
+										class="btn bs_submit_button"
+										(click)="saveFormObj()"
+								>Save
+								</button>
+								-->
+
+								<button type="button"
 										class="btn bs_submit_button"
 										(click)="saveFormObj()"
 								>Save

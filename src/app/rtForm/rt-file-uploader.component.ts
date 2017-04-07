@@ -325,6 +325,8 @@ export class rtFileUploaderComponent implements AfterViewInit,OnInit
             //var delObj2 = {};  //TODO: ask Max, because set formObject-value = null from type 'file' isn't accepted by plone-server at the moment ??
 
             (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(delObj);  //only one fileObject used at the moment
+            //let keystring :string = this.currentFormEntry.key.toString();
+            //this.currentForm.patchValue({keystring: delObj});
         }
 
         //(<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.localFileArray);

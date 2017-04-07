@@ -195,7 +195,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
 
 
-				this.subscribeMainFormValuesChanged();
+				//this.subscribeMainFormValuesChanged();
 
 				// subscribe to form changes, so we can detect the formEntries that were changed --> and send only these ones
 				this.subscribeToFormEntriesChanges();
@@ -213,8 +213,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 				this.changeDetected = false;
 				this.reset_formChangedEntries();
 
-                //if (dbgPrint)
-				 console.log("In user-application ngAfterViewInit2, after get data!",this.main_lmu_ua_form);
+                if (dbgPrint)console.log("In user-application ngAfterViewInit2, after get data!",this.main_lmu_ua_form);
 
             })
 			.catch(err => {
@@ -226,12 +225,15 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
 	private setChangeDetected(value:boolean)
 	{
-		if (value == this.changeDetected) return;
-		else {
-			setTimeout(() => {
-				this.changeDetected = value;
-			}, 1);
-		}
+
+			//console.log("in setChangedDetected:",value);
+			if (value == this.changeDetected) return;
+			else {
+				setTimeout(() => {
+					this.changeDetected = value;
+				}, 1);
+			}
+
 	}
 
 	private reset_formChangedEntries() {
@@ -246,7 +248,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
 	private subscribeMainFormValuesChanged()
 	{
-		this.main_lmu_ua_form.valueChanges
+		this.main_lmu_ua_form.controls['subFormGroup_ac'].valueChanges
             .subscribe(x => {
 				//console.log("in ValueChanged x = ",this.main_lmu_ua_form);
 				if (this.main_lmu_ua_form.dirty) this.setChangeDetected(true);
@@ -268,7 +270,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 				//this.lastValue = x[0];
 				//console.log("in ValueChanged x = ",x);
 				 if (dbgPrint_formEntryChanged) console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_apd']['controls'][0]['controls'][fControl]);
-				//	this.setChangeDetected(true);
+				 if (this.main_lmu_ua_form.dirty) this.setChangeDetected(true);
 				});
 		}
 
@@ -282,7 +284,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 					//this.lastValue = x[0];
 					//console.log("in ValueChanged x = ",x);
 					if (dbgPrint_formEntryChanged) console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_ac']['controls'][0]['controls'][fControl]);
-					//	this.setChangeDetected(true);
+					if (this.main_lmu_ua_form.dirty) this.setChangeDetected(true);
 				});
 		}
 
@@ -296,7 +298,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 					//this.lastValue = x[0];
 					//console.log("in ValueChanged x = ",x);
 					if (dbgPrint_formEntryChanged) console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_ac2']['controls'][0]['controls'][fControl]);
-					//	this.setChangeDetected(true);
+					if (this.main_lmu_ua_form.dirty) this.setChangeDetected(true);
 				});
 		}
 
@@ -310,7 +312,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 					//this.lastValue = x[0];
 					//console.log("in ValueChanged x = ",x);
 					if (dbgPrint_formEntryChanged) console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_oi']['controls'][0]['controls'][fControl]);
-					//	this.setChangeDetected(true);
+					if (this.main_lmu_ua_form.dirty) this.setChangeDetected(true);
 				});
 		}
 

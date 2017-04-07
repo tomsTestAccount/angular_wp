@@ -321,14 +321,11 @@ export class AuthenticationService {
                 .subscribe(
                     (response) => {
 
-                        //if (dbgPrint_getFormObj)
-                        console.log("In auth_getFormObject_Server after rest-call, response=",response);
+                        if (dbgPrint_getFormObj)console.log("In auth_getFormObject_Server after rest-call, response=",response);
 
                         var convertedUaObject = this._lmuForms.handleServerFormObject4localWorking(response);
 
-
                         //this._rtFormSrv.subFormsUpdated(true);
-
 
                         resolve(convertedUaObject);
                     },
