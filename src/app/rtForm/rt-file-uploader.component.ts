@@ -160,7 +160,7 @@ export class rtFileUploaderComponent implements AfterViewInit,OnInit
                 //'Content-Type':'application/json',
                 'Accept':'application/json'
             },
-            plainJson: true,
+            //plainJson: true,
             withCredentials: false,
             cors:false
         });
