@@ -85,7 +85,7 @@ export class rtInputComponent implements OnInit {
         e.stopPropagation();
     }
 
-
+    //used in html-template to show info for user for invalid input
     entryErrorString() {
 
         let retValue =  "Not an valid input : ";
@@ -95,7 +95,7 @@ export class rtInputComponent implements OnInit {
         {
             let errRef =  this.formgroup.controls[this.formEntry.key].errors;
 
-            console.log("errType=",errRef);
+            //console.log("errType=",errRef);
 
             for (let errType in errRef)
             {

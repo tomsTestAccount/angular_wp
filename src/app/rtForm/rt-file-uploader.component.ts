@@ -172,8 +172,7 @@ export class rtFileUploaderComponent implements AfterViewInit,OnInit
         if (this.currentFormEntry.defaultValue)
         {
             if (this.currentFormEntry.defaultValue.filename) {
-                //if (dbgPrint)
-                    console.log("this.currentFormEntry.defaultValue= ", this.currentFormEntry.defaultValue);
+                if (dbgPrint) console.log("this.currentFormEntry.defaultValue= ", this.currentFormEntry.defaultValue);
                 this.localFileArray[0] = this.currentFormEntry.defaultValue;
                 (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.localFileArray[0]);
                 if (dbgPrint) console.log(">this.currentForm.controls[this.currentFormEntry.key]= ", this.currentForm.controls[this.currentFormEntry.key]);

@@ -693,7 +693,6 @@ export class lmu_ua_formList {
             {
 
                 formEntries_oi[i]['defaultValue']=value;
-
                 return;
             }
         }
@@ -722,7 +721,7 @@ export class lmu_ua_formList {
 
 
                 formEntries_ac2[i]['defaultValue']=value;
-                console.log("Set Default-Value for ",formEntries_ac2[i].key, " = ",value);
+                //if (dbgPrint_handle4local) console.log("Set Default-Value for ",formEntries_ac2[i].key, " = ",value);
 
                 return;
             }

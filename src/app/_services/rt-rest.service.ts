@@ -13,7 +13,8 @@ import {ServerConfigs} from '../_models/configFile';
 //import {Body} from "@angular/http/src/body";
 //import { Subject }    from 'rxjs/Subject';
 
-const dbgPrint_getUser = true;
+const dbgPrint_getUser = false;
+const dbgPrint = false;
 
 @Injectable()
 export class RestService {
@@ -31,7 +32,7 @@ export class RestService {
 
         this.onDevEnv = serverConfs.onDevelopmentEnv;
 
-        console.log("serverURL=",this.serverURL);
+        if (dbgPrint) console.log("serverURL=",this.serverURL);
     }
 
     /********************************************************************************************************************/

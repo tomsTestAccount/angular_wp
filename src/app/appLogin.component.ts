@@ -187,9 +187,9 @@ import {Location} from '@angular/common';
      subscription: Subscription;
 
      constructor(private _router: Router,
-     public _authenticationService: AuthenticationService,
-     private _location: Location
-     //,public modal: Modal
+         public _authenticationService: AuthenticationService,
+         private _location: Location
+         //,public modal: Modal
      ){
      this.subscription = _authenticationService.userDisplayName$.subscribe(
      newDisplayName => {

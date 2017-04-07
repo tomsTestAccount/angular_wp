@@ -24,7 +24,7 @@ export class ServerConfigs {
         let locUrl = window.location;
         //locUrl =
 
-        console.log("locUrl=",locUrl );
+        if (dbgPrint) console.log("locUrl=",locUrl );
 
         if (locUrl.pathname.indexOf('Plone') == -1)
         {

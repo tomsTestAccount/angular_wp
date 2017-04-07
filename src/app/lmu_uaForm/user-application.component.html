@@ -46,22 +46,46 @@
 
 					<!--</template>-->
 
-						<hr/>
-						<div [style.background]="'white'">
+						<!-- <hr/> -->
 
+						<div [style.background]="'white'">
+							<div>
+								<hr [style.background]="'white'"/>
+							</div>
 
 							<div align="center" class="uacard-footer">
-								<!--<button md-button type="button">Back</button>-->
-								<button md-button type="button" (click)="saveFormObj()">Save</button>
-								<!--<button md-button type="button">Next</button>-->
-								<!--<button md-button type="submit" [disabled]="!main_lmu_ua_form.valid">
+
+								<button *ngIf="!changeDetected"
+										md-button type="save" [disabled]="true">
+									Save
+								</button>
+								<button *ngIf="changeDetected"
+										type="button"
+										class="btn bs_submit_button"
+										(click)="saveFormObj()"
+								>Save
+								</button>
+
+								<button *ngIf="changeDetected"
+										md-button type="submit" [disabled]="true">
 									Submit
 								</button>
-								-->
-								<!--<a href="{{summaryPage_href}}" [disabled]="!main_lmu_ua_form.valid"></a>-->
-								<!--<button class="md-primary" href="{{summaryPage_href}}" [disabled]="!main_lmu_ua_form.valid" target="_blank">Submit</button>-->
+								<a *ngIf="main_lmu_ua_form.valid && !changeDetected"
+								   class="btn bs_submit_button"
+								   id="babab"
+								   href="{{summaryPage_href}}"
+								   role="button">
+									Submit
+								</a>
+
+								<!--
 								<button md-button type="button" (click)="showDbg()">Submit_dbg</button>
+								-->
 							</div>
+							<div>
+								<hr [style.background]="'white'"/>
+							</div>
+							<div></div>
 						</div>
 
 					</form>

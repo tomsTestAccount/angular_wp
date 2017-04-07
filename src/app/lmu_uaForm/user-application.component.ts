@@ -1,19 +1,13 @@
 import { Component,OnInit,AfterViewInit,HostListener,Input,OnChanges,SimpleChange } from '@angular/core';
 
 
-import {Validators, FormGroup,FormControl,FormBuilder,FormArray} from '@angular/forms';
+import {FormGroup,FormControl,FormBuilder} from '@angular/forms';
 
 
 import {rtFormValidators}  from '../_services/rt-form-validators.service';
 import {lmu_ua_formList} from'../_models/lmu_ua_formList';
 import { RtFormService ,cFormObject} from '../_services/rt-forms.service';
 
-
-
-//import {UserService} from '../_services/rt-user.service';
-//import { User } from '../_models/user';
-
-//import {Router,ActivatedRoute} from '@angular/router';
 
 import {AuthenticationService} from  '../_services/rt-authentication.service';
 import {ServerConfigs} from '../_models/configFile';
@@ -73,9 +67,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
                   answerMissing : 0}
     ];
 
-
 	curr_ua_sec : string;
-
 
 	//------------------------------------------
 	main_lmu_ua_form : FormGroup;
@@ -96,7 +88,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
     dbgFormValues =false;
 
-	changeDetected=false;
+	changeDetected:boolean = false;
 
 	isFormUpdated = false;
 
@@ -155,17 +147,20 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
 
 
-    ngOnInit(): void {
+    //ngOnInit(): void {
+	ngAfterViewInit(): void {
 
 		if (dbgPrint) console.log("In UserApplicationComponent ngOnInit");
 
 
+		this.setChangeDetected(false);
 
 
     }
 
 
-    ngAfterViewInit(): void {
+ 	//ngAfterViewInit(): void {
+	ngOnInit(): void {
 
 
         if (dbgPrint) console.log("In user-application ngAfterViewInit!");
@@ -196,10 +191,16 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 				 this.ac2_formObj = this.lmu_ua_form.ac2_formObj;
 				 this.oi_formObj = this.lmu_ua_form.oi_formObj;
 
-				console.log("this.apd_formObj=",this.apd_formObj);
+				//console.log("this.apd_formObj=",this.apd_formObj);
+
+
+
+				this.subscribeMainFormValuesChanged();
 
 				// subscribe to form changes, so we can detect the formEntries that were changed --> and send only these ones
 				this.subscribeToFormEntriesChanges();
+
+
 
 				//set event the view is waiting for
 				this.isFormUpdated = true;
@@ -207,7 +208,13 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 				//close loading dialog
 				this.dialogsService.closeDialog();
 
-                if (dbgPrint) console.log("In user-application ngAfterViewInit2, after get data!",this.main_lmu_ua_form);
+
+				// has to be set after 'subscribeToFormEntriesChanges', because the subsribe functions are calling this.setChangeDetected()
+				this.changeDetected = false;
+				this.reset_formChangedEntries();
+
+                //if (dbgPrint)
+				 console.log("In user-application ngAfterViewInit2, after get data!",this.main_lmu_ua_form);
 
             })
 			.catch(err => {
@@ -215,6 +222,16 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 			});
 
 
+	}
+
+	private setChangeDetected(value:boolean)
+	{
+		if (value == this.changeDetected) return;
+		else {
+			setTimeout(() => {
+				this.changeDetected = value;
+			}, 1);
+		}
 	}
 
 	private reset_formChangedEntries() {
@@ -227,8 +244,16 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
 };
 
-	private subscribeToFormEntriesChanges() {
+	private subscribeMainFormValuesChanged()
+	{
+		this.main_lmu_ua_form.valueChanges
+            .subscribe(x => {
+				//console.log("in ValueChanged x = ",this.main_lmu_ua_form);
+				if (this.main_lmu_ua_form.dirty) this.setChangeDetected(true);
+			});
+	}
 
+	private subscribeToFormEntriesChanges() {
 
 		if (dbgPrint_formEntryChanged) console.log("form=",this.main_lmu_ua_form.controls['subFormGroup_apd']);
 
@@ -243,7 +268,8 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 				//this.lastValue = x[0];
 				//console.log("in ValueChanged x = ",x);
 				 if (dbgPrint_formEntryChanged) console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_apd']['controls'][0]['controls'][fControl]);
-			});
+				//	this.setChangeDetected(true);
+				});
 		}
 
 		for (let fControl in  (<FormControl>this.main_lmu_ua_form.controls['subFormGroup_ac']['controls'][0]['controls']))
@@ -256,6 +282,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 					//this.lastValue = x[0];
 					//console.log("in ValueChanged x = ",x);
 					if (dbgPrint_formEntryChanged) console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_ac']['controls'][0]['controls'][fControl]);
+					//	this.setChangeDetected(true);
 				});
 		}
 
@@ -269,6 +296,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 					//this.lastValue = x[0];
 					//console.log("in ValueChanged x = ",x);
 					if (dbgPrint_formEntryChanged) console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_ac2']['controls'][0]['controls'][fControl]);
+					//	this.setChangeDetected(true);
 				});
 		}
 
@@ -282,38 +310,15 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 					//this.lastValue = x[0];
 					//console.log("in ValueChanged x = ",x);
 					if (dbgPrint_formEntryChanged) console.log("formControl", fControl," =",this.main_lmu_ua_form.controls['subFormGroup_oi']['controls'][0]['controls'][fControl]);
+					//	this.setChangeDetected(true);
 				});
 		}
 
 
+		this.setChangeDetected(false);
+
 	 }
 
-	 /*
-	private subscribeToFormStatusChanges() {
-
-	 // initialize stream
-	 //const myFormStatusChanges$ = this.main_lmu_ua_form.controls['subFormGroup_apd'].statusChanges;
-	 var myFormValueChanges$ = this.main_lmu_ua_form.controls['subFormGroup_apd'].valueChanges;
-
-	 // subscribe to the stream
-	 //myFormStatusChanges$.subscribe(x => this.events.push({ event: 'STATUS_CHANGED', object: x }));
-	 myFormValueChanges$.subscribe(x => {
-	 this.events.push({event: 'VALUE_CHANGED', object: x})
-	 this.lastValue = x[0];
-	 console.log("in ValueChanged x = ",x,x[1]);
-	 console.log("form=",this.main_lmu_ua_form.controls['subFormGroup_apd']);
-	 });
-
-
-	 }*/
-
-
-	/*formValueChanged(data:any)
-	 {
-	 console.log("value changed, this.main_lmu_ua_form=",this.main_lmu_ua_form);
-	 this.changeDetected = true;
-	 }
-	 */
 
 	select_subFormTab(current_ua_sec: string) {
         if (dbgPrint) console.log("In select_comp4User, current_dbComp_user=",current_ua_sec);
@@ -343,8 +348,9 @@ export class UserApplicationComponent implements OnInit,AfterViewInit {
 
 	submitForm()
 	{
-		this.saveFormObj();
+		//this.saveFormObj();
 		console.log("this.summaryPage_href =",this.summaryPage_href );
+
 	}
 
 	//status_apd: boolean = false;

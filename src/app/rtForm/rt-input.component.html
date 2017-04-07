@@ -26,7 +26,7 @@
                        [id]="formEntry.key"
                        formControlName={{formEntry.key}}
                 />
-                <div class="invalidInfo" [hidden]="formgroup.controls[formEntry.key].valid">
+                <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
                     {{entryErrorString()}}
                 </div>
 
@@ -49,7 +49,7 @@
                        formControlName={{formEntry.key}}
                         >
                 </textarea>
-                <div class="invalidInfo" [hidden]="formgroup.controls[formEntry.key].valid">
+                <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
                     {{entryErrorString()}}
                 </div>
             </div>
@@ -83,7 +83,7 @@
 
                     <!--<input *ngIf="formEntry.required == true" class="notvisibleInput" formControlName={{formEntry.key}} value={{formgroup.controls[formEntry.key].value}} required>-->
                     <input *ngIf="formEntry.required == undefined || formEntry.required == false" class="notvisibleInput" formControlName={{formEntry.key}} value={{formgroup.controls[formEntry.key].value}}>
-                    <div class="invalidInfo" [hidden]="formgroup.controls[formEntry.key].valid">
+                    <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
                         {{entryErrorString()}}
                     </div>
                 </div>
@@ -109,7 +109,7 @@
                     <option selected="selected" disabled="disabled" value="">Please Select</option>
                     <option *ngFor="let option of formEntry.options" [value]="option.name">{{option.name}}</option>
                 </select>
-                <div class="invalidInfo" [hidden]="formgroup.controls[formEntry.key].valid">
+                <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
                     {{entryErrorString()}}
                 </div>
 
@@ -132,7 +132,7 @@
                        [id]="formEntry.key"
                        formControlName={{formEntry.key}}
                        />
-                <div class="invalidInfo" [hidden]="formgroup.controls[formEntry.key].valid">
+                <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
                     {{entryErrorString()}}
                 </div>
 
@@ -147,15 +147,18 @@
                                                  }">
                 <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
 
+
                 <input
                         type={{formEntry.type}}
                        class="form-control"
                        [id]="formEntry.key"
                        formControlName={{formEntry.key}}
-                        />
-                <div class="invalidInfo" [hidden]="formgroup.controls[formEntry.key].valid">
+                />
+
+                <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
                     {{entryErrorString()}}
                 </div>
+
             </div>
         </div>
 
@@ -176,7 +179,7 @@
                                                 [formgroup]=formgroup
                                                 [formEntry] = formEntry>
                               </rt-file-uploader>
-                <div class="invalidInfo" [hidden]="formgroup.controls[formEntry.key].valid">
+                <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
                     {{entryErrorString()}}
                 </div>
 
@@ -192,7 +195,7 @@
                     <md-checkbox formControlName={{formEntry.key}} align="start">
                         <label class="lbl-form_main" [attr.for]="formEntry.key"> {{formEntry.title}} </label>
                     </md-checkbox>
-                    <div class="invalidInfo" [hidden]="formgroup.controls[formEntry.key].valid">
+                    <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
                         {{entryErrorString()}}
                     </div>
                         <!--

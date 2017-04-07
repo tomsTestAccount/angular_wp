@@ -116,7 +116,7 @@ export class LmuUserApdComponent implements OnInit {
 
 		if (this.dbgPrint) console.log("formEntries=",this.currentFormEntries);
 
-		let currentUserObj = JSON.parse(localStorage.getItem('currentUser'));
+		/*let currentUserObj = JSON.parse(localStorage.getItem('currentUser'));
 
 		if (currentUserObj) {
 
@@ -126,7 +126,7 @@ export class LmuUserApdComponent implements OnInit {
 			this.currentForm.controls['firstname'].patchValue(currentUserObj['firstName']);
 			this.currentForm.controls['email'].patchValue(currentUserObj['email']);
 		}
-
+		*/
 
 
 
