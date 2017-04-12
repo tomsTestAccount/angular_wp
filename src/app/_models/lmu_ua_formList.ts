@@ -151,7 +151,7 @@ var formEntries_ac = [
         key: 'ac_education',
         title: 'Academic Education *',
         type: 'textarea',
-        validators: ['minLength=3'],
+        validators: ['required','minLength=3'],
         secParagraphArray: ['Please enter your previous or your current study program:'],
         required: true
     },
@@ -209,7 +209,7 @@ var formEntries_ac = [
         secParagraphArray: ['Please upload a PDF copy of your degree certificate'],
         options: {
             url: fileUploadUrl,//fileUploadURL,
-            filterExtensions: true,
+
             allowedExtensions: ['application/pdf'],
             calculateSpeed: true,
         },
@@ -225,7 +225,7 @@ var formEntries_ac = [
                         and 30 ECTS in Data-Based Modelling (see below)'],
         options: {
             url: fileUploadUrl,// fileUploadURL,
-            filterExtensions: true,
+
             allowedExtensions: ['application/pdf', 'image/jpeg', 'image/png'],
             calculateSpeed: true,
         },
@@ -356,7 +356,7 @@ var formEntries_ac = [
         validators: ['required','validateFileUpload'],
         options: {
             url: fileUploadUrl,// fileUploadURL,
-            filterExtensions: true,
+
             allowedExtensions: ['application/pdf', 'image/jpeg', 'image/png'],
             calculateSpeed: true,
         },
@@ -375,7 +375,7 @@ var formEntries_oi = [
             'The essay musst not exceed 1,000 words'],
         options: {
             url: fileUploadUrl,// fileUploadURL,
-            filterExtensions: true,
+
             allowedExtensions: ['application/pdf'],
             calculateSpeed: true,
         },
@@ -389,7 +389,7 @@ var formEntries_oi = [
         secParagraphArray: ['Please upload any other certificates regarding internships, vocational training, computer courses, past working experience, etc.,', ' as well as your ECTS calculation document within a single PDF file.'],
         options: {
             url: fileUploadUrl,// fileUploadURL,
-            filterExtensions: true,
+
             allowedExtensions: ['application/pdf'],
             calculateSpeed: true,
         },
@@ -454,7 +454,9 @@ var formEntries_ac2 = [
             dateFormat: "yy-mm-dd",
             dataType: "string",
             yearRange: "2000:2017",
-            placeholder: "yyyy-mm-dd"
+            placeholder: "yyyy-mm-dd",
+            minDate: "2000-01-01",
+
         },
         validators: ['minLength=8'],
         required: false
@@ -464,10 +466,10 @@ var formEntries_ac2 = [
         key: 'copy_of_certificate2',
         title: 'Copy of Degree Certificate *',
         type: 'fileUpload',
-        validators: ['validateFileUpload'],
+        //validators: ['validateFileUpload'],  //TODO:   just a workaround here -> we have to wait for max for implementing to setting null to file-entries to plone-serialization
         options: {
             url: fileUploadUrl,// fileUploadURL,
-            filterExtensions: true,
+
             allowedExtensions: ['application/pdf'],
             calculateSpeed: true,
         },
@@ -539,8 +541,7 @@ export class lmu_ua_formList {
         return this.main_lmu_ua_form;
     }
 
-    get_mainForm():FormGroup
-    {
+    get_mainForm():FormGroup {
         if (dbgPrint) console.log("In get_mainForm");
         return this.main_lmu_ua_form;
     }
@@ -585,10 +586,7 @@ export class lmu_ua_formList {
         return new cFormObject(formGroup,this.get_form_oi());
     }
 
-
-
-    //--------------------------------------------------------------------------
-
+    //---------------------------------------------------------------------------------------------------
 
     private _handleFormEntry4GridBox(formEntry:any,givenValue:any) {
 
@@ -682,6 +680,19 @@ export class lmu_ua_formList {
                 {
                     formEntries_ac[i]['defaultValue'] =  this._handleFormEntry4GridBox(formEntries_ac[i],value);
                 }
+                /*else if (formEntries_ac[i].type === 'fileUpload')
+                {
+                    if (value)
+                    {
+                        if (value.filename == null)
+                        {
+                            value = null;
+                        }
+                    }
+
+                    formEntries_ac[i]['defaultValue'] = value;
+                }
+                */
                 else formEntries_ac[i]['defaultValue'] = value;
                 return;
             }
@@ -715,7 +726,6 @@ export class lmu_ua_formList {
                         {
                             value = null;
                         }
-
                     }
                 }
 
@@ -762,7 +772,7 @@ export class lmu_ua_formList {
 
     private _conversionsAndChecks4Obj2Server(o:any,p:any) {
 
-        console.log("o[",p,"] = ",o[p]);
+        //console.log("o[",p,"] = ",o[p]);
 
         var retStruct={
             delete:false,
@@ -776,59 +786,62 @@ export class lmu_ua_formList {
 
         if (dbgPrint_handle4server) console.log("newObj = ",newObj);
 
-        //delete all empty fields (set to null on server)
-        if ( (typeof newObj === 'string') || (typeof newObj === 'array') )
+        if (newObj !== null )
         {
-            if (( newObj.length === 0) ) {
-                retStruct.delete = true;
-                if (dbgPrint_handle4server)  console.log("In check for delete , newObj = ", newObj);
-            }
-        }
-
-        else if (typeof newObj === 'object')
-        {
-            if ((Object.keys(newObj).length === 0))
+            //delete all empty fields (set to null on server)
+            if ( (typeof newObj === 'string') || (Object.prototype.toString.call(newObj) === '[object Array]') )
             {
-                retStruct.delete = true;
-                if (dbgPrint_handle4server)  console.log("In check for delete 2, newObj = ", newObj);
+                if (( newObj.length === 0) ) {
+                    retStruct.delete = true;
+                    if (dbgPrint_handle4server)  console.log("In check for delete , newObj = ", newObj);
+                }
             }
 
-            for (let p2 in newObj)
+            else if (typeof newObj === 'object')
             {
-                if (newObj[p2] instanceof Array)
+                if ((Object.keys(newObj).length === 0))
                 {
-                    //handle grid-box-add elements
-                    if (p2 === 'table')                                  //we got parameter table (array) here (for i.e. grid-bix-add)
-                    {
-                        //handle invalid or deleted grid-box elements
-                        if (newObj[p2].length === 0) retStruct.send = false;
-
-                        for (let i = 0; i < newObj[p2].length; i++)            //we got table-rows content (array index) here
-                        {
-                            let newListObj = {};
-                            for (let p3 in newObj[p2][i]) {
-                                if (typeof newObj[p2][i][p3] === 'object')      //we got table-cell per row content (p3) here (i.e. course, ects, grade), but we exclude the complete flag of each table
-                                {
-                                    newListObj[p3] = newObj[p2][i][p3].value;
-                                }
-                            }
-                            //console.log("newListObj=",newListObj);
-                            newObj[p2][i] = newListObj;
-                        }
-                    }
+                    retStruct.delete = true;
+                    if (dbgPrint_handle4server)  console.log("In check for delete 2, newObj = ", newObj);
                 }
 
-                //handle INVALID file-upload elements
-                if ( (p2 === 'filename') )//&& (newObj[p2] instanceof String) )              //we got parameter 'data' () here (for i.e. file-upload)
+                for (let p2 in newObj)
                 {
-                    if (newObj[p2] === null) {
-                        retStruct.delete = true;
-                        retStruct.value = newObj;
-                        console.log("newObj =", newObj);
-                    }
-                    else if ( (newObj['download'] !== undefined) )//&& (newObj[p2] instanceof String) )              //we got parameter 'data' () here (for i.e. file-upload)
+                    if (newObj[p2] instanceof Array)
                     {
-                        retStruct.send = false;
+                        //handle grid-box-add elements
+                        if (p2 === 'table')                                  //we got parameter table (array) here (for i.e. grid-bix-add)
+                        {
+                            //handle invalid or deleted grid-box elements
+                            if (newObj[p2].length === 0) retStruct.send = false;
+
+                            for (let i = 0; i < newObj[p2].length; i++)            //we got table-rows content (array index) here
+                            {
+                                let newListObj = {};
+                                for (let p3 in newObj[p2][i]) {
+                                    if (typeof newObj[p2][i][p3] === 'object')      //we got table-cell per row content (p3) here (i.e. course, ects, grade), but we exclude the complete flag of each table
+                                    {
+                                        newListObj[p3] = newObj[p2][i][p3].value;
+                                    }
+                                }
+                                //console.log("newListObj=",newListObj);
+                                newObj[p2][i] = newListObj;
+                            }
+                        }
+                    }
+
+                    //handle INVALID file-upload elements
+                    if ( (p2 === 'filename') )//&& (newObj[p2] instanceof String) )              //we got parameter 'data' () here (for i.e. file-upload)
+                    {
+                        if (newObj[p2] === null) {
+                            retStruct.delete = true;
+                            retStruct.value = newObj;
+                            console.log("newObj =", newObj);
+                        }
+                        else if ( (newObj['download'] !== undefined) )//&& (newObj[p2] instanceof String) )              //we got parameter 'data' () here (for i.e. file-upload)
+                        {
+                            retStruct.send = false;
+                        }
                     }
                 }
             }

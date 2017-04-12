@@ -1,21 +1,8 @@
-//import { Ng2UploaderModule } from 'ng2-uploader/ng2-uploader';
 
-import { Component,OnInit,AfterViewInit,EventEmitter,Input,Output ,NgZone,ElementRef} from '@angular/core';
-
+import {Component, OnInit, Input } from '@angular/core';
 import {FormGroup,FormControl} from '@angular/forms';
+import 'rxjs/add/operator/debounceTime';
 
-//import {Validators, FormGroup,FormControl,FormBuilder} from '@angular/forms';
-
-import {AuthenticationService} from '../_services/rt-authentication.service';
-
-//for animations
-import {
-    trigger,
-    state,
-    style,
-    transition,
-    animate
-} from '@angular/core';
 
 const dbgPrint = false;
 
@@ -30,6 +17,8 @@ const dbgPrint = false;
     //template:html,
     //styles:[css]
 })
+
+
 
 
 export class rtGridBoxAddComponent implements OnInit
@@ -61,20 +50,17 @@ export class rtGridBoxAddComponent implements OnInit
     //currentUaFormObj : any;
 
     averageCalculated = 0.0;
-    //avrgValueSet : number;
+    avrgValueDisplayed : string;           //a string is used because of different display of floating point number in different countries  problems of browser
 
     setObj : any ;
 
     isValValid = false;
+    differ:any;
     //----------------------------------------------------
 
     //constructor(compId:string,t:string,secP:string,fCN:string) {
-    constructor(private _authService:AuthenticationService) {
-
-        //this.tmpAddArray = new Array() ;
-
-        //this.newAddObj = null;
-
+    //constructor(private _authService:AuthenticationService) {
+    constructor() {
     }
 
     ngOnInit(): void {
@@ -101,16 +87,23 @@ export class rtGridBoxAddComponent implements OnInit
                 }
 
                 if (dbgPrint) console.log("found key ",formCtrlKey, ", value=",this.formgroup.value[formCtrlKey]);
-                let tmpObj = this.formgroup.value[formCtrlKey];
 
-                //if ((tmpObj.table !== undefined) && (tmpObj.average!==undefined))
-                if ((tmpObj.table) && (tmpObj.average))
+                let tmpObj = JSON.parse(JSON.stringify(this.formgroup.value[formCtrlKey]));
+
+                if ((tmpObj.table !== undefined) && (tmpObj.average!==undefined))
+                //if ((tmpObj.table) && (tmpObj.average))
                 {
 
                     this.setObj.table = tmpObj.table;
-                    this.setObj.average = parseFloat(tmpObj.average);
+                    //this.setObj.average = parseFloat(tmpObj.average);
+                    this.setObj.average = tmpObj.average;
+                    this.avrgValueDisplayed = tmpObj.average;
                 }
+
+                if (dbgPrint) console.log("this.formgroup.controls=",this.formgroup.controls, ", formCtrlKey=",formCtrlKey);
+
             }
+
         }
 
         if (dbgPrint) console.log("this.setObj=",this.setObj);
@@ -118,8 +111,32 @@ export class rtGridBoxAddComponent implements OnInit
 
 
 
+
     }
 
+    /*
+    ngDoCheck() {
+        var changes = this.differ.diff(this.setObj);
+
+        if(changes) {
+            console.log('changes detected');
+            changes.forEachChangedItem(r => console.log('changed ', r.currentValue));
+            changes.forEachAddedItem(r => console.log('added ' + r.currentValue));
+            changes.forEachRemovedItem(r => console.log('removed ' + r.currentValue));
+            this.setFormControlValue(this.setObj);
+        } else {
+            console.log('nothing changed');
+        }
+    }
+    */
+
+
+    /*
+    ngOnChanges():void{
+        console.log("In ngOnChanges");
+        this.setFormControlValue(this.setObj);
+    }
+    */
 
     //---------------------------------------------------
 
@@ -159,19 +176,68 @@ export class rtGridBoxAddComponent implements OnInit
 
     }
 
-
     deleteObjFromList(courseItem):void {
 
-            //console.log("delete courseItem=", courseItem);
-            let index = this.setObj.table.indexOf(courseItem);
-            if (index > -1)
+        //console.log("delete courseItem=", courseItem);
+
+        /*
+        setTimeout(()=>{
+        if (this.setObj.table.length == 1)
+        {
+            this.avrgValueDisplayed = "0.0";
+            this.setObj.average = null;
+            this.setObj.table = [];
+            this.setFormControlValue(this.setObj);
+        }
+        },10);
+        */
+
+        //setTimeout(()=>{
+            /*
+            if (this.setObj.table.length == 1)
             {
-                this.setObj.table.splice(index, 1);
+                this.avrgValueDisplayed = "0.0";
+                this.setObj.average = 0;
+                this.setObj.table = [];
+
+                //this.setFormControlValue(this.setObj);
             }
-            if (this.setObj.table.length >= 1)
+            else
+            */
             {
-                this.calculate_average();
+
+
+                let index = this.setObj.table.indexOf(courseItem);
+                if (index > -1)
+                {
+                    this.setObj.table.splice(index, 1);
+                }
+
+                /*if (this.setObj.table.length >= 1)
+                {
+                    this.calculate_average();
+                }
+                */
+
+                //set average-value to 0, invalid => so user has to re-set average-value
+                if (this.setObj.table.length == 0)
+                {
+                    this.setObj.average = 0;
+                    this.setObj.table = [];
+                    this.avrgValueDisplayed = "0.0";
+                }
+                else
+                {
+                    this.setObj.average = 0;
+
+                    this.avrgValueDisplayed = "0.0";
+
+                }
             }
+
+        this.setFormControlValue(this.setObj);
+
+        //},10);
 
 
     }
@@ -180,6 +246,8 @@ export class rtGridBoxAddComponent implements OnInit
         newObj[currentColEntry.id].value = evt.target.value;
         this.checkNewAddObj();
     }
+
+
 
     checkNewAddObj():void{
         var isComplete = true;
@@ -207,15 +275,17 @@ export class rtGridBoxAddComponent implements OnInit
 
         this.setObj.table.push(newAddObj_Deep);
 
-        //(<FormControl>this.formgroup.controls[this.formEntry.key]).setValue(this.tmpAddArray);
-
         this.newAddObj = null;
 
         if (dbgPrint) console.log('this.setObj.courses',this.setObj.table);
 
-        this.calculate_average();
-    }
+        //(<FormControl>this.formgroup.controls[this.formEntry.key]).setValue(this.setObj.table);
 
+        //this.calculate_average();
+        this.setObj.average = 0;            //set average-value to 0, invalid => so user has to re-set average-value
+        this.avrgValueDisplayed = "0.0";
+        this.setFormControlValue(this.setObj);
+    }
 
     calculate_average(){
         let sumValues:number = 0.0;
@@ -231,91 +301,77 @@ export class rtGridBoxAddComponent implements OnInit
             if (dbgPrint) console.log("sumValues=",sumValues,i,this.setObj.table[i]);
         }
 
-        //this.change_averageValue();
+        this.change_averageValue();
     }
 
+    timeOutHndl:any;
+    oldValue:any;
+    change_averageValue_evt(evt?:any) {
 
-    change_averageValue(evt?:any) {
+        if (evt.target.value != this.oldValue) {
+
+            this.setObj.average = parseFloat(evt.target.value);
+
+            clearTimeout(this.timeOutHndl);
+            this.timeOutHndl = setTimeout(() => {
+                if (isNaN(this.setObj.average)) {
+                    this.setObj.average = 0;
+                    this.avrgValueDisplayed = "0.0";             //at first time we set a wrong value, we overwrite value given by  server
+                }
+                else this.avrgValueDisplayed = this.setObj.average;
+
+                this.setFormControlValue(this.setObj);
+            }, 10);
+
+            this.oldValue = this.setObj.average;
+        }
+        /*setTimeout(() => {
+            this.change_averageValue(evt.target.value)
+        },1500);
+        */
+    }
+
+    change_averageValue(newValue?:any) {
+
         //newObj[currentColEntry.id].value = evt.target.value;
         let tmpSetValue:string = '0.0';
 
-        if (evt!= undefined ) tmpSetValue = evt.target.value;
-        else tmpSetValue =  this.averageCalculated.toFixed(1);
-
-        this.setObj.average = parseFloat(tmpSetValue).toFixed(1);
-
-        //console.log("in change_averageValue,this.setObj.average=",this.setObj.average);
-
-        if (isNaN(parseFloat(this.setObj.average)))
+        if (newValue != undefined )
         {
-            if (dbgPrint) console.log("in isNan,evt=",evt);
-            this.calculate_average();
-
-            //evt.srcE.placeholder = this.averageCalculated;
-            this.setObj.average = 0.0;
-            (<FormControl>this.formgroup.controls[this.formEntry.key]).setValue(0.0);
-            this.isValValid = false;
+            tmpSetValue = newValue;
         }
         else
         {
-            (<FormControl>this.formgroup.controls[this.formEntry.key]).setValue(this.setObj);
-            this.isValValid = true;
+            tmpSetValue =  this.averageCalculated.toFixed(1);
         }
 
-         //setValue(setObj);
+        this.setObj.average = parseFloat(tmpSetValue).toFixed(1);
 
-        if (dbgPrint) console.log("this.formEntry for ",this.formEntry.key," =",(<FormControl>this.formgroup.controls[this.formEntry.key])); //this.setObj.courses;
+
+        this.setFormControlValue(this.setObj);
+
+
 
     }
 
-    /*
-    isValueValid()
+
+
+    setFormControlValue(setObject:any)
     {
-        if ( isNaN(parseFloatthis.setValue) )
-        {
-            return false;
-        }
-        else return true;
-    }
-    */
+        //let setObjReally = setObject;
+        setTimeout(() => {
 
-    //------------old stuff-----------------------------
+            if (setObject.table.length == 0) this.formgroup.controls[this.formEntry.key].setValue(null);
+            else this.formgroup.controls[this.formEntry.key].setValue(setObject);
 
-    /*
-    change_courseName(obj:Object,evt):void{
-        //console.log("change Name=", evt.target.value);
-        obj['name'] =  evt.target.value;
-        //console.log("change Name=", course);
-        this.checkNewCourseObj(obj);
+            this.formgroup.controls[this.formEntry.key].markAsDirty();
+
+            //if (dbgPrint)
+            console.log("this.formEntry for ",this.formEntry.key," =",(<FormControl>this.formgroup.controls[this.formEntry.key])); //this.setObj.courses;
+
+        },15);
     }
 
-    change_courseECTS(obj:Object,evt):void{
-        //console.log("change Name=", evt.target.value);
-        obj['ects'] =  evt.target.value;
-        //console.log("change Name=", course);
-        this.checkNewCourseObj(obj);
-    }
-
-    change_courseGrade(obj:Object,evt):void{
-        //console.log("change Name=", evt.target.value);
-        obj['grade'] =  evt.target.value;
-        //console.log("change Name=", course);
-        this.checkNewCourseObj(obj);
-    }
-
-    checkNewCourseObj(obj:Object):void{
-        if (obj['name'] !='' && obj['ects']!=0 && obj['grade']!=0)
-        {
-            obj['courseComplete'] = true;
-        }
-        else { obj['courseComplete'] = false}
-    }
-*/
-
-
-
-
-    //------------------- debug ---------------------------------------------
 
 
 }

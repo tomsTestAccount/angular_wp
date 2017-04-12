@@ -2,26 +2,10 @@ import { Component,OnInit,AfterViewInit,HostListener,Input ,NgZone,ElementRef} f
 
 import {Validators, FormGroup,FormControl,FormBuilder} from '@angular/forms';
 
-import { CountryList} from '../_models/countries';
-
-import {rtFormValidators}  from '../_services/rt-form-validators.service';
-
-import {lmu_ua_formList} from'../_models/lmu_ua_formList';
-import { RtFormService ,cFormObject} from '../_services/rt-forms.service';
-
-//for animations
-import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate
-} from '@angular/core';
-import {ValidateFn} from "codelyzer/walkerFactory/walkerFn";
 
 
 const dbgPrint_ac =false;
-const dbgPrint_ac2 =false;
+const dbgPrint_ac2 =true;
 
 @Component({
 	//moduleId: module.id,
@@ -33,7 +17,7 @@ const dbgPrint_ac2 =false;
 
 })
 
-export class LmuUserPeComponent implements AfterViewInit{
+export class LmuUserPeComponent implements OnInit{// AfterViewInit{
 
 
 	//for ac
@@ -81,8 +65,10 @@ export class LmuUserPeComponent implements AfterViewInit{
         {
             //console.log("formCtrl = ", key);
 
-            if (formCtrls[key].value !== '' &&
-                formCtrls[key].value!== [] &&
+
+            if (formCtrls[key].value !== null &&
+            	formCtrls[key].value !== '' &&
+                formCtrls[key].value !== [] &&
                 formCtrls[key].value !== 'undefined')
             {
                 if (dbgPrint_ac2) console.log("formCtrl.value = ", formCtrls[key].value," for ",key);
@@ -105,8 +91,8 @@ export class LmuUserPeComponent implements AfterViewInit{
 
 	constructor() {}
 
-    ngAfterViewInit():void{
-	//ngOnInit(): void {
+    //ngAfterViewInit():void{
+	ngOnInit(): void {
 
 		//TODO: create a more general implementation for that kind of 'collapsible'-forms - or formEntries (i.e ac2)
 		//open/close degreeCertAvailable at init-time, if either copy-of-certifcate is loaded or not-->
@@ -129,37 +115,21 @@ export class LmuUserPeComponent implements AfterViewInit{
 		}
 
 		this.toggle_degreeCertAvailable();
+		//setChangedDetected
 
-        if (dbgPrint_ac) console.log("In LmuUserPeComponent,ngAfterViewInit this.ac2_hasValues",this.ac2_hasValues);
+        if (dbgPrint_ac2) console.log("In LmuUserPeComponent,ngAfterViewInit this.ac2_hasValues",this.ac2_hasValues);
 	}
 
 
-	nullValidator(c: FormControl) {
-	return null;
-	}
+	toggle_degreeCertAvailable(this_component?) {
 
-	toggle_degreeCertAvailable(this_component?)
-	{
-		//if (this_component) console.log("this_component",this_component);
 		setTimeout(()=> {			//bugfix for angular.io changeDetection in Dev-Mode; see issue #6005 (EXCEPTION: Expression has changed after it was checked)
-			//this.degreeCertAvailable = !this.degreeCertAvailable;
 			if (!this.degreeCertAvailable )
 			{
-				//this.currentForm.setControl('copy_of_certificate', new FormControl(''));
-				//this.currentForm.removeControl('copy_of_certificate');
-
-				//this.currentForm.controls['copy_of_certificate'].clearValidators();
-				//this.currentForm.controls['copy_of_certificate'].setValidators(Validators.nullValidator);
-
 				this.currentForm.controls['copy_of_certificate'].disable();
 			}
-			else {
-				//this.currentForm.addControl('copy_of_certificate', new FormControl('', Validators.required));
-				//this.currentForm.setControl('copy_of_certificate', new FormControl('', Validators.required));
-				//nullValidator : ValidateFn;
-
-				//this.currentForm.controls['copy_of_certificate'].setValidators(Validators.required);
-
+			else
+			{
 				this.currentForm.controls['copy_of_certificate'].enable();
 			}
 		},1);
@@ -167,10 +137,7 @@ export class LmuUserPeComponent implements AfterViewInit{
 	}
 
 
-	formInputValid(formInput:string)
-	{
-		return false;
-	}
+
 
 	/*
 	onChange(e:any):void{
@@ -180,7 +147,18 @@ export class LmuUserPeComponent implements AfterViewInit{
 		if (dbgPrint_ac) console.log("e=",e);
 		if (dbgPrint_ac) console.log("this.peForm=",this.peForm);
 	}
-	*/
+
+	 nullValidator(c: FormControl) {
+	 return null;
+	 }
+	 formInputValid(formInput:string)
+	 {
+	 return false;
+	 }
+
+	 */
+
+
 
 	//----------- has previous degree yet section
 

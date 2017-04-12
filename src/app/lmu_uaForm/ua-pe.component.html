@@ -2,7 +2,7 @@
 <html lang="en">
 <div>
 
-    <form [formGroup]="currentForm">
+    <form [formGroup]="currentForm" autocomplete="off">
 
         <!--
         <textarea [ngStyle]="{'background-color':'black','color':'white'}" [(ngModel)]='usermodel.prevEducation' rows="15" cols="80">
@@ -106,8 +106,8 @@
             <label class="lbl-form_main"> Other previous education available ? (optional) </label>
         </md-checkbox>
 
-        <form [hidden]="!ac2_hasValues"
-              [formGroup]="currentForm2" name="ac2_form">
+        <form *ngIf="ac2_hasValues"
+              [formGroup]="currentForm2" name="ac2_form" novalidate>
 
             <div *ngFor="let formEntry of currentFormEntries2">
 

@@ -21,16 +21,18 @@ export class RestService {
 
     public serverURL : string;
     public host : string;
-    public  userId:string;
+    public userId:string;
     public onDevEnv:boolean = false;
+    private runningConfs:any;
 
     constructor(private http: Http, serverConfs: ServerConfigs)
     {
-        this.serverURL = serverConfs.get_serverConfigs().url;
+        this.runningConfs = serverConfs;
+        this.serverURL = this.runningConfs.get_serverConfigs().url;
         //this._currentUserId = 'mueller';
-        this.userId = serverConfs.get_serverConfigs().userId;
+        this.userId = this.runningConfs.get_serverConfigs().userId;
 
-        this.onDevEnv = serverConfs.onDevelopmentEnv;
+        this.onDevEnv = this.runningConfs.onDevelopmentEnv;
 
         if (dbgPrint) console.log("serverURL=",this.serverURL);
     }
@@ -83,9 +85,11 @@ export class RestService {
 
 
     //login - post
-    restPost_login(email:string,password:string): Observable<{}> {
+    restPost_login(userId:string,password:string): Observable<{}> {
 
-        let bodyContent = {login: email, password: password};
+        if (this.userId.length == 0) this.runningConfs.set_userId(userId);
+
+        let bodyContent = {login: userId, password: password};
 
         let body = JSON.stringify(bodyContent);
 

@@ -31,7 +31,7 @@ export class ServerConfigs {
             //we're on developent system, so we need rest-login and authorization token
             this.host = 'http://192.168.159.130:8080'; //for vmWare with PLone-instance running
             this.serverURL = this.host + '/Plone';
-            this.userId = 'mueller';
+            this.userId = '';
             this.onDevelopmentEnv  = true;
         }
         else
@@ -49,12 +49,11 @@ export class ServerConfigs {
                 console.log("splitPathname =",splitPathname );
                 if (splitPathname.length)
                 {
-                    this.userId = splitPathname[splitPathname.length-1];
+                    this.userId = splitPathname[splitPathname.length-2];
                 }
 
             }
         }
-
 
 
 
@@ -104,6 +103,11 @@ export class ServerConfigs {
         constSrvUrl = this.serverURL;
     }
 
+
+    set_userId(userId:string)
+    {
+        this.userId = userId;
+    }
 
     get_serverConfigs()
     {

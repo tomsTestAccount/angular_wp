@@ -41,7 +41,6 @@ export class AuthenticationService {
     private userDisplayNameSrc = new Subject<string>();
     subscription: Subscription;
 
-
     // Observable string streams
     userDisplayName$ = this.userDisplayNameSrc.asObservable();
 
@@ -50,31 +49,35 @@ export class AuthenticationService {
                 //,private _rtFormSrv: RtFormService
     ){
 
-
+        console.log("In authService constructor");
         if (dbgPrint) console.log("_authenicated=",this._authenicated);
         if (dbgPrint)  console.log("_currentUser=",this._currentUser);
         if (dbgPrint)  console.log("_currentFormObj=",this._currentFormObj);
     }
 
+
+    //------------------------------------------------------------------------------------------------------------------
+
+
     //------------------------------------------------------------------------------------------------------------------
     private progressValue: Subject<number> = new Subject<number>();
 
-    getProgressValue(): Observable<number> {
+    public getProgressValue(): Observable<number> {
         return this.progressValue.asObservable();
     }
 
-    setProgressValue(newValue: number): void {
+    public setProgressValue(newValue: number): void {
         //this.progressValue = newValue;
         this.progressValue.next(newValue);
     }
 
     private progressMode: Subject<string> = new Subject<string>();
 
-    getProgressMode(): Observable<string> {
+    public getProgressMode(): Observable<string> {
         return this.progressMode.asObservable();
     }
 
-    setProgressMode(newMode: string): void {
+    public setProgressMode(newMode: string): void {
         //this.progressValue = newValue;
         if (newMode === 'indeterminate') this.setProgressValue(0);
         this.progressMode.next(newMode);
@@ -82,7 +85,7 @@ export class AuthenticationService {
     //------------------------------------------------------------------------------------------------------------------
 
 
-    login_getToken(userId: string, password: string):any {
+    public login_getToken(userId: string, password: string):any {
         //return this.http.post('/api/authenticate', JSON.stringify({ email: email, password: password }))
         //this.setProgressValue(0);
         this.setProgressMode('indeterminate');
@@ -111,13 +114,12 @@ export class AuthenticationService {
                 },err => {
                     // Log errors are catched in REST-Service
                     //console.log(err);
-                    if (dbgPrint_login) console.log("In authService login, User NOT found !!! an uaObj for current user at server, err=",err);
+                    console.log("In authService login, User NOT found !!! an uaObj for current user at server, err=",err);
 
                     reject(err);
                 }); //.toPromise();
         });
     }
-
 
     public auth_getUserData():any {
         if (this._currentUserId && this._currentToken)
@@ -138,12 +140,11 @@ export class AuthenticationService {
         }
     }
 
-    setDisplayName(name: string) {
+    public setDisplayName(name: string) {
         this.userDisplayNameSrc.next(name);
     }
 
-
-    logout() {
+    public logout() {
 
         console.log("In authService-logout");
 
@@ -160,7 +161,7 @@ export class AuthenticationService {
         this._currentUserId = null;
     }
 
-    isAuthenticated() {
+    public isAuthenticated() {
 
         if (dbgPrint_user) console.log("this._currentUser=",this._currentUser);
         if (dbgPrint_user) console.log("this._currentUserId=",this._currentUserId);
@@ -193,7 +194,7 @@ export class AuthenticationService {
 
     //-----------------------------------------------------------------------------------------------------------------
 
-    setCurrentUser_local(user:string):boolean{
+    public setCurrentUser_local(user:string):boolean{
 
         let retValue=false;
         if (dbgPrint_user) console.log("In AuthenticationService,setCurrentUser_local: user=",user);
@@ -212,7 +213,7 @@ export class AuthenticationService {
         return retValue;
     }
 
-    setCurrentToken_local(token:string):boolean{
+    public setCurrentToken_local(token:string):boolean{
 
         let retValue=false;
         if (dbgPrint_login) console.log("In AuthenticationService,setCurrentToken_local: token=",token);
@@ -230,11 +231,11 @@ export class AuthenticationService {
         return retValue;
     }
 
-    auth_getCurrentToken():any {
+    public auth_getCurrentToken():any {
         return this._currentToken;
     }
 
-    auth_getCurrentUser():any {
+    public auth_getCurrentUser():any {
 
         this._currentUser = (JSON.parse(localStorage.getItem('lmu_evfmsd_currentUser')));
 
@@ -242,7 +243,7 @@ export class AuthenticationService {
         return this._currentUser;
     }
 
-    auth_getCurrentUserId():any {
+    public auth_getCurrentUserId():any {
 
         this._currentUserId = (JSON.parse(localStorage.getItem('lmu_evfmsd_currentUserId')));
 
@@ -250,7 +251,7 @@ export class AuthenticationService {
         return this._currentUserId;
     }
 
-    auth_setCurrentUserId_local(userId:string):any {
+    public auth_setCurrentUserId_local(userId:string):any {
 
         this._currentUserId = userId;
         if (dbgPrint_userId) console.log("In auth_setCurrentUser,this._currentUserId",this._currentUserId);
@@ -365,7 +366,8 @@ export class AuthenticationService {
 
         let uaObj4Server = this._lmuForms.handleFormObject2SendToServer(uaObjLocal);
 
-        if (dbgPrint_setFormObj)console.log("In authService, auth_setFormObj 2 ,uaObj4Server=",uaObj4Server);
+        //if (dbgPrint_setFormObj)
+            console.log("In authService, auth_setFormObj 2 ,uaObj4Server=",uaObj4Server);
 
         if (sendToServer) return this.auth_setFormObj_Server(uaObj4Server);
 
@@ -379,7 +381,7 @@ export class AuthenticationService {
         return new Promise((resolve, reject) => {
             if (Object.keys(obj2Server).length === 0) {
                 console.log("ERROR in auth_setFormObj_Server, localObj is empty !!!!");
-                reject("ERROR: Nothing is sent because no changes were detected , obj is empty !");
+                reject("Nothing is sent because no changes were detected for obj to sent !");
             }
             else {
 

@@ -85,11 +85,36 @@
                         [style.border-top-right-radius]="'0.25rem'"
                 >
 
-                    <div class="btn btn-sm"
+
+
+                    <button type="button" class="btn_lmu btn btn-sm"
+                         [ngClass]="{'btn_lmu_emptyFields' : localFileArray.length==0, 'btn_lmu' : localFileArray.length!=0 }"
+                    >
+                        <label class="formLabel_button">
+                            <span class="placeholder_button"></span>
+
+                            <i class="mdi mdi-file-find mdi-24px"></i>
+                            <span> Browse </span>
+                            <span class="placeholder_button"></span>
+                            <input type="file" class="upload"
+                                   ngFileSelect
+                                   [options]=options
+                                   (onUpload)="handleUpload($event)"
+                                   [events]="startUploadEvent"
+                                   (change)="beforeUpload($event)"
+                                   accept={{options.allowedExtensions}}
+                                   hidden="true"
+                            />
+                        </label>
+
+
+                    </button>
+
+
+                        <!--
+                         <div class="btn btn-sm"
                          [ngClass]="{'btn_lmu_emptyFields' : localFileArray.length==0, 'btn_lmu' : localFileArray.length!=0 }"
                          >
-
-
                         <label class="formLabel_button">
                             <span class="placeholder_button"></span>
 
@@ -104,17 +129,11 @@
                                    (change)="beforeUpload($event)"
                                    hidden="true"
                             />
-
-                            <!-- (beforeUpload)="beforeUpload($event)"-->
-
                         </label>
 
-                        <!--
-                         formControlName={{formCtrlName}}
-                                   required/>
-                         -->
 
-                    </div>
+                        </div>
+                        -->
 
                 </md-grid-tile>
 
@@ -158,6 +177,6 @@
                 </md-grid-tile>
 
             </md-grid-list>
-        </div>
+       </div>
 
     </div>

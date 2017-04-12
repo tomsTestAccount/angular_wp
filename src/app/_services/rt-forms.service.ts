@@ -11,15 +11,16 @@ export class cFormObject {
      ){}
 }
 
-
+/*
 export class uaFormObj {
     apd_formObj : cFormObject;
     ac_formObj : cFormObject;
     ac2_formObj : cFormObject;
     oi_formObj : cFormObject;
 };
+*/
 
-
+const dbg_print = true;
 
 
 
@@ -34,23 +35,19 @@ export class RtFormService {
     subFormIsUpdated$ = this.subFormIsUpdated.asObservable();
     subFormsUpdated(bVal : boolean) {
         this.subFormIsUpdated.next(bVal);
+        if (dbg_print) console.log("In rtFormService subFormWasUpdated");
     }
-
 
     //----------------------------------------------------------------
 
     rtValidators = new rtFormValidators;
 
-    buildFormObject(form:FormGroup,entries:any):cFormObject
-    {
-
+    buildFormObject(form:FormGroup,entries:any):cFormObject {
         return new cFormObject(form,entries);
-
     }
 
-    // Get function from string, with or without scopes (by Nicolas Gauthier)
-    getFunctionCallFromString = function(stringArray)
-    {
+    // Get function from string for Validator-Function. With or without scopes (by Nicolas Gauthier)
+    getFunctionCallFromString = function(stringArray) {
         if (stringArray == undefined) return null;
         if (!Array.isArray(stringArray)) return null;
         if (stringArray.length == 0 ) return null;
@@ -118,6 +115,7 @@ export class RtFormService {
 
     toFormGroup(entries: any) {
 
+
         //console.log("entries=",entries);
 
         let group: any = {};
@@ -132,7 +130,6 @@ export class RtFormService {
                 let defaultValue = '';
                 if (entry.defaultValue !== undefined) defaultValue = entry.defaultValue;
                 group[entry.key] = new FormControl(defaultValue, this.getFunctionCallFromString(entry.validators) );
-
 
         });
 

@@ -28,3 +28,26 @@ export class objValuesPipe implements PipeTransform {
         return Object.keys(value).map(key => value[key]);
     }
 }
+
+@Pipe({ name: 'subFormEntryPipe',  pure: false })
+export class subFormEntryPipe implements PipeTransform {
+    transform(value: any, args: any[] = null): any {
+
+        if (Object.prototype.toString.call(value) === '[object Array]')
+        {
+
+            for (let i=0;i<value.length;i++)
+            {
+                if (value[i].embedded)
+                {
+                    value.splice(i, 1);
+                }
+
+            }
+            //console.log("value=",value);
+
+            return value;
+        }
+        //return value;
+    }
+}

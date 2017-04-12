@@ -1,9 +1,9 @@
-import { Component,OnInit,HostListener,Input ,NgZone,ElementRef} from '@angular/core';
+import { Component,OnInit,AfterViewInit,Input} from '@angular/core';
 
 import {Validators, FormGroup,FormControl,FormBuilder} from '@angular/forms';
 import {rtFormValidators}  from '../_services/rt-form-validators.service';
 
-import {lmu_ua_formList} from'../_models/lmu_ua_formList';
+//import {lmu_ua_formList} from'../_models/lmu_ua_formList';
 import { RtFormService ,cFormObject} from '../_services/rt-forms.service';
 
 //for animations
@@ -18,6 +18,8 @@ import {
 
 //var html = require('./ua-oi.component.html!text');
 
+const dbgPrint = true;
+
 @Component({
     //moduleId: module.id,
     selector: 'lmu_user_oi',
@@ -26,26 +28,9 @@ import {
     //styleUrls: ['lmu-ua-styles.css']
 
 })
+export class LmuUserOiComponent implements OnInit,AfterViewInit{
 
-
-
-
-
-export class LmuUserOiComponent implements OnInit{
-
-    oiForm : FormGroup;
-
-/*
-    options4upload_essay_oi: Object;
-    uploadedDataArray_essay_oi : any[];
-    title_essay_oi : string;
-    secParagraph_essay_oi : string;
-
-    options4upload_otherDoc_oi: Object;
-    //uploadedData_otherDoc_oi : any[];
-    title_otherDoc_oi : string;
-    secParagraph_otherDoc_oi : string;
-*/
+    //oiForm : FormGroup;
 
     //----------------------------------------------------
 
@@ -54,20 +39,22 @@ export class LmuUserOiComponent implements OnInit{
 
     rtValidators = new rtFormValidators;
     formEntries:Object[];
+    //currentFormObject:cFormObject;
 
     //----------------------------------------------------
 
-    lmu_ua_form= new lmu_ua_formList();
-    currentFormObject:cFormObject;
+    //lmu_ua_form= new lmu_ua_formList();
+
+
 
     //----------------------------------------------------
 
-    dbgPrint : boolean = false;
+
 
     currentForm:FormGroup;
     @Input() set setForm(givenForm: FormGroup){
 
-        if (this.dbgPrint) console.log("givenForm=",givenForm);
+        if (dbgPrint) console.log("givenForm=",givenForm);
         this.currentForm = <FormGroup>givenForm.controls[0];
         //this.currentForm = givenForm;
 
@@ -86,35 +73,6 @@ export class LmuUserOiComponent implements OnInit{
 
         this.dbgIsOpen = false;
 
-
-        //for file-upload-components
-        /*this.title_essay_oi = 'Essay "Data Science"';
-        this.secParagraph_essay_oi = 'Please submit a PDF file with an essay on Data Science in which you should look at the developments and perspectives of Data Science as well as your planned area of specialisation, and your previous experience.The essay musst not exceed 1,000 words.'
-
-        this.options4upload_essay_oi= {
-            url: 'http://localhost:3001/upload',
-            filterExtensions: true,
-            allowedExtensions: ['application/pdf'],
-            calculateSpeed: true,
-        };
-
-        this.uploadedDataArray_essay_oi = new Array(); //TODO: load via restApi (Mock first)
-
-
-
-        this.secParagraph_otherDoc_oi = 'Please upload any other certificates regarding internships, vocational training, computer courses, past working experience, etc., as well as your ECTS calculation document within a single PDF file.'
-        //this.uploadedData_otherDoc_oi = new Array(); //TODO: load via restApi (Mock first)
-        this.options4upload_otherDoc_oi= {
-            url: 'http://localhost:3001/upload',
-            filterExtensions: true,
-            allowedExtensions: ['application/pdf'],
-            calculateSpeed: true,
-        };
-
-        this.titleTest = "das ist ein test";
-        */
-
-        //this.currentFormObject = this.lmu_ua_form.buildFormObject_oi();
     }
 
     //---------------------------------------------------
@@ -124,11 +82,15 @@ export class LmuUserOiComponent implements OnInit{
     ngOnInit(): void {
        // this.buildForm();
 
+        //if (dbgPrint) console.log("this.currentFormObject=",this.currentFormObject);
 
-
-        if (this.dbgPrint) console.log("this.currentFormObject=",this.currentFormObject);
     }
 
+    ngAfterViewInit():void {
+        if (dbgPrint) console.log("In LmuUserOiComponent, afterViewInit");
+    }
+
+    /*
     buildForm(): void
     {
 
@@ -250,5 +212,5 @@ export class LmuUserOiComponent implements OnInit{
         if (this.dbgPrint) console.log("this.dbgIsOpen=",this.dbgIsOpen);
         //console.log("this.uploadedDataArray_essay_oi=",this.uploadedDataArray_essay_oi);
     }
-
+    */
 }

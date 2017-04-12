@@ -20,14 +20,14 @@
                 <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
                 </label>
 
-                <input
+                <input  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                        type={{formEntry.type}}
                        class="form-control"
                        [id]="formEntry.key"
                        formControlName={{formEntry.key}}
                 />
-                <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
-                    {{entryErrorString()}}
+                <div class="invalidInfo" *ngIf="entryErrorString">
+                    {{entryErrorString}}
                 </div>
 
             </div>
@@ -42,15 +42,15 @@
                 <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
                 </label>
 
-                <textarea
+                <textarea   autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                         rows="2"
                        class="form-control"
                        [id]="formEntry.key"
                        formControlName={{formEntry.key}}
                         >
                 </textarea>
-                <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
-                    {{entryErrorString()}}
+                <div class="invalidInfo" *ngIf="entryErrorString">
+                    {{entryErrorString}}
                 </div>
             </div>
         </div>
@@ -82,9 +82,10 @@
                     </p-calendar>
 
                     <!--<input *ngIf="formEntry.required == true" class="notvisibleInput" formControlName={{formEntry.key}} value={{formgroup.controls[formEntry.key].value}} required>-->
-                    <input *ngIf="formEntry.required == undefined || formEntry.required == false" class="notvisibleInput" formControlName={{formEntry.key}} value={{formgroup.controls[formEntry.key].value}}>
-                    <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
-                        {{entryErrorString()}}
+                    <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                            *ngIf="formEntry.required == undefined || formEntry.required == false" class="notvisibleInput" formControlName={{formEntry.key}} value={{formgroup.controls[formEntry.key].value}}>
+                    <div class="invalidInfo" *ngIf="entryErrorString">
+                        {{entryErrorString}}
                     </div>
                 </div>
 
@@ -101,7 +102,7 @@
                 <br />
                 <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
                 </label>
-                <select
+                <select autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                         class="form-control"
                         [id]="formEntry.key"
                         formControlName={{formEntry.key}}
@@ -109,8 +110,8 @@
                     <option selected="selected" disabled="disabled" value="">Please Select</option>
                     <option *ngFor="let option of formEntry.options" [value]="option.name">{{option.name}}</option>
                 </select>
-                <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
-                    {{entryErrorString()}}
+                <div class="invalidInfo" *ngIf="entryErrorString">
+                    {{entryErrorString}}
                 </div>
 
             </div>
@@ -126,14 +127,16 @@
                 <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
                 </label>
 
-                <input
+                <input  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                        type={{formEntry.type}}
                        class="form-control"
                        [id]="formEntry.key"
                        formControlName={{formEntry.key}}
-                       />
-                <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
-                    {{entryErrorString()}}
+                        pattern="[0-9]+([\.,][0-9]+)?"
+                        step="0.01"
+                />
+                <div class="invalidInfo" *ngIf="entryErrorString">
+                    {{entryErrorString}}
                 </div>
 
 
@@ -148,25 +151,41 @@
                 <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
 
 
-                <input
+                <input  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                         type={{formEntry.type}}
                        class="form-control"
                        [id]="formEntry.key"
                        formControlName={{formEntry.key}}
                 />
 
-                <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
-                    {{entryErrorString()}}
+                <div class="invalidInfo" *ngIf="entryErrorString">
+                    {{entryErrorString}}
                 </div>
 
             </div>
         </div>
 
         <div *ngSwitchCase="'grid-box-add'">
+            <div class="form-group"
+                 [ngClass]="{ 'formFrame_invalid' : entryErrorString && formEntry.required == true,
+                  'formFrame_valid' : formgroup.controls[formEntry.key].valid,
+                  'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formEntry.required == false}">
+                <label class="lbl-form_main" [attr.for]="formEntry.key">{{formEntry.title}}</label>
+                <br />
+                <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray"> {{text}}  <br />
+                </label>
+
                 <rt-grid-box-add
                         [formgroup]=formgroup
                         [formEntry]= formEntry>
                 </rt-grid-box-add>
+
+                <div class="invalidInfo" *ngIf="entryErrorString">
+                    {{entryErrorString}}
+                </div>
+
+            </div>
+
         </div>
 
         <div *ngSwitchCase="'fileUpload'">
@@ -179,15 +198,15 @@
                                                 [formgroup]=formgroup
                                                 [formEntry] = formEntry>
                               </rt-file-uploader>
-                <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
-                    {{entryErrorString()}}
+                <div class="invalidInfo" *ngIf="entryErrorString">
+                    {{entryErrorString}}
                 </div>
 
             </div>
         </div>
 
         <div *ngSwitchCase="'checkBox'">
-            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : !formgroup.controls[formEntry.key].valid && formEntry.required == true,
+            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : entryErrorString && formEntry.required == true,
                                                  'formFrame_valid' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value != 0 && formEntry.required == true,
                                                  'formFrame_optional' : formEntry.required == false}">
 
@@ -195,8 +214,8 @@
                     <md-checkbox formControlName={{formEntry.key}} align="start">
                         <label class="lbl-form_main" [attr.for]="formEntry.key"> {{formEntry.title}} </label>
                     </md-checkbox>
-                    <div class="invalidInfo" *ngIf="!formgroup.controls[formEntry.key].valid">
-                        {{entryErrorString()}}
+                    <div class="invalidInfo" *ngIf="entryErrorString">
+                        {{entryErrorString}}
                     </div>
                         <!--
 

@@ -3,32 +3,27 @@
 
 	<div class="userApplication_ContentContainer"> <!-- class="grid grid-pad">-->
 
-		<md-tab-group mat-center-tabs="true" id="uaTabGroup">
+		<md-tab-group mat-center-tabs="true" id="uaTabGroup" [(selectedIndex)]="selectedIndex">
 
 
+			<div  *ngFor="let ua_sec of subFormEntries">
+				<md-tab *ngIf="!ua_sec.embedded"
 
-				<md-tab *ngFor="let ua_sec of ua_sections"
-                (click)="select_subFormTab(ua_sec.name)"
-                id="uaTab_+{{ua_sec.name}}">
+                (click)="select_subFormTab(ua_sec.key)"
+                id="uaTab_+{{ua_sec.key}}">
 					<template md-tab-label>{{ua_sec.title}}
-					<!--<span class="num">
-						{{ua_sec.answerMissing}}
-					</span>
-					-->
-					</template>
-					<!--<template md-tab-content>
-					[mainForm]="main_lmu_ua_form"
-					-->
 
-					<form *ngIf="isFormUpdated==true" [formGroup]="main_lmu_ua_form">
+					</template>
+
+					<form *ngIf="isFormUpdated==true" [formGroup]="main_lmu_ua_form" >
 
 						<md-card class="ua-cardBg">
 
 							<md-card-content class="uacard-content" >
 
-								<lmu_user_apd *ngIf="ua_sec.name=='dbComp_User_apd'"  [setForm]="main_lmu_ua_form.controls['subFormGroup_apd']" [setFormEntries]="apd_formObj.formEntries" (onFormEvent_apd)="onFormEvent_apd($event)"></lmu_user_apd>
+								<lmu_user_apd *ngIf="ua_sec.key=='subFormGroup_apd'"  [setForm]="main_lmu_ua_form.controls['subFormGroup_apd']" [setFormEntries]="apd_formObj.formEntries"></lmu_user_apd>
 
-								<lmu_user_pe *ngIf="ua_sec.name=='dbComp_User_pe'"
+								<lmu_user_pe *ngIf="ua_sec.key=='subFormGroup_ac'"
 
                              [setForm]="main_lmu_ua_form.controls['subFormGroup_ac']"
                              [setFormEntries]="ac_formObj.formEntries"
@@ -36,14 +31,21 @@
                               [setFormEntries2]="ac2_formObj.formEntries">
                 				</lmu_user_pe>
 
-								<lmu_user_oi *ngIf="ua_sec.name=='dbComp_User_oi'"  [setForm]="main_lmu_ua_form.controls['subFormGroup_oi']" [setFormEntries]="oi_formObj.formEntries"></lmu_user_oi>
+								<lmu_user_oi *ngIf="ua_sec.key=='subFormGroup_oi'"  [setForm]="main_lmu_ua_form.controls['subFormGroup_oi']" [setFormEntries]="oi_formObj.formEntries"></lmu_user_oi>
+
+
+								<label class="lbl-form_main">* = required</label>
+
 							</md-card-content>
 
+							<!--
 							<md-card-footer class="uacard-footer">
 								<div class="form-group" >
 									<label class="lbl-form_main">* = required</label>
 								</div>
 							</md-card-footer>
+							-->
+
 
 						</md-card>
 
@@ -58,7 +60,7 @@
 
 							<div align="center" class="uacard-footer">
 
-								<!--
+
 								<button *ngIf="!changeDetected"
 										md-button type="save" [disabled]="true">
 									Save
@@ -69,24 +71,26 @@
 										(click)="saveFormObj()"
 								>Save
 								</button>
-								-->
 
+
+								<!--
 								<button type="button"
 										class="btn bs_submit_button"
 										(click)="saveFormObj()"
 								>Save
 								</button>
+								-->
 
-								<button *ngIf="changeDetected"
-										md-button type="submit" [disabled]="true">
-									Submit
+								<button *ngIf="!mainFormValid"
+										md-button type="button" (click)="showMissingInput()">
+									Missing Inputs
 								</button>
-								<a *ngIf="main_lmu_ua_form.valid && !changeDetected"
+								<a *ngIf="mainFormValid && !changeDetected"
 								   class="btn bs_submit_button"
-								   id="babab"
+								   id="blabla_notusedJsutTest"
 								   href="{{summaryPage_href}}"
 								   role="button">
-									Submit
+									Go to Submit
 								</a>
 
 								<!--
@@ -103,7 +107,7 @@
 
 				</md-tab>
 
-
+			</div>
 
 		</md-tab-group>
 

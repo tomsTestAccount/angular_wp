@@ -30,14 +30,22 @@ export class rtFormValidators {
     validateFileUpload(c: FormControl) {
 
         let retValue = null; // {notValid: true};
+
+        //TODO:   just a workaround here -> we have to wait for max for implementing to setting null to file-entries to plone-serialization
+
         if (c.value != null) {
 
-            retValue = (c.value.filename == null) ? {notValid: true} : null;
-
+            if ((c.value.size !== 'undefined') && (c.value.size <= 10))
+            {
+                retValue = {notValid: {File: 'was not added'}};
+                console.log("In validateFileUpload c=",c, ', c.value=', c.value);
+            }
             //if (dbgPrint_Validation) console.log("In validateArray, c=",c, ',c.value[0].filename =', c.value.filename);
         }
 
-        if (dbgPrint_Validation) console.log("In validateFileUpload c=",c, ', c.value.length=', c.value.length);
+
+        //if (dbgPrint_Validation)  console.log("In validateFileUpload c=",c, ', c.value=', c.value);
+
 
         return retValue
 
@@ -46,7 +54,11 @@ export class rtFormValidators {
     validateCourseList(c: FormControl) {
 
         let retValue = null; //{notValid: true};
-        if ( (c.value['average'] != null) && (c.value['table'].length != 0) ) {
+        if ( (!c.value) || (!c.value['table']) || (c.value['table'].length == 0))
+        {
+            retValue = {notValid:{Course: 'was not added'}};
+        }
+        else if ( (c.value['average'] != null) && (c.value['table'].length != 0) ) {
 
             let numValue = parseFloat(c.value['average']);
             //retValue = (isNaN(numValue) || (numValue<=0)) ? {notValid: true} : null;
@@ -105,8 +117,7 @@ export class rtFormValidators {
 
     }
 
-    validatePasswordConfirm(cConfirm: FormControl)
-    {
+    validatePasswordConfirm(cConfirm: FormControl) {
         let retValue = {equal: false};
 
         if (cConfirm != null) {
@@ -133,10 +144,7 @@ export class rtFormValidators {
         return retValue;
     }
 
-
-
-    validateGroup_CheckboxEnabled(group: FormGroup)
-    {
+    validateGroup_CheckboxEnabled(group: FormGroup) {
         /*
         const range = group.controls[0].find(r => r.id === Number(group.value.range));
         if(range && (group.value.specificValue < range.min || group.value.specificValue > range.max)) {

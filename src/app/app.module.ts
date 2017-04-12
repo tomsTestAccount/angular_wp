@@ -25,7 +25,8 @@ import {LoginComponent} from './login/rt-login.component';
 //import {RtRegisterCompletion} from './register/rt-register-completion.component';
 
 import {getKeyValuePair}        from './_pipes/key-value.pipe';
-import {objValuesPipe}          from '../app/_pipes/key-value.pipe';
+import {objValuesPipe}          from './_pipes/key-value.pipe';
+import {subFormEntryPipe}       from './_pipes/key-value.pipe';
 import {rtFileUploaderComponent} from './rtForm/rt-file-uploader.component';
 
 import {rtInputComponent}       from './rtForm/rt-input.component';
@@ -89,7 +90,8 @@ import { AppRoutingModule }             from './app-routing';
         rtInputComponent,
         rtGridBoxAddComponent,
         objValuesPipe,
-        getKeyValuePair];
+        getKeyValuePair,
+        subFormEntryPipe];
 
     var providersList = [//UserDataService,
         RestService,

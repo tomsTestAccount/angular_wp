@@ -137,8 +137,8 @@ export class rtFileUploaderComponent implements AfterViewInit,OnInit
         this.options = new NgUploaderOptions({
             url : this.fileUpload_url,
             autoUpload: false,
-            //filterExtensions: true,
-            //allowedExtensions: ['application/pdf'],
+            filterExtensions: true,
+            allowedExtensions: this.currentFormEntry.options.allowedExtensions,//['application/pdf'],
             calculateSpeed: true,
             data:{
                 '@type': "File",
@@ -178,6 +178,7 @@ export class rtFileUploaderComponent implements AfterViewInit,OnInit
                 if (dbgPrint) console.log(">this.currentForm.controls[this.currentFormEntry.key]= ", this.currentForm.controls[this.currentFormEntry.key]);
             }
         }
+
     }
 
 
@@ -227,7 +228,6 @@ export class rtFileUploaderComponent implements AfterViewInit,OnInit
         myReader.readAsDataURL(file);
 
     }
-
 
     handleUpload(data): void {
 
@@ -281,7 +281,7 @@ export class rtFileUploaderComponent implements AfterViewInit,OnInit
 
     deleteFile(file:any):void {
 
-        console.log("In defleteFile, file =",file);
+        if (dbgPrint) console.log("In defleteFile, file =",file);
 
         let index = this.localFileArray.indexOf(file);
         if (index > -1) {

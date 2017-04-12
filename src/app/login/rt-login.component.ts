@@ -249,7 +249,6 @@ export class LoginComponent implements OnInit{
                     //this.alertService.error(error);
                     console.log("In login, login_getToken, error=",error);
 
-
                     if (error.status != 'undefined') {
                         if (error.status == 401)
                             this.error = error['_body'] +  '! Are you registered?';
