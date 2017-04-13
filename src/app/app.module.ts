@@ -1,5 +1,3 @@
-
-
 import { NgModule }      		from '@angular/core';
 import { BrowserModule } 		from '@angular/platform-browser';
 import { FormsModule }   		from '@angular/forms';
@@ -9,24 +7,19 @@ import { HttpModule }    		from '@angular/http';
 
 import { MaterialModule } 		from '@angular/material/';
 
-
 import { CalendarModule }            from 'primeng/components/calendar/calendar';
-
-//import { Ng2UploaderModule }        from 'ng2-uploader/ng2-uploader';
 import { NgUploaderModule }        from 'ngx-uploader';
 
 import  'hammerjs';
 
 
-import {StartPageComponent} from './home/start-page.component';
-import { UserApplicationComponent }   from './lmu_uaForm/user-application.component';
+
 
 import {LoginComponent} from './login/rt-login.component';
 //import {RtRegisterCompletion} from './register/rt-register-completion.component';
 
 import {getKeyValuePair}        from './_pipes/key-value.pipe';
-import {objValuesPipe}          from './_pipes/key-value.pipe';
-import {subFormEntryPipe}       from './_pipes/key-value.pipe';
+import {objValuesPipe}          from '../app/_pipes/key-value.pipe';
 import {rtFileUploaderComponent} from './rtForm/rt-file-uploader.component';
 
 import {rtInputComponent}       from './rtForm/rt-input.component';
@@ -41,21 +34,21 @@ import { LmuUserOiComponent } 	from './lmu_uaForm/ua-oi.component';
 
 import { RestService } from './_services/rt-rest.service';
 import {AuthenticationService} from './_services/rt-authentication.service';
-
+import {RtFormService} from './_services/rt-forms.service'
 import {ServerConfigs} from './_models/configFile';
 
-import {lmu_ua_formList} from './_models/lmu_ua_formList'; //TODO
-import {RtFormService} from './_services/rt-forms.service'
 import {DialogsService} from './_services/dialogs.services'
 import { uaFormDialog} from './modal/uaFormModal.component';
 
+import {lmu_ua_formList} from './_models/lmu_ua_formList'; //TODO
 
-import { AppComponent} 			from './app.component';
+import { UserApplicationComponent }   from './lmu_uaForm/user-application.component';
+
+//import { AppComponent} 			from './app.component';
+import {StartPageComponent} from './home/start-page.component';
 import { AppLoginComponent} 			from './appLogin.component';
 import { AppRoutingModule }             from './app-routing';
 
-//import {WindowRef} from './_services/windowRef.service'
-//import { environment } from '../environments/environment';
 
 
     var importsList = [
@@ -65,7 +58,7 @@ import { AppRoutingModule }             from './app-routing';
         MaterialModule,
         HttpModule,
         CalendarModule,
-        //Ng2UploaderModule,
+
         NgUploaderModule,
 
         AppRoutingModule,
@@ -76,10 +69,13 @@ import { AppRoutingModule }             from './app-routing';
 
     var declarationList = [
         //AppComponent,
+
         AppLoginComponent,
         StartPageComponent,
         LoginComponent,
+
         //RtRegisterCompletion,
+
         uaFormDialog,
         UserApplicationComponent,
         LmuUserApdComponent,
@@ -90,8 +86,7 @@ import { AppRoutingModule }             from './app-routing';
         rtInputComponent,
         rtGridBoxAddComponent,
         objValuesPipe,
-        getKeyValuePair,
-        subFormEntryPipe];
+        getKeyValuePair];
 
     var providersList = [//UserDataService,
         RestService,

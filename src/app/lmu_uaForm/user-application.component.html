@@ -82,7 +82,8 @@
 								-->
 
 								<button *ngIf="!mainFormValid"
-										md-button type="button" (click)="showMissingInput()">
+										class="btn bs_submit_button"
+										type="button" (click)="showMissingInput()">
 									Missing Inputs
 								</button>
 								<a *ngIf="mainFormValid && !changeDetected"
