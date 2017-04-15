@@ -1,6 +1,6 @@
 import {Component, ElementRef,OnInit,Input,EventEmitter} from '@angular/core';
 import {AuthenticationService} from '../_services/rt-authentication.service';
-import {Router, ActivatedRoute, __router_private__} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
 import {Validators, FormGroup,FormControl,FormBuilder} from '@angular/forms';
 import {rtFormValidators}  from '../_services/rt-form-validators.service';
 import {Location} from '@angular/common';

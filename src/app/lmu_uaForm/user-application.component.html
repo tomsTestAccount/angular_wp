@@ -11,9 +11,9 @@
 
                 (click)="select_subFormTab(ua_sec.key)"
                 id="uaTab_+{{ua_sec.key}}">
-					<template md-tab-label>{{ua_sec.title}}
+					<ng-template md-tab-label>{{ua_sec.title}}
 
-					</template>
+					</ng-template>
 
 					<form *ngIf="isFormUpdated==true" [formGroup]="main_lmu_ua_form" >
 
