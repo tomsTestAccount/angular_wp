@@ -392,8 +392,6 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
 	}
 
 
-
-
 	select_subFormTab(wantedSubForm: string) {
 		//if (dbgPrint)
 		console.log("In select_comp4User, wantedSubForm=",wantedSubForm);
@@ -424,7 +422,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
 
 					this.select_subFormTab(subForm.toString());
 
-					//setTimeout(()=>{
+					setTimeout(()=>{  //is needed to make focus on element working !?!
 					for (let subFormControl in this.main_lmu_ua_form.controls[subForm]['controls'][0]['controls'])
 					{
 
@@ -515,7 +513,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
 						}
 
 					}
-					//},10);
+					},10);
 
 
 						//console.log("subform: ",subForm, " is invalid!");
