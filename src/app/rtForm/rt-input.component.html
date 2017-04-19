@@ -72,14 +72,15 @@
                             [dateFormat]= "formEntry.options.dateFormat"
                             [dataType]= "formEntry.options.dataType "
                             [yearRange]= "formEntry.options.yearRange"
-                            [minDate]="minDate"
-                            [maxDate]="maxDate"
+                            [minDate]="formEntry.options.minDate"
+                            [maxDate]="formEntry.options.maxDate"
                             [placeholder]= "formEntry.options.placeholder"
                             [monthNavigator]="true"
                             [yearNavigator]="true"
                             [defaultDate]="valueAsDate"
                     >
                     </p-calendar>
+
 
                     <!--<input *ngIf="formEntry.required == true" class="notvisibleInput" formControlName={{formEntry.key}} value={{formgroup.controls[formEntry.key].value}} required>-->
                     <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"

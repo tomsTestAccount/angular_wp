@@ -67,11 +67,11 @@
                     </div>
 
                     <div  [hidden]="!degreeCertAvailable">
-                        <rt-file-uploader
+                        <rt-input id="{{'rtInput_'+ formEntry.key}}"
                                           [formgroup]= currentForm
                                           [formEntry] = formEntry
 
-                        ></rt-file-uploader>
+                        ></rt-input>
 
                     </div>
 
@@ -79,7 +79,7 @@
 
 
                 <div *ngSwitchDefault>
-                    <rt-input
+                    <rt-input id="{{'rtInput_'+ formEntry.key}}"
                               [formgroup]=currentForm
                               [formEntry]=formEntry>
 

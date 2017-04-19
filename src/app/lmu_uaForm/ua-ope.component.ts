@@ -4,25 +4,11 @@ import {Validators, FormGroup,FormControl,FormBuilder} from '@angular/forms';
 
 import {rtFormValidators}  from '../_services/rt-form-validators.service';
 
-//import { CountryList} from '../app/_models/countries';
+//----------------------------------------------------------------------------------------------------------------------
 
+const dbgPrint_lifecyclehooks = true;
 
-
-//@import 'app/candy-carousel/candy-carousel-theme.scss';
-
-//for animations
-import {
-    trigger,
-    state,
-    style,
-    transition,
-    animate
-} from '@angular/core';
-
-
-//import { ViewContainerRef } from '@angular/core';
-
-//var html = require('./ua-ope.component.html!text');
+//----------------------------------------------------------------------------------------------------------------------
 
 @Component({
     //moduleId: module.id,
@@ -100,8 +86,10 @@ export class LmuUserOpeComponent implements OnInit{
 
 
     ngOnInit(): void {
-        this.buildForm();
+        //this.buildForm();
        // this.isDragDropAvailable();
+
+        console.log("In ngOnInit for ope-component");
     }
 
     buildForm(): void {

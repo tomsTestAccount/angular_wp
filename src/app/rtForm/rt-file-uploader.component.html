@@ -48,7 +48,6 @@
                             <input *ngIf="currentFormEntry.required != true"
                                     type="text"
                                    class="notvisibleInput"
-                                   id={{currentFormEntry.key}}
                                    formControlName={{currentFormEntry.key}}
                                    />
                             <input *ngIf="currentFormEntry.required == true"

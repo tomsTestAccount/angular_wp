@@ -1,16 +1,15 @@
 
 import {Component,Injectable} from '@angular/core';
-
 import { CountryList} from '../_models/countries';
-
 import { RtFormService ,cFormObject} from '../_services/rt-forms.service';
 import {FormGroup, FormArray, FormBuilder,Validators} from "@angular/forms";
 import {rtFormValidators}  from '../_services/rt-form-validators.service';
 import {constSrvUrl} from './configFile';
 
 
-var fileUploadUrl="";
+//----------------------------------------------------------------------------------------------------------------------
 
+const dbgPrint_lifecyclehooks = true;
 const dbgPrint = false;
 const dbgPrint_handle4local = false;
 const dbgPrint_handle4server = false;
@@ -18,6 +17,8 @@ const dbgPrint_handle4server = false;
 //TODO: todo rename class and file ( it isn't a list anymore. it's a class with init- and mapping-functions, a.s.o
 
 //--------------------------------------------------------------------------------
+
+var fileUploadUrl="";
 
 var formEntries_apd = [
     {
@@ -48,7 +49,7 @@ var formEntries_apd = [
             }
         ],
         required: true
-    }, {
+    },{
 
         key: 'dateofbirth',
         title: 'Date of Birth *',
@@ -57,7 +58,7 @@ var formEntries_apd = [
         options: {
             dateFormat: "yy-mm-dd",
             dataType: "string",
-            yearRange: "1970:1999",
+            yearRange: "1965:1999",
             placeholder: "yyyy-mm-dd"
         },
         required: true
@@ -182,10 +183,10 @@ var formEntries_ac = [
         options: {
             dateFormat: "yy-mm-dd",
             dataType: "string",
-            yearRange: "2000:2017",
+            yearRange: "2001:2017",
             placeholder: "yyyy-mm-dd"
         },
-        secParagraphArray: ['Please indicate the date (day/month/year) in which you \
+        secParagraphArray: ['Please indicate the date (year-month-day) in which you \
                         received or expect to receive the degree mentioned above:'],
         required: true
     },
@@ -397,17 +398,17 @@ var formEntries_oi = [
     },
     {
         key: 'other_info',
-        title: 'Any other information  *',
-        validators: ['required','minLength=5'],
+        title: 'Any other information ',
+        validators: ['minLength=5'],
         type: 'textarea',
-        required: true
+        required: false
     },
     {
         key: 'spec_interview_prov',
-        title: 'Special provisions for the interview needed? (e.g. because of disability): *',
-        validators: ['required','minLength=2'],
+        title: 'Special provisions for the interview needed? (e.g. because of disability): ',
+        validators: ['minLength=5'],
         type: 'textarea',
-        required: true
+        required: false
     },
     {
         key: 'notification_emailed',
@@ -453,10 +454,8 @@ var formEntries_ac2 = [
         options: {
             dateFormat: "yy-mm-dd",
             dataType: "string",
-            yearRange: "2000:2017",
-            placeholder: "yyyy-mm-dd",
-            minDate: "2000-01-01",
-
+            yearRange: "2001:2017",
+            placeholder: "yyyy-mm-dd"
         },
         validators: ['minLength=8'],
         required: false
@@ -505,6 +504,8 @@ export class lmu_ua_formList {
     constructor() {
 
         this._fb = new FormBuilder();
+
+        if (dbgPrint_lifecyclehooks)  console.log("In lmu_ua_formList constructor");
 
         if (dbgPrint) console.log("In lmu_ua_formList 1,constSrvUrl=",constSrvUrl);
 

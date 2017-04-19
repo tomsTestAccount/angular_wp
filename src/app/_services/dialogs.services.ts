@@ -19,6 +19,8 @@ export class DialogsService {
 
     public closeDialog()
     {
+        if (dbgDialog_Print) console.log("In closeDialog, dialogRef=",this.dialogRef);
+
         this.dialogRef.close();
         this.isDialog_open = false;
     }
@@ -71,6 +73,8 @@ export class DialogsService {
                 dialogSelection: 'loading',
             }
         );
+
+        if (dbgDialog_Print) console.log("In loading, dialogRef=",this.dialogRef);
 
         //return dialogRef.afterClosed();
     }

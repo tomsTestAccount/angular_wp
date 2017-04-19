@@ -202,7 +202,7 @@ import {Location} from '@angular/common';
 
      showLoginModal():void{
 
-     console.log("In app.componet before navigate to 'login' _location=",this._location.path());
+     //console.log("In app.componet before navigate to 'login' _location=",this._location.path());
 
      if (this._authenticationService.isAuthenticated())  this._router.navigate(['/login','out',this._location.path()]);
      else this._router.navigate(['/login','in',this._location.path()]);

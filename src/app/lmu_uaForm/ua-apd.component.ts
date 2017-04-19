@@ -1,31 +1,13 @@
-import {Component, OnInit, HostListener, Input,Output, SimpleChanges, OnChanges, EventEmitter} from '@angular/core';
+import {Component, OnInit, AfterViewInit, Input,Output, SimpleChanges, OnChanges, EventEmitter} from '@angular/core';
 
 import {Validators, FormGroup,FormControl,FormBuilder} from '@angular/forms';
 
-//import { forbiddenNameValidator } from '../shared/forbidden-name.directive';
-
-//import { UserModel } from '../usermodel';
-
-//import { CountryList} from '../_models/countries';
-
-import {lmu_ua_formList} from'../_models/lmu_ua_formList';
-
 import { RtFormService ,cFormObject} from '../_services/rt-forms.service';
+//----------------------------------------------------------------------------------------------------------------------
 
-//for animations
-import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate
-} from '@angular/core';
+const dbgPrint_lifecyclehooks = true;
 
-
-//import { ViewContainerRef } from '@angular/core';
-
-//var html = require('./ua-apd.component.html!text');
-
+//----------------------------------------------------------------------------------------------------------------------
 
 
 @Component({
@@ -37,8 +19,7 @@ import {
 
 
 })
-
-export class LmuUserApdComponent implements OnInit {
+export class LmuUserApdComponent implements OnInit,AfterViewInit {
 
 	//private model = {};
 
@@ -77,34 +58,12 @@ export class LmuUserApdComponent implements OnInit {
 
 	};
 
-	/*
-	@Input() genderCheckBox_clicked()
-	{
-		if (this.model.genderM) this.model.genderF = false;
-		else if(this.model.genderF) this.model.genderM = false;
-		console.log("In genderCheckBox_clicked, this.model.genderM,this.model.genderF= ",this.model.genderM,this.model.genderF );
-	}
-	*/
 
-	//lmu_ua_form= new lmu_ua_formList();
+	constructor(private fb: FormBuilder,
+	private _rtFomrsService:RtFormService) {
 
-
-	constructor(private fb: FormBuilder) {
-
-		//console.log("In LmuUserApdComponent");
 
 		this.submitted = false;
-
-		//this.currentForm = new lmu_ua_formList();
-
-		//this.apdForm = this.lmu_ua_form.buildFormObject_apd();
-
-		//this.countries = CountryList;
-		//this.usermodel = {uid:1 ,surname : "", givenName : "", gender : 'male', dateOfBirth : { day:0, month:0, year:0}};
-		//this.usermodel = UserModel;
-		//this.usermodel = { };
-		// this.usermodel['dateOfBirth'] = {};
-		//console.log("In LmuUserApdComponent constructor, usermodel",this.usermodel); //, ', this.countries=',this.countries);
 
 	}
 
@@ -112,45 +71,19 @@ export class LmuUserApdComponent implements OnInit {
 	ngOnInit(): void {
 
 
+		if (dbgPrint_lifecyclehooks) console.log("In ngOnInit for apd-componnet");
+
 		if (this.dbgPrint) console.log("this.currentForm=",this.currentForm);
 
 		if (this.dbgPrint) console.log("formEntries=",this.currentFormEntries);
 
-		/*let currentUserObj = JSON.parse(localStorage.getItem('currentUser'));
 
-		if (currentUserObj) {
-
-			//console.log("In apdForm, currentUserObj=",currentUserObj);
-
-			this.currentForm.controls['lastname'].patchValue(currentUserObj['lastName']);
-			this.currentForm.controls['firstname'].patchValue(currentUserObj['firstName']);
-			this.currentForm.controls['email'].patchValue(currentUserObj['email']);
-		}
-		*/
-
-
-
-
-		//console.log("currentForm.controls.apd_formArray=",this.currentForm.controls['apd_formArray']);
-
-
-		//this.buildForm();
-
-		/*this.currentFormObject= this.lmu_ua_form.buildFormObject_apd();
-
-		let currentUserObj = JSON.parse(localStorage.getItem('currentUser'));
-
-		if (currentUserObj) {
-
-			//console.log("In apdForm, currentUserObj=",currentUserObj);
-
-			this.currentFormObject.formgroup.controls['lastname'].patchValue(currentUserObj['lastName']);
-			this.currentFormObject.formgroup.controls['firstname'].patchValue(currentUserObj['firstName']);
-			this.currentFormObject.formgroup.controls['email'].patchValue(currentUserObj['email']);
-		}
-		*/
 	}
 
+	ngAfterViewInit():void{
+		if (dbgPrint_lifecyclehooks) console.log("In ngAfterViewInit for apd-component");
+		this._rtFomrsService.set_subForm_APD_Updated(true);
+	}
 
 
 	onFormValueChanged(data)

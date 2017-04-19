@@ -6,19 +6,14 @@ import {rtFormValidators}  from '../_services/rt-form-validators.service';
 //import {lmu_ua_formList} from'../_models/lmu_ua_formList';
 import { RtFormService ,cFormObject} from '../_services/rt-forms.service';
 
-//for animations
-import {
-    trigger,
-    state,
-    style,
-    transition,
-    animate
-} from '@angular/core';
+//----------------------------------------------------------------------------------------------------------------------
 
+const dbgPrint_lifecyclehooks = true;
 
-//var html = require('./ua-oi.component.html!text');
+const dbgPrint = false;
 
-const dbgPrint = true;
+//----------------------------------------------------------------------------------------------------------------------
+
 
 @Component({
     //moduleId: module.id,
@@ -69,7 +64,7 @@ export class LmuUserOiComponent implements OnInit,AfterViewInit{
 
     //----------------------------------------------------
 
-    constructor(private fb: FormBuilder) {
+    constructor(private _rtFormsService:RtFormService ) {
 
         this.dbgIsOpen = false;
 
@@ -80,14 +75,14 @@ export class LmuUserOiComponent implements OnInit,AfterViewInit{
 
 
     ngOnInit(): void {
-       // this.buildForm();
-
-        //if (dbgPrint) console.log("this.currentFormObject=",this.currentFormObject);
+        console.log("In ngOnInit for oi-component");
 
     }
 
     ngAfterViewInit():void {
-        if (dbgPrint) console.log("In LmuUserOiComponent, afterViewInit");
+        if (dbgPrint_lifecyclehooks) console.log("In ngAfterViewInit for oi-component");
+
+        this._rtFormsService.set_subForm_OI_Updated(true);
     }
 
     /*

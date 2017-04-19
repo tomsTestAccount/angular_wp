@@ -15,7 +15,7 @@
 
 					</ng-template>
 
-					<form *ngIf="isFormUpdated==true" [formGroup]="main_lmu_ua_form" >
+					<form *ngIf="isFormDataLoaded==true" [formGroup]="main_lmu_ua_form" >
 
 						<md-card class="ua-cardBg">
 
@@ -115,19 +115,3 @@
 
 	</div>
 
-<!--
-	<footer>
-	<button type="submit" class="btn btn-default" [disabled]="!uasubmit" >Submit {{uasubmit}}</button>
-	</footer>
--->
-
-<!--
-<md-list *ngIf="dbgIsOpen">
-	<md-list-item *ngFor="let formObj of main_lmu_ua_form.value | getKeyValuePair">
-		<h4>{{formObj.key}}</h4>
-		<md-list-item *ngFor="let subformObj of formObj.value | getKeyValuePair">
-		{{subformObj.key }} : {{subformObj.value}}
-		</md-list-item>
-	</md-list-item>
-</md-list>
--->

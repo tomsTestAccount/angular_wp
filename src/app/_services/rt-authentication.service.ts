@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+//import { Http, Headers, Response } from '@angular/http';
 import {
     CanActivate, Router,
     ActivatedRouteSnapshot,
@@ -14,10 +14,12 @@ import { Subscription }   from 'rxjs/Subscription';
 import {RestService} from './rt-rest.service';
 
 import {lmu_ua_formList} from '../_models/lmu_ua_formList'
-import {RtFormService} from '../_services/rt-forms.service'
+//import {RtFormService} from '../_services/rt-forms.service'
 
 
+//----------------------------------------------------------------------------------------------------------------------
 
+const dbgPrint_lifecyclehooks = true;
 const dbgPrint = false;
 const dbgPrint_user = false;
 const dbgPrint_userId = false;
@@ -25,6 +27,7 @@ const dbgPrint_login = false;
 const dbgPrint_setFormObj = false;
 const dbgPrint_getFormObj = false;
 
+//----------------------------------------------------------------------------------------------------------------------
 
 @Injectable()
 export class AuthenticationService {
@@ -49,7 +52,7 @@ export class AuthenticationService {
                 //,private _rtFormSrv: RtFormService
     ){
 
-        console.log("In authService constructor");
+        if (dbgPrint_lifecyclehooks) console.log("In authService constructor");
         if (dbgPrint) console.log("_authenicated=",this._authenicated);
         if (dbgPrint)  console.log("_currentUser=",this._currentUser);
         if (dbgPrint)  console.log("_currentFormObj=",this._currentFormObj);
@@ -146,7 +149,7 @@ export class AuthenticationService {
 
     public logout() {
 
-        console.log("In authService-logout");
+        if (dbgPrint_login) console.log("In authService-logout");
 
         // remove user from local storage to log user out
         localStorage.setItem('lmu_evfmsd_currentUser',null);

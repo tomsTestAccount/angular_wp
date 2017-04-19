@@ -1,11 +1,16 @@
 import { Component,OnInit,AfterViewInit,HostListener,Input ,NgZone,ElementRef} from '@angular/core';
 
 import {Validators, FormGroup,FormControl,FormBuilder} from '@angular/forms';
+import {RtFormService} from "../_services/rt-forms.service";
 
 
-
+//----------------------------------------------------------------------------------------------------------------------
 const dbgPrint_ac =false;
-const dbgPrint_ac2 =true;
+const dbgPrint_ac2 =false;
+
+const dbgPrint_lifecyclehooks = true;
+
+//----------------------------------------------------------------------------------------------------------------------
 
 @Component({
 	//moduleId: module.id,
@@ -16,8 +21,7 @@ const dbgPrint_ac2 =true;
 	//providers: [CountryList]
 
 })
-
-export class LmuUserPeComponent implements OnInit{// AfterViewInit{
+export class LmuUserPeComponent implements OnInit, AfterViewInit{
 
 
 	//for ac
@@ -89,17 +93,18 @@ export class LmuUserPeComponent implements OnInit{// AfterViewInit{
 
 	//---------------------------------------------------
 
-	constructor() {}
+	constructor(private _rtFomrsService:RtFormService) {}
 
-    //ngAfterViewInit():void{
+
 	ngOnInit(): void {
+
+		if (dbgPrint_lifecyclehooks) console.log("In ngOnInit for pe-component");
 
 		//TODO: create a more general implementation for that kind of 'collapsible'-forms - or formEntries (i.e ac2)
 		//open/close degreeCertAvailable at init-time, if either copy-of-certifcate is loaded or not-->
 		for (let i= 0;i<this.currentFormEntries.length;i++) {
 			if (this.currentFormEntries[i].key == 'copy_of_certificate')
 			{
-
 				if (this.currentFormEntries[i].defaultValue != null)
 				{
 					if (this.currentFormEntries[i].defaultValue.filename != null)
@@ -120,6 +125,11 @@ export class LmuUserPeComponent implements OnInit{// AfterViewInit{
         if (dbgPrint_ac2) console.log("In LmuUserPeComponent,ngAfterViewInit this.ac2_hasValues",this.ac2_hasValues);
 	}
 
+	ngAfterViewInit():void{
+		if (dbgPrint_lifecyclehooks) console.log("In ngAfterViewInit for pe-component");
+
+		this._rtFomrsService.set_subForm_PE_Updated(true);
+	}
 
 	toggle_degreeCertAvailable(this_component?) {
 

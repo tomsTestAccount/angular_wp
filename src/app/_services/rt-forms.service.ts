@@ -20,7 +20,7 @@ export class uaFormObj {
 };
 */
 
-const dbg_print = true;
+const dbg_print = false;
 
 
 
@@ -28,14 +28,58 @@ const dbg_print = true;
 export class RtFormService {
 
 
-    //---------------- subForm- services --------------------------------
+    //---------------- subForm - services - vor view/data init --------------------------------
 
 
-    private subFormIsUpdated = new Subject<boolean>();
-    subFormIsUpdated$ = this.subFormIsUpdated.asObservable();
-    subFormsUpdated(bVal : boolean) {
-        this.subFormIsUpdated.next(bVal);
+
+    private subForm_APD_Updated = false;
+    private subForm_PE_Updated = false;
+    private subForm_OI_Updated = false;
+
+    private subFormsAreUpdated_Src = new Subject<boolean>();
+
+
+
+    //subForm_APD_Updated$ = this.subForm_APD_Updated_Src.asObservable();
+    set_subForm_APD_Updated(bVal : boolean) {
+        this.subForm_APD_Updated = bVal;
+        if (dbg_print) console.log("In rtFormService subForm_APD_Updated$");
+
+        this.checkAllSubformsUpdated();
+    }
+
+    //subForm_PE_Updated$ = this.subForm_PE_Updated_Src.asObservable();
+    set_subForm_PE_Updated(bVal : boolean) {
+        this.subForm_PE_Updated = bVal;
+        if (dbg_print) console.log("In rtFormService subForm_PE_Updated$");
+
+        this.checkAllSubformsUpdated();
+    }
+
+    //subForm_OI_Updated$ = this.subForm_OI_Updated_Src.asObservable();
+    set_subForm_OI_Updated(bVal : boolean) {
+        this.subForm_OI_Updated = bVal;
+        if (dbg_print) console.log("In rtFormService subForm_OI_Updated$");
+
+        this.checkAllSubformsUpdated();
+    }
+
+    subFormsAreUpdated$ = this.subFormsAreUpdated_Src.asObservable();
+    set_subFormsAreUpdated(bVal : boolean) {
+        this.subFormsAreUpdated_Src.next(bVal);
         if (dbg_print) console.log("In rtFormService subFormWasUpdated");
+    }
+
+    private checkAllSubformsUpdated()
+    {
+        /*
+        console.log("this.subForm_APD_Updated$=",this.subForm_APD_Updated);
+        console.log("this.subForm_PE_Updated$=",this.subForm_PE_Updated);
+        console.log("this.subForm_OI_Updated$=",this.subForm_OI_Updated);
+        */
+
+        if ( this.subForm_APD_Updated &&  this.subForm_PE_Updated &&  this.subForm_OI_Updated ) this.set_subFormsAreUpdated(true);
+        //else if(this.subFormsAreUpdated$._isScalar) this.set_subFormsAreUpdated(false);
     }
 
     //----------------------------------------------------------------
@@ -127,7 +171,7 @@ export class RtFormService {
         entries.forEach(entry => {
                 //console.log("entry=", entry);
                 //Validators.compose([Validators.required,Validators.minLength(3)])
-                let defaultValue = '';
+                let defaultValue = null;
                 if (entry.defaultValue !== undefined) defaultValue = entry.defaultValue;
                 group[entry.key] = new FormControl(defaultValue, this.getFunctionCallFromString(entry.validators) );
 

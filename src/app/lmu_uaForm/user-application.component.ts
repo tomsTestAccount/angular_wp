@@ -1,5 +1,6 @@
 import {
-	Component, OnInit, AfterViewInit,DoCheck, Input, OnChanges, SimpleChange
+	Component, OnInit, AfterViewInit, DoCheck, AfterViewChecked,Renderer2, ViewChildren, ViewChild, ElementRef, QueryList,
+	Directive, ContentChildren, Input, OnChanges, SimpleChange, Query
 } from '@angular/core';
 
 
@@ -15,7 +16,7 @@ import {AuthenticationService} from  '../_services/rt-authentication.service';
 import {ServerConfigs} from '../_models/configFile';
 import {DialogsService} from '../_services/dialogs.services'
 
-const dbgPrint_lifecyclehooks = false;
+const dbgPrint_lifecyclehooks = true;
 const dbgPrint_save = false;
 const dbgPrint_formChanged = false;
 const dbgPrint_formEntryChanged = false;
@@ -34,6 +35,8 @@ import {timeout} from "rxjs/operator/timeout";
 //var html = require('./user-application.component.html!text');
 //var css = require('./user-application.component.css!text');
 
+@Directive({ selector: 'rt-input' })
+export class ListItem {}
 
 
 @Component({
@@ -45,13 +48,9 @@ import {timeout} from "rxjs/operator/timeout";
 	styleUrls: ['user-application.component.css'],
 
 })
+export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,AfterViewChecked{
 
-
-
-export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
-
-	uasubmit : boolean;
-
+	//TODO: load from form_model_list
 	subFormEntries  = [
             { 	title: " Applicant\'s Personal Details",
               	key : "subFormGroup_apd",
@@ -80,11 +79,12 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 
 	//------------------------------------------
 	main_lmu_ua_form : FormGroup;
-	lmu_ua_form= new lmu_ua_formList();
-	rtValidators = new rtFormValidators;
+	//lmu_ua_form= new lmu_ua_formList();
+	//rtValidators = rtFormValidators;
 	//-------------------------------------------
 
-	currentFormObject:cFormObject;
+	//currentFormObject:cFormObject;
+
 	ac_formObj:cFormObject;
 	ac2_formObj:cFormObject;
 	apd_formObj:cFormObject;
@@ -99,11 +99,11 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 
 	changeDetected:boolean = false;
 
-	isFormUpdated = false;
+	isFormDataLoaded = false;
 
-	isFormValueLoadedFromServer = false;
+	//isFormValueLoadedFromServer = false;
 
-	public dialogResult: any;
+	//public dialogResult: any;
 
 	//public formChangedEntries: any[] = [];
 	public formChangedEntries = {
@@ -115,16 +115,17 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 	};
 
 	mainFormValid = false;
-	fromEntriesChangeDetected = false;
-
+	formEntriesChangeDetected = false;
 	summaryPage_href :string;
 
 	//-------------------------------------------------------------------------------------------------------------------
 
 	constructor(//private _fb: FormBuilder,
 				private _authService:AuthenticationService,
-				//private _rtFormSrv: RtFormService,
-				serverConfs: ServerConfigs,
+				private _elementRef : ElementRef,
+				private _rtFormSrv : RtFormService,
+				private serverConfs: ServerConfigs,
+				private lmu_ua_form: lmu_ua_formList,
 				private dialogsService: DialogsService
 				)
     {
@@ -133,50 +134,43 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 		let userId = serverConfs.get_serverConfigs().userId;
 		this.summaryPage_href = serverURL + '/applications/' + userId + '/' + userId ;
 
-		//console.log("this.summaryPage_href =",this.summaryPage_href );
-
-		//detect changes for form made by server --> detect when download form-data finished
-		/*this._rtFormSrv.subFormIsUpdated$.subscribe(
+		//detect changes for form made by server --> detect when download form-data finished and child-views are initialized
+		//TODO: We have to know here, when the init-process of child-Views (subFomrs) is finished !?! .... using of lifeCycleHooks (afterContent .. ) ??
+		this._rtFormSrv.subFormsAreUpdated$.subscribe(
 			isUpdated => {
 
 				setTimeout(()=> {
-					this.main_lmu_ua_form = this.lmu_ua_form.init_mainForm();
-					if (dbgPrint)console.log("In subFormIsUpdated$ ", this.main_lmu_ua_form);
+					//this.main_lmu_ua_form = this.lmu_ua_form.init_mainForm();
+					//if (dbgPrint)
+					console.log("In subFormsAreAllUpdated$ ", this.main_lmu_ua_form);
 
 					// subscribe to form changes, so we can detect the formEntries that were changed --> and send only these ones
-					//this.subscribeToFormEntriesChanges();
+					this.subscribeToFormEntriesChanges();
 
 					//set event the view is waiting for
 					//this.isFormUpdated = isUpdated;
 
 					//close loading dialog
 					this.dialogsService.closeDialog();
-				},31000);
+				},1000);
 			});
-		*/
+
+
 	};
 
 
-
-    //ngOnInit(): void {
-	ngAfterViewInit(): void {
-
-		if (dbgPrint_lifecyclehooks)console.log("In UserApplicationComponent ngAfterViewInit");
-
-    }
-
 	ngOnInit(): void {
 
-		if (dbgPrint_lifecyclehooks) console.log("In user-application ngOnInit!");
 
-		this.uasubmit = false;
+		if (dbgPrint_lifecyclehooks) console.log("In ngOnInit for user-application-component");
+
 
 		this.dialogsService.loading('Your data is loading ... '); //TODO: put this or a similar message in the beginning -> i.e. in app.module.ts
 
 		this._authService.auth_getFormObject()
             .then(response => {
 
-				if (dbgPrint_lifecyclehooks)console.log("In user-application ngAfterViewInit, after get data, response=!",response);
+				if (dbgPrint_lifecyclehooks)console.log("In ngOnInit for user-application , after get data from server, data=!",response);
 
 
 				//init mainForm  --> with the really data downloaded from server !
@@ -189,12 +183,11 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 				 this.oi_formObj = this.lmu_ua_form.oi_formObj;
 
 				//set event the view is waiting for --> so the childViews (for each subForm) will be initialized
-				this.isFormUpdated = true;
+				this.isFormDataLoaded = true;
 
 
-				//TODO: We have to know here, when the init-process of child-Views (subFomrs) is finished !?! .... lifeCycleHooks ??
 				//using of setTimeout works, but is dirty !!!
-				setTimeout(()=> {
+				/*setTimeout(()=> {
 					//console.log("this.apd_formObj=",this.apd_formObj);
 
 
@@ -215,11 +208,45 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 
 					if (dbgPrint_lifecyclehooks) console.log("In user-application ngAfterViewInit2, after get data, this=!",this);
 				},1000);
+				*/
+
             })
 			.catch(err => {
 				this.dialogsService.info('Error for retrieving data from server, err= ',err);
 			});
 
+
+	}
+
+	//ngOnInit(): void {
+	ngAfterViewInit(): void {
+
+		if (dbgPrint_lifecyclehooks)console.log("In ngAfterViewInit for user-application-component");
+
+		//setTimeout(()=> {
+		//var el = this._elementRef.nativeElement.querySelector('lmu_user_apd');
+		//console.log(el);},1000);
+
+
+	}
+
+	ngAfterViewChecked() {
+
+		//if (dbgPrint_lifecyclehooks)	console.log("In ngAfterViewChecked for user-application-component");
+
+		//let vc = ViewChildren('input');
+		//console.log("In ngAfterViewChecked,vc=",vc());
+
+	}
+
+	ngDoCheck():void{
+		//console.log("In ngDoCheck");
+
+		this.changeDetected = this.formEntriesChangeDetected;
+		if (this.main_lmu_ua_form)
+		{
+			this.mainFormValid = this.main_lmu_ua_form.valid ;
+		}
 
 	}
 
@@ -238,10 +265,10 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 		//else
 		{
 			setTimeout(() => {
-				this.fromEntriesChangeDetected = value;
+				this.formEntriesChangeDetected = value;
 				this.main_lmu_ua_form.markAsDirty();
-				if (fControl) console.log("in setChangedDetected:",this.fromEntriesChangeDetected, fControl);
-				else console.log("in setChangedDetected:",this.fromEntriesChangeDetected);
+				//if (fControl) console.log("in setChangedDetected:",this.formEntriesChangeDetected, fControl);
+				//else console.log("in setChangedDetected:",this.formEntriesChangeDetected);
 			}, 100);
 		}
 
@@ -364,14 +391,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 		this.reset_formChangedEntries();
 	}
 
-	ngDoCheck():void{
-		this.changeDetected = this.fromEntriesChangeDetected;
-		if (this.main_lmu_ua_form)
-		{
-			this.mainFormValid = this.main_lmu_ua_form.valid ;
-		}
 
-	}
 
 
 	select_subFormTab(wantedSubForm: string) {
@@ -386,12 +406,10 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 				{
 					if (this.subFormEntries[j].key == this.subFormEntries[i].site) this.selectedIndex = j;
 				}
-
 			}
-
 		}
-
 	}
+
 
 	showMissingInput()
 	{
@@ -401,8 +419,108 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 			{
 				if (this.main_lmu_ua_form.controls[subForm].invalid)
 				{
-					//console.log("subform: ",subForm, " is invalid!");
+
+					//console.log("subform: ",this.main_lmu_ua_form.controls[subForm]);
+
 					this.select_subFormTab(subForm.toString());
+
+					//setTimeout(()=>{
+					for (let subFormControl in this.main_lmu_ua_form.controls[subForm]['controls'][0]['controls'])
+					{
+
+						let currControl = this.main_lmu_ua_form.controls[subForm]['controls'][0]['controls'][subFormControl];
+
+						//if (this.main_lmu_ua_form.controls[subForm]['controls'][0]['controls'][subFormControl].invalid)
+						/*
+						if (0)//(currControl['invalid'])
+						{
+							console.log(subFormControl, ": ", currControl);
+
+							//hjgjj: ElementRef;
+							//ViewChild('fhgfj') hjgjj;
+							//console.log(this.viewChildren);
+
+							//this._elementRef.nativeElement(subFormControl).focus();
+							//navtiveElement.querySelector(subFormControl).focus();
+
+
+							var el1 = this._elementRef.nativeElement.querySelector('rt-input#rtInput_'+subFormControl);
+							console.log(el1);
+
+							//setTimeout(() => {
+							//var el = this._elementRef.nativeElement.querySelector('input#'+subFormControl);
+
+							let el;
+
+							//this._elementRef.nativeElement.querySelector('rt-input#'+subFormControl).focus();
+							if (el = this._elementRef.nativeElement.querySelector('input#'+subFormControl))
+							{
+								console.log("input-element=",el);
+								el.focus();
+							}
+							else if (el = this._elementRef.nativeElement.querySelector('textarea#'+subFormControl))
+							{
+								console.log("textarea-element=",el);
+								el.focus();
+							}
+							else if (el = this._elementRef.nativeElement.querySelector('select#'+subFormControl))
+							{
+								console.log("select-element=",el);
+								el.focus();
+							}
+							else if (el = this._elementRef.nativeElement.querySelector('p-calendar#'+subFormControl))
+							{
+								console.log("p-calender-element=",el);
+								el.focus();
+							}
+							else if(el = this._elementRef.nativeElement.querySelector('div.invalidInfo'))
+							{
+								console.log("invalidInfo=",el);
+								el.scrollIntoView('center');
+							}
+
+
+							//},1000);
+
+						}
+
+
+						if (0)//(currControl['invalid'])
+						{
+							var el1 = this._elementRef.nativeElement.querySelector('rt-input#'+subFormControl);
+							console.log(el1);
+
+							let element = document.getElementById(subFormControl); //.focus(), .scrollTo();
+							console.log("element=",element);
+							//element.getTar();
+							//this.content.scrollTo(0, element.offsetTop, 500);
+						}
+						*/
+
+						if (currControl['invalid'])
+						{
+
+							//let element = document.getElementsByTagName('md-card'); //.focus(), .scrollTo();
+							//console.log("element=",element);
+
+							let el;
+							if (el = this._elementRef.nativeElement.querySelector('div.invalidInfo')) {
+								//console.log("invalidInfo=", el);
+								el.scrollIntoView(false);//{block:'start',inline:'smooth'});
+								window.scrollBy(0,240);
+								//console.log("window=",window);
+
+								break;
+							}
+						}
+
+					}
+					//},10);
+
+
+						//console.log("subform: ",subForm, " is invalid!");
+
+					break;
 				}
 			}
 		}
@@ -413,17 +531,6 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 		//this.saveFormObj();
 		//console.log("this.summaryPage_href =",this.summaryPage_href );
 	}
-
-	//status_apd: boolean = false;
-	/*onFormEvent_apd(status_apd)
-	{
-		//TODO: only call this function when value was changed --> form
-
-		this.uasubmit = status_apd;
-		this.subFormEntries[0]['answerMissing']++;
-        if (dbgPrint_formChanged) console.log("In onFormEvent_apd this.uasubmit= ",this.uasubmit);
-	}
-	*/
 
 
 

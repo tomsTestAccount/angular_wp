@@ -1,8 +1,13 @@
-import {Component, Input, DoCheck, OnInit} from '@angular/core';
+import {Component, Input, DoCheck, OnInit,AfterViewInit} from '@angular/core';
 import { FormGroup,FormControl,FormBuilder }        from '@angular/forms';
-import { ChangeDetectorRef } from '@angular/core';
+//import { ChangeDetectorRef } from '@angular/core';
 
-const dbgPrint_dateEntry=false;
+//----------------------------------------------------------------------------------------------------------------------
+
+const dbgPrint_lifecyclehooks = true;
+const dbgPrint_dateEntry = false;
+//----------------------------------------------------------------------------------------------------------------------
+
 
 @Component({
     //moduleId: module.id,
@@ -13,7 +18,7 @@ const dbgPrint_dateEntry=false;
     templateUrl: 'rt-input.component.html',
     styleUrls: ['rtForm.css']
 })
-export class rtInputComponent implements OnInit,DoCheck {
+export class rtInputComponent implements OnInit,DoCheck,AfterViewInit {
 
 
     valueAsDate : Date;
@@ -26,62 +31,76 @@ export class rtInputComponent implements OnInit,DoCheck {
 
     @Input() formEntry: any;
     @Input() formgroup: FormGroup;
-    //formgroup: FormGroup;
 
-    //@Input() form: FormBuilder ;
-
-    //get isValid() { return this.form.controls[this.question.key].valid; }
     showTooltip =  false;
 
     entryErrorString : string;
 
-    constructor(private cdr: ChangeDetectorRef)
+    constructor()
     {
+
+       // console.log("In rt-input constructor, this.formEntry = ", this.formEntry );
+
+    }
+
+    ngDoCheck() {
+
+        if (this.formEntry !== undefined)
+        {
+            this.checkValidationErrorExists();
+        }
+
+
 
     }
 
     ngOnInit(): void {
 
-        /*this.valObj = this.formgroup.controls[this.formEntry.key].value;
-        if( Object.prototype.toString.call( this.valObj ) === '[object Array]' ) {
-            this.tmpArray = this.formgroup.controls[this.formEntry.key].value;
-        }
-        */
 
-        /*
-        this.dateValue =  new Date("04-04-2017");
-
-        if (this.formEntry.key == "dateOfBirth")
-        {
-            console.log("this.formgroup.controls[dateOfBirth] =",this.formgroup.controls[this.formEntry.key].value);
-            this.dateValue =  new Date(this.formgroup.controls["dateOfBirth"].value);
-            //console.log("this.dateValue =",this.dateValue.value);
-        }
-        */
+         if (this.formEntry.type == 'date')
+         {
 
 
+             if (dbgPrint_dateEntry) console.log("Input-entry: DATE, this.formEntry=", this.formEntry);
 
-        //TODO: parse year-string from year-range
-        if (this.formEntry.type == 'date')
-        {
 
-            if (dbgPrint_dateEntry) console.log("Input-entry: DATE, this.formEntry=",this.formEntry);
-            //this.formEntry.defaultValue = null;
-            this.valueAsDate = new Date(this.formEntry.defaultValue);
+             if (this.formEntry.options.minDate !== undefined && this.formEntry.options.maxDate !== undefined) {
+                this.formEntry.options.minDate = new Date(this.formEntry.options.minDate);
+                this.formEntry.options.maxDate = new Date(this.formEntry.options.maxDate);
+             }
+             else if (this.formEntry.options.yearRange !== undefined) {
+                let range = this.formEntry.options.yearRange.split(':');
+                this.formEntry.options.minDate =  new Date(range[0] + '-01-01');
+                this.formEntry.options.maxDate =  new Date(range[1] + '-12-31');
+             }
+             else
+             {
+                this.formEntry.options.minDate = new Date("1975-01-01");
+                this.formEntry.options.maxDate = new Date();
+             }
 
-            if (this.formEntry.options.minDate !== undefined)
-            {
-                this.minDate = new Date(this.formEntry.options.minDate);
-            }
-            else this.minDate = new Date("1970-01-01");
+             //defaultDate (minDate) or loadedDate
+             if (this.formEntry.defaultValue) {
+                 this.formEntry.defaultValue = new Date(this.formEntry.defaultValue);
+             }
+             let showedDate = this.formEntry.defaultValue || this.formEntry.options.minDate;
+             this.valueAsDate = showedDate;
 
-            if (this.formEntry.options.maxDate !== undefined)
-            {
-                this.maxDate = new Date(this.formEntry.options.maxDate);    //this.maxDate = new Date("2010-01-01");
-            }
-            else this.maxDate = new Date();
+             //this.formEntry.options.minDate = null;
+             //this.formEntry.options.maxDate = null;
 
-        }
+             if (dbgPrint_dateEntry) console.log("this.formEntry.options=", this.formEntry.options);
+         }
+
+
+
+    }
+
+
+
+    ngAfterViewInit():void {
+
+
     }
 
 
@@ -121,10 +140,6 @@ export class rtInputComponent implements OnInit,DoCheck {
         return retValue;
     }
 
-
-    ngDoCheck() {
-        this.checkValidationErrorExists();
-    }
 
     checkValidationErrorExists()
     {

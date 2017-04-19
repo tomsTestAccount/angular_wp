@@ -38,7 +38,7 @@ export class rtFormValidators {
             if ((c.value.size !== 'undefined') && (c.value.size <= 10))
             {
                 retValue = {notValid: {File: 'was not added'}};
-                console.log("In validateFileUpload c=",c, ', c.value=', c.value);
+                //console.log("In validateFileUpload c=",c, ', c.value=', c.value);
             }
             //if (dbgPrint_Validation) console.log("In validateArray, c=",c, ',c.value[0].filename =', c.value.filename);
         }
