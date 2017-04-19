@@ -66,6 +66,7 @@ div.mat-tab-labels
 
 /*****************************************************************************/
 
+/* Remove input-controls from Safari and Chrome */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   /* display: none; <- Crashes Chrome on hover */
@@ -79,6 +80,11 @@ form textarea::-webkit-validation-bubble-message {
   display:none;
 }
 
+
+/* Remove input-number-controls from Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
 
 /*****************************************************************************/
 
