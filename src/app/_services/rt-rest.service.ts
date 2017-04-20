@@ -167,7 +167,7 @@ export class RestService {
         headers.append('Accept', 'application/json');
         if (token) headers.append('Authorization','Bearer ' + token); //'Authorization':'Bearer '
 
-        if (dbgPrint_getUser) console.log("in restService,auth_getFormObject: userId=",userId);
+        if (dbgPrint_getUser) console.log("in restService,restGet_formObject: userId=",userId);
 
         return this.http.get(this.serverURL + '/applications/'+ userId +'/'+userId              //url req-main
                                                                             //url req-sub

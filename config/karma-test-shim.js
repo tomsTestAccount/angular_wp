@@ -11,7 +11,12 @@ require('zone.js/dist/jasmine-patch');
 require('zone.js/dist/async-test');
 require('zone.js/dist/fake-async-test');
 
-var appContext = require.context('../src', true, /\.spec\.ts/);
+
+
+
+var appContext = require.context('../src', true, /\.spec\.js/);
+
+//console.log("In Karma-test-shim.js , appContext = ",appContext);
 
 appContext.keys().forEach(appContext);
 

@@ -1,6 +1,8 @@
 var webpack = require('webpack');
 var helpers = require('./helpers');
 
+const path = require('path');
+
 module.exports = {
   devtool: 'inline-source-map',
 
@@ -42,12 +44,17 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.ContextReplacementPlugin(
+    /*new webpack.ContextReplacementPlugin(
       // The (\\|\/) piece accounts for path separators in *nix and Windows
       /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
       helpers.root('./src'), // location of your src
       {} // a map of your routes
     )
+    */
+      new webpack.ContextReplacementPlugin(
+          /angular(\\|\/)core(\\|\/)@angular/,
+          path.resolve(__dirname, '../src')
+      )
   ]
 }
 

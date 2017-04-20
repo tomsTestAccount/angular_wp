@@ -3,14 +3,10 @@ import {
 	Directive, ContentChildren, Input, OnChanges, SimpleChange, Query
 } from '@angular/core';
 
-
 import {FormGroup,FormControl,FormBuilder} from '@angular/forms';
 
-
-import {rtFormValidators}  from '../_services/rt-form-validators.service';
 import {lmu_ua_formList} from'../_models/lmu_ua_formList';
 import { RtFormService ,cFormObject} from '../_services/rt-forms.service';
-
 
 import {AuthenticationService} from  '../_services/rt-authentication.service';
 import {ServerConfigs} from '../_models/configFile';
@@ -20,23 +16,6 @@ const dbgPrint_lifecyclehooks = true;
 const dbgPrint_save = false;
 const dbgPrint_formChanged = false;
 const dbgPrint_formEntryChanged = false;
-
-//for animations
-import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate
-} from '@angular/core';
-import {isNullOrUndefined} from "util";
-import {timeout} from "rxjs/operator/timeout";
-
-//var html = require('./user-application.component.html!text');
-//var css = require('./user-application.component.css!text');
-
-@Directive({ selector: 'rt-input' })
-export class ListItem {}
 
 
 @Component({
@@ -139,7 +118,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
 		this._rtFormSrv.subFormsAreUpdated$.subscribe(
 			isUpdated => {
 
-				setTimeout(()=> {
+				setTimeout(()=> {		//not needed , but let the modal-dialog displayed at least for 1sec
 					//this.main_lmu_ua_form = this.lmu_ua_form.init_mainForm();
 					//if (dbgPrint)
 					console.log("In subFormsAreAllUpdated$ ", this.main_lmu_ua_form);
@@ -171,7 +150,6 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
             .then(response => {
 
 				if (dbgPrint_lifecyclehooks)console.log("In ngOnInit for user-application , after get data from server, data=!",response);
-
 
 				//init mainForm  --> with the really data downloaded from server !
 				this.main_lmu_ua_form = this.lmu_ua_form.init_mainForm();
@@ -218,7 +196,6 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
 
 	}
 
-	//ngOnInit(): void {
 	ngAfterViewInit(): void {
 
 		if (dbgPrint_lifecyclehooks)console.log("In ngAfterViewInit for user-application-component");
@@ -250,8 +227,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
 
 	}
 
-	private setChangeDetected(value:boolean,fControl?:any)
-	{
+	private setChangeDetected(value:boolean,fControl?:any) {
 
 		/*
 			if (value == this.changeDetected) return;
@@ -409,8 +385,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
 	}
 
 
-	showMissingInput()
-	{
+	showMissingInput() {
 		if (this.main_lmu_ua_form)
 		{
 			for (let subForm in this.main_lmu_ua_form.controls)
@@ -422,7 +397,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
 
 					this.select_subFormTab(subForm.toString());
 
-					setTimeout(()=>{  //is needed to make focus on element working !?!
+					setTimeout(()=>{  //is needed to make focus on element working ! ...i think, because of the child tab-switch
 					for (let subFormControl in this.main_lmu_ua_form.controls[subForm]['controls'][0]['controls'])
 					{
 

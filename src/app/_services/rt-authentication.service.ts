@@ -265,7 +265,7 @@ export class AuthenticationService {
     //-----------------------------------------------------------------------------------------------------------------
     //TODO: put mapping functions (auth_handleFormObject4localWorking and auth_handleFormObject4SendToServer) to lmu_ua_formList.ts-class
 
-    public auth_getFormObject():any {
+    public auth_getFormObject():Promise<Object> {
 
         return new Promise((resolve, reject) => {
 

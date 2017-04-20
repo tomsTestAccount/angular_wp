@@ -6,12 +6,19 @@ module.exports = function (config) {
 
     frameworks: ['jasmine'],
 
+    failOnEmptyTestSuite: false,
+
     files: [
-      {pattern: './config/karma-test-shim.js', watched: false}
+      //{pattern: './config/karma-test-shim.js', watched: true},
+        {pattern: './src/tests/karma-test-shim2.js', watched: true},
+       // './src/app/1st.spec.js'
     ],
 
     preprocessors: {
-      './config/karma-test-shim.js': ['webpack', 'sourcemap']
+      './src/tests/karma-test-shim2.js': ['webpack', 'sourcemap'],
+        './src/**/!(*.spec).(ts|js)': [
+            'sourcemap'
+        ]
     },
 
     webpack: webpackConfig,
@@ -30,7 +37,10 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: false,
     browsers: ['Chrome'],
-    singleRun: true
+
+    // Continuous Integration mode
+    // if true, it capture browsers, run tests and exit
+    singleRun: false
   };
 
   config.set(_config);
