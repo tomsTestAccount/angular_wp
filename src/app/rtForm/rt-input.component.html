@@ -165,7 +165,6 @@
 
             </div>
         </div>
-
         <div *ngSwitchCase="'grid-box-add'">
             <div class="form-group"
                  [ngClass]="{ 'formFrame_invalid' : entryErrorString && formEntry.required == true,
@@ -205,7 +204,6 @@
 
             </div>
         </div>
-
         <div *ngSwitchCase="'checkBox'">
             <div class="form-group" [ngClass]="{ 'formFrame_invalid' : entryErrorString && formEntry.required == true,
                                                  'formFrame_valid' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value != 0 && formEntry.required == true,

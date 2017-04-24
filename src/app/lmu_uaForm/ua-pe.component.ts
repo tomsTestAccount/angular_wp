@@ -64,21 +64,8 @@ export class LmuUserPeComponent implements OnInit, AfterViewInit{
 
         this.currentForm2 = <FormGroup>givenForm.controls[0];
         if (dbgPrint_ac2) console.log("this.currentForm2=",this.currentForm2);
-        let formCtrls = this.currentForm2['controls'];
-        for (let key in formCtrls)
-        {
-            //console.log("formCtrl = ", key);
+        //let formCtrls = this.currentForm2['controls'];
 
-
-            if (formCtrls[key].value !== null &&
-            	formCtrls[key].value !== '' &&
-                formCtrls[key].value !== [] &&
-                formCtrls[key].value !== 'undefined')
-            {
-                if (dbgPrint_ac2) console.log("formCtrl.value = ", formCtrls[key].value," for ",key);
-                this.ac2_hasValues = true;
-            }
-        }
 
     };
 
@@ -111,16 +98,13 @@ export class LmuUserPeComponent implements OnInit, AfterViewInit{
 					{
 						setTimeout(()=> {			//bugfix for angular.io changeDetection in Dev-Mode; see issue #6005 (EXCEPTION: Expression has changed after it was checked)
 							this.degreeCertAvailable = true;
-						},1);
-
+						},10);
 					}
 				}
 			}
-
 		}
 
 		this.toggle_degreeCertAvailable();
-		//setChangedDetected
 
         if (dbgPrint_ac2) console.log("In LmuUserPeComponent,ngAfterViewInit this.ac2_hasValues",this.ac2_hasValues);
 	}
@@ -128,8 +112,30 @@ export class LmuUserPeComponent implements OnInit, AfterViewInit{
 	ngAfterViewInit():void{
 		if (dbgPrint_lifecyclehooks) console.log("In ngAfterViewInit for pe-component");
 
+
+		//check/uncheck checkbox for sub-subform
+		for (let key in this.currentForm2['controls'])
+		{
+			//console.log("formCtrl = ", key);
+
+			if (this.currentForm2['controls'][key].value !== null &&
+				this.currentForm2['controls'][key].value !== '' &&
+				this.currentForm2['controls'][key].value !== [] &&
+				this.currentForm2['controls'][key].value !== 'undefined')
+			{
+				if (dbgPrint_ac2) console.log("this.currentForm2['controls'].value = ", this.currentForm2['controls'][key].value," for ",key);
+		 		setTimeout(()=> {this.ac2_hasValues = true},1);
+				//this.ac2_hasValues = true;
+			}
+		}
+
 		this._rtFomrsService.set_subForm_PE_Updated(true);
 	}
+
+	/*ngAfterViewInit():void{
+		this._rtFomrsService.set_subForm_PE_Updated(true);
+	};
+	*/
 
 	toggle_degreeCertAvailable(this_component?) {
 

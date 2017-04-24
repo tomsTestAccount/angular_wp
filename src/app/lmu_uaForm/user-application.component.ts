@@ -25,9 +25,8 @@ const dbgPrint_formEntryChanged = false;
     //styles:[css]
 	templateUrl: 'user-application.component.html',
 	styleUrls: ['user-application.component.css'],
-
 })
-export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,AfterViewChecked{
+export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 
 	//TODO: load from form_model_list
 	subFormEntries  = [
@@ -80,11 +79,6 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
 
 	isFormDataLoaded = false;
 
-	//isFormValueLoadedFromServer = false;
-
-	//public dialogResult: any;
-
-	//public formChangedEntries: any[] = [];
 	public formChangedEntries = {
 		subFormGroup_ac: {0:{}},
 		subFormGroup_ac2: {0:{}},
@@ -113,11 +107,12 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
 		let userId = serverConfs.get_serverConfigs().userId;
 		this.summaryPage_href = serverURL + '/applications/' + userId + '/' + userId ;
 
+
 		//detect changes for form made by server --> detect when download form-data finished and child-views are initialized
 		//TODO: We have to know here, when the init-process of child-Views (subFomrs) is finished !?! .... using of lifeCycleHooks (afterContent .. ) ??
+
 		this._rtFormSrv.subFormsAreUpdated$.subscribe(
 			isUpdated => {
-
 				setTimeout(()=> {		//not needed , but let the modal-dialog displayed at least for 1sec
 					//this.main_lmu_ua_form = this.lmu_ua_form.init_mainForm();
 					//if (dbgPrint)
@@ -132,7 +127,8 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
 					//close loading dialog
 					this.dialogsService.closeDialog();
 				},1000);
-			});
+			}
+		);
 
 
 	};
@@ -143,8 +139,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck,Af
 
 		if (dbgPrint_lifecyclehooks) console.log("In ngOnInit for user-application-component");
 
-
-		this.dialogsService.loading('Your data is loading ... '); //TODO: put this or a similar message in the beginning -> i.e. in app.module.ts
+		this.dialogsService.loading('Your data is loading ... '); //TODO: put this or a similar message at the beginning -> i.e. in app.module.ts
 
 		this._authService.auth_getFormObject()
             .then(response => {

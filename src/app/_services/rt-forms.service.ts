@@ -78,6 +78,7 @@ export class RtFormService {
         console.log("this.subForm_OI_Updated$=",this.subForm_OI_Updated);
         */
 
+        //if ( this.subForm_APD_Updated &&  this.subForm_OI_Updated ) this.set_subFormsAreUpdated(true);
         if ( this.subForm_APD_Updated &&  this.subForm_PE_Updated &&  this.subForm_OI_Updated ) this.set_subFormsAreUpdated(true);
         //else if(this.subFormsAreUpdated$._isScalar) this.set_subFormsAreUpdated(false);
     }

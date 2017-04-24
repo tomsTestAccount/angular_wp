@@ -21,9 +21,6 @@ const dbgPrint_lifecyclehooks = true;
 })
 export class LmuUserApdComponent implements OnInit,AfterViewInit {
 
-	//private model = {};
-
-	//private usermodel : UserModel = {uid:42,surname : "Dampf", givenName : "hans", gender : 'male', dateOfBirth : { day:1, month:4, year:1980}};
 	usermodel : any; // = {uid:1 ,surname : "", givenName : "", gender : 'male'};
 
 	countries : any;
@@ -62,7 +59,6 @@ export class LmuUserApdComponent implements OnInit,AfterViewInit {
 	constructor(private fb: FormBuilder,
 	private _rtFomrsService:RtFormService) {
 
-
 		this.submitted = false;
 
 	}
@@ -70,13 +66,11 @@ export class LmuUserApdComponent implements OnInit,AfterViewInit {
 
 	ngOnInit(): void {
 
-
 		if (dbgPrint_lifecyclehooks) console.log("In ngOnInit for apd-componnet");
 
 		if (this.dbgPrint) console.log("this.currentForm=",this.currentForm);
 
 		if (this.dbgPrint) console.log("formEntries=",this.currentFormEntries);
-
 
 	}
 

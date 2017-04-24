@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component,OnInit,DoCheck,AfterViewInit } from '@angular/core';
 import {MdDialogRef} from '@angular/material';
 import { Subject }    from 'rxjs/Subject';
 
@@ -6,60 +6,45 @@ export interface IDialogStruct {
     title?: string;
     message?: string;
     dialogSelection: string;
-
-    /*
-     constructor(t:string,m:string,d:string)
-     {
-     this.title = t;
-     this.message = m;
-     this.dialogSelection = d;
-     }
-     */
 }
 
 
-
+const dbg_print = true;
 
 @Component({
-    selector: 'uaFormDialog',
+    selector: 'my-uaFormDialog',
     template: `
-        <div *ngIf="ds.dialogSelection == 'loading'"  id="loadingDialog">
-            <div  id="spinnerDiv" [style.display]="'flex'" [style.justify-content]="'center'" >
-                <md-spinner></md-spinner>
+            <div *ngIf="ds.dialogSelection == 'loading'"  id="loadingDialog">
+                <div  id="spinnerDiv" [style.display]="'flex'" [style.justify-content]="'center'" >
+                    <md-spinner></md-spinner>
+                </div>
+                <p>{{ ds.title }}</p>
+                <p>{{ ds.message }}</p>
+            </div>    
+            
+            <div *ngIf="ds.dialogSelection == 'confirm'"  id="confirmDialog">
+                <p>{{ ds.title }}</p>
+                <p>{{ ds.message }}</p>
+                <button type="button" md-raised-button 
+                    (click)="dialogRef.close(true)">OK</button>
+                <button type="button" md-button 
+                    (click)="dialogRef.close()">Cancel</button>
             </div>
-            <p>{{ ds.title }}</p>
-            <p>{{ ds.message }}</p>
-        </div>    
-        
-        <div *ngIf="ds.dialogSelection == 'confirm'"  id="confirmDialog">
-            <p>{{ ds.title }}</p>
-            <p>{{ ds.message }}</p>
-            <button type="button" md-raised-button 
-                (click)="dialogRef.close(true)">OK</button>
-            <button type="button" md-button 
-                (click)="dialogRef.close()">Cancel</button>
-        </div>
-        
-        <div *ngIf="ds.dialogSelection == 'info'"  id="infoDialog">
-            <p>{{ ds.title }}</p>
-            <p>{{ ds.message }}</p>
-            <button type="button" md-raised-button 
-                (click)="dialogRef.close(true)">OK</button>
-            <!--<button type="button" md-button 
-                (click)="dialogRef.close()">Cancel</button>
-             -->
-        </div>
+            
+            <div *ngIf="ds.dialogSelection == 'info'"  id="infoDialog">
+                <p>{{ ds.title }}</p>
+                <p>{{ ds.message }}</p>
+                <button type="button" md-raised-button 
+                    (click)="dialogRef.close(true)">OK</button>
+                <!--<button type="button" md-button 
+                    (click)="dialogRef.close()">Cancel</button>
+                 -->
+            </div>
     `,
 })
-export class uaFormDialog {
-
-    /*public title: string;
-    public message: string;
-    public dialogSelection: string;
-    */
+export class uaFormDialogComponent implements OnInit,DoCheck,AfterViewInit {
 
     public ds  : IDialogStruct;
-
 
     //observable sources
     private dialog_selection = new Subject<IDialogStruct>();
@@ -72,8 +57,9 @@ export class uaFormDialog {
         this.dialog_selection.next(dialogStruct);
     }
 
-    constructor(public dialogRef: MdDialogRef<uaFormDialog>) {
+    constructor(public dialogRef: MdDialogRef<uaFormDialogComponent>) {
 
+        if (dbg_print) console.log('In constructor uaFormDialogComponent');
 
          this.dialogSel$.subscribe(
          selStruct => {
@@ -85,8 +71,23 @@ export class uaFormDialog {
             }
             else console.log("Error : In uaFormModal, selStruct.dialogSelection = ",selStruct.dialogSelection );
 
-
          });
-
     }
+
+    ngOnInit()
+    {
+        console.log("In ngOnInit for uaFormDialogComponent");
+    }
+
+    ngDoCheck()
+    {
+      // console.log("ds=",this.ds);
+    }
+
+    ngAfterViewInit()
+    {
+        console.log("In ngAfterViewInit for uaFormDialogComponent");
+    }
+
+
 }

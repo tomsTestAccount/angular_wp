@@ -1,51 +1,51 @@
 import { Observable } from 'rxjs/Rx';
-import { uaFormDialog} from '../modal/uaFormModal.component';
+import { uaFormDialogComponent} from '../modal/uaFormModal.component';
 import { MdDialogRef, MdDialog, MdDialogConfig } from '@angular/material';
 import { Injectable } from '@angular/core';
 
-const dbgDialog_Print = false;
+const dbgDialog_Print = true;
 
 @Injectable()
 export class DialogsService {
 
-    private dialogRef: MdDialogRef<uaFormDialog>;
-    private  config: MdDialogConfig;
+    private dialogRef: MdDialogRef<uaFormDialogComponent>;
+    private config: MdDialogConfig;
     private isDialog_open = false;
 
     constructor(private dialog: MdDialog) {
         this.config = new MdDialogConfig(); //disableClose = true;
-    }
 
+    }
 
     public closeDialog()
     {
-        if (dbgDialog_Print) console.log("In closeDialog, dialogRef=",this.dialogRef);
+        if (dbgDialog_Print) console.log("In closeDialog 1, dialogRef=",this.dialogRef);
 
-        this.dialogRef.close();
+        if (this.dialogRef)
+        {
+            this.dialog.closeAll();
+            //this.dialogRef.close(uaFormDialogComponent);
+            if (dbgDialog_Print) console.log("In closeDialog 2, dialogRef=",this.dialogRef);
+        }
         this.isDialog_open = false;
     }
 
     public confirm(title: string, message: string): Observable<boolean> {
 
-        if (this.isDialog_open == true) this.closeDialog();
+        if (this.isDialog_open === true) this.closeDialog();
 
         if (dbgDialog_Print) console.log("In DialogService,confirm,title",title,",message=",message);
 
-        //let dialogRef: MdDialogRef<uaFormDialog>;
-
-        this.dialogRef = this.dialog.open(uaFormDialog);
+        this.dialogRef = this.dialog.open(uaFormDialogComponent);
         this.isDialog_open = true;
-        //dialogRef.componentInstance.title = title;
-        //dialogRef.componentInstance.message = message;
-
 
         this.dialogRef.componentInstance.set_dialogSel(
             {
                 title: title,
                 message:message,
-                dialogSelection: 'confirm',
+                dialogSelection: 'confirm'
             }
-            );
+        );
 
         return this.dialogRef.afterClosed();
     }
@@ -54,17 +54,14 @@ export class DialogsService {
 
         if (this.isDialog_open == true) this.closeDialog();
 
-        if (dbgDialog_Print) console.log("In DialogService,loading,title",title,",message=",message);
+        //if (dbgDialog_Print) console.log("In DialogService,loading,title",title,",message=",message);
 
-        //let dialogRef: MdDialogRef<uaFormDialog>;
+        //this.dialogRef = MdDialogRef<uaFormDialogComponent>;
 
-        this.config.disableClose = true;
+        //this.config.disableClose = false;
 
-        this.dialogRef = this.dialog.open(uaFormDialog,this.config);
+        this.dialogRef = this.dialog.open(uaFormDialogComponent,this.config);
         this.isDialog_open = true;
-        //dialogRef.componentInstance.title = title;
-        //dialogRef.componentInstance.message = message;
-
 
         this.dialogRef.componentInstance.set_dialogSel(
             {
@@ -85,9 +82,9 @@ export class DialogsService {
 
         if (dbgDialog_Print) console.log("In DialogService,info,title",title,",message=",message);
 
-        //let dialogRef: MdDialogRef<uaFormDialog>;
+        //let dialogRef: MdDialogRef<uaFormDialogComponent>;
 
-        this.dialogRef = this.dialog.open(uaFormDialog);
+        this.dialogRef = this.dialog.open(uaFormDialogComponent);
         this.isDialog_open = true;
         //dialogRef.componentInstance.title = title;
         //dialogRef.componentInstance.message = message;
@@ -97,7 +94,7 @@ export class DialogsService {
             {
                 title: title ,
                 message:message,
-                dialogSelection: 'info',
+                dialogSelection: 'info'
             }
         );
 
