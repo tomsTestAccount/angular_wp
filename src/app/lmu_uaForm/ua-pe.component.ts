@@ -124,7 +124,7 @@ export class LmuUserPeComponent implements OnInit, AfterViewInit{
 				this.currentForm2['controls'][key].value !== 'undefined')
 			{
 				if (dbgPrint_ac2) console.log("this.currentForm2['controls'].value = ", this.currentForm2['controls'][key].value," for ",key);
-		 		setTimeout(()=> {this.ac2_hasValues = true},1);
+		 		setTimeout(()=> {this.ac2_hasValues = true},10);
 				//this.ac2_hasValues = true;
 			}
 		}

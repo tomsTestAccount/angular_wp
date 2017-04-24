@@ -191,13 +191,31 @@
         <div *ngSwitchCase="'fileUpload'">
             <div class="form-group" [ngClass]="{ 'formFrame_invalid' : formgroup.controls[formEntry.key].invalid ,
                                                     'formFrame_valid' : formgroup.controls[formEntry.key].valid,
-                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formEntry.required == false
+                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid && (isOpened==false)
                                                     }">
 
-                               <rt-file-uploader
+
+                <md-checkbox *ngIf='formEntry.collapsible_box_title !== undefined'  [(ngModel)]="isOpened" [ngModelOptions]="{standalone: true}" (click)="toggle_isOpened(this)" align="start">
+                    <label class="lbl-form_main"> {{formEntry.collapsible_box_title}} </label>
+                </md-checkbox>
+
+                <i class="mdi mdi-information-outline mdi-24px" *ngIf="formEntry.collapsible_info_text !== undefined"
+                   [ngClass]="{'isInfoActive' : showTooltip1}"
+                   (click)="toggleInfo($event)"
+                   (mouseover)="showTooltip1=true"
+                   (mouseleave)="showTooltip1=false"
+                   [style.color]="'#4b797c'"></i>
+
+                <div *ngIf="showTooltip1" class="container-fluid">
+                    <div class="row">
+                        <label class="infoText"> {{formEntry.collapsible_info_text}}</label>
+                    </div>
+                </div>
+
+                <rt-file-uploader *ngIf='isOpened==true'
                                                 [formgroup]=formgroup
                                                 [formEntry] = formEntry>
-                              </rt-file-uploader>
+                </rt-file-uploader>
                 <div class="invalidInfo" *ngIf="entryErrorString">
                     {{entryErrorString}}
                 </div>

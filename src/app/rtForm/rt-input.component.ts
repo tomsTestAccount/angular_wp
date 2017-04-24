@@ -6,6 +6,7 @@ import { FormGroup,FormControl,FormBuilder }        from '@angular/forms';
 
 const dbgPrint_lifecyclehooks = true;
 const dbgPrint_dateEntry = false;
+const dbgPrint_fileEntry = true;
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -33,7 +34,7 @@ export class rtInputComponent implements OnInit,DoCheck,AfterViewInit {
     @Input() formgroup: FormGroup;
 
     showTooltip =  false;
-
+    isOpened=true;
     entryErrorString : string;
 
     constructor()
@@ -57,8 +58,41 @@ export class rtInputComponent implements OnInit,DoCheck,AfterViewInit {
     ngOnInit(): void {
 
 
-         if (this.formEntry.type == 'date')
-         {
+        if (this.formEntry.collapsible_box_title)
+        {
+
+            this.isOpened = false;
+            this.toggle_isOpened();     ////this.formgroup.controls[this.formEntry.key].disable();
+
+           // setTimeout(() => {this.isOpened = false},1);
+
+        }
+
+
+
+        if (this.formEntry.type == 'fileUpload') {
+
+
+            //if (dbgPrint_fileEntry) console.log("Input-entry: File-upload, this.formEntry=", this.formEntry);
+
+            if (dbgPrint_fileEntry)
+            {
+                if (this.formEntry.key == 'copy_of_certificate') {
+                    //console.log("Input-entry: File-upload, this.formEntry=", this.formEntry);
+                    console.log("FormControl copy_of_certificate : FormControl=", this.formgroup.controls[this.formEntry.key]);
+                }
+            }
+
+            if ( (this.formEntry.defaultValue) && (this.formEntry.defaultValue.filename))
+            {
+                this.isOpened = true;
+                this.toggle_isOpened();     ////this.formgroup.controls[this.formEntry.key].enable();
+
+                //setTimeout(() => {this.isOpened = true},1);
+            }
+        }
+        else if (this.formEntry.type == 'date')
+        {
 
 
              if (dbgPrint_dateEntry) console.log("Input-entry: DATE, this.formEntry=", this.formEntry);
@@ -90,7 +124,7 @@ export class rtInputComponent implements OnInit,DoCheck,AfterViewInit {
              //this.formEntry.options.maxDate = null;
 
              if (dbgPrint_dateEntry) console.log("this.formEntry.options=", this.formEntry.options);
-         }
+        }
 
 
 
@@ -107,6 +141,27 @@ export class rtInputComponent implements OnInit,DoCheck,AfterViewInit {
     toggleInfo(e:any):void{
         this.showTooltip = !this.showTooltip;
         e.stopPropagation();
+    }
+
+    toggle_isOpened(value?) {
+
+        setTimeout(()=> {			//bugfix for angular.io changeDetection in Dev-Mode; see issue #6005 (EXCEPTION: Expression has changed after it was checked)
+            if (!this.isOpened)
+            {
+                this.formgroup.controls[this.formEntry.key].disable();
+            }
+            else
+            {
+                this.formgroup.controls[this.formEntry.key].enable();
+            }
+
+            if (this.formEntry.key == 'copy_of_certificate') {
+                //console.log("Input-entry: File-upload, this.formEntry=", this.formEntry);
+                console.log("FormControl copy_of_certificate : FormControl=", this.formgroup.controls[this.formEntry.key]);
+            }
+
+        },1);
+
     }
 
     //used in html-template to show info for user for invalid input

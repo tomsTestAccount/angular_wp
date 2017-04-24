@@ -26,14 +26,14 @@ var formEntries_apd = [
         title: 'Surname / Family Name *',
         type: 'text',
         validators: ['required','minLength=5'],
-        required: true
+        //required:  true
     },
     {
         key: 'firstname',
         title: 'First Name(s) / Given Name(s) *',
         type: 'text',
         validators: ['required','minLength=3'],
-        required: true
+        //required:  true
     },
     {
         key: 'gender',
@@ -48,7 +48,7 @@ var formEntries_apd = [
                 name: 'female'
             }
         ],
-        required: true
+        //required:  true
     },{
 
         key: 'dateofbirth',
@@ -61,7 +61,7 @@ var formEntries_apd = [
             yearRange: "1965:1999",
             placeholder: "yyyy-mm-dd"
         },
-        required: true
+        //required:  true
     },
     {
 
@@ -70,7 +70,7 @@ var formEntries_apd = [
         type: 'select',
         validators: ['required','minLength=3'],
         options: CountryList,
-        required: true
+        //required:  true
     },
     {
 
@@ -78,7 +78,7 @@ var formEntries_apd = [
         title: 'Street Name and House Number *',
         type: 'text',
         validators: ['required','minLength=3'],
-        required: true
+        //required:  true
     },
     {
 
@@ -86,7 +86,7 @@ var formEntries_apd = [
         title: 'Postcode / ZIP Code *',
         type: 'text',
         validators: ['required','minLength=3'],
-        required: true
+        //required:  true
     },
     {
 
@@ -94,7 +94,7 @@ var formEntries_apd = [
         title: 'Place of Residence  *',
         type: 'text',
         validators: ['required','minLength=3'],
-        required: true
+        //required:  true
     },
     {
 
@@ -103,7 +103,7 @@ var formEntries_apd = [
         type: 'select',
         validators: ['required','minLength=3'],
         options: CountryList,
-        required: true
+        //required:  true
     },
     {
 
@@ -111,7 +111,7 @@ var formEntries_apd = [
         title: 'Phonenumber  *',
         type: 'number',
         validators: ['required','minLength=3'],
-        required: true
+        //required:  true
     },
     {
 
@@ -119,7 +119,7 @@ var formEntries_apd = [
         title: 'other Phonenumber  (optional)',
         type: 'number',
         validators: ['minLength=3'],
-        required: false
+        //required:  false
     },
     {
 
@@ -127,7 +127,7 @@ var formEntries_apd = [
         title: 'Email Address *',
         type: 'email',
         validators: ['required','validateEmail'],
-        required: true
+        //required:  true
     },
     {
 
@@ -135,7 +135,7 @@ var formEntries_apd = [
         title: 'Other Email Address (optional)',
         type: 'email',
         validators: ['validateEmail'],
-        required: false
+        //required:  false
     },
     {
 
@@ -143,7 +143,7 @@ var formEntries_apd = [
         title: 'Homepage (optional)',
         type: 'text',
         validators: ['minLength=5'],
-        required: false
+        //required:  false
     }
 ];
 
@@ -154,7 +154,7 @@ var formEntries_ac = [
         type: 'textarea',
         validators: ['required','minLength=3'],
         secParagraphArray: ['Please enter your previous or your current study program:'],
-        required: true
+        //required:  true
     },
     {
         key: 'ac_level',
@@ -163,7 +163,7 @@ var formEntries_ac = [
         validators: ['required','minLength=3'],
         secParagraphArray: ['Please enter the name of the academic degree you already',
             'hold or you will receive once you have finished your current studies'],
-        required: true
+        //required:  true
     },
     {
         key: 'ac_institution',
@@ -173,7 +173,7 @@ var formEntries_ac = [
         secParagraphArray: ['Please give the exact name, location and country of the \
                                academic institution where you have received or will \
                         receive your academic degree:'],
-        required: true
+        //required:  true
     }, {
 
         key: 'degree_conferral_date',
@@ -188,7 +188,7 @@ var formEntries_ac = [
         },
         secParagraphArray: ['Please indicate the date (year-month-day) in which you \
                         received or expect to receive the degree mentioned above:'],
-        required: true
+        //required:  true
     },
     /*
     {
@@ -198,7 +198,7 @@ var formEntries_ac = [
         title: '',
         type: 'checkbox',
         //validators: ['required'],
-        required: false
+        //required:  false
     },
     */
     {
@@ -214,7 +214,11 @@ var formEntries_ac = [
             allowedExtensions: ['application/pdf'],
             calculateSpeed: true,
         },
-        required: true
+        collapsible_box_title:'Copy of Degree Certificate (e.g. Bachelor) already available ?',
+        collapsible_info_text:"Please uncheck this box if you are unable to provide your degree certificate (e.g. bachelor's)  \
+                                by the application deadline because it will be issued by your academic institution only after the deadline",
+        //required:  true
+
     },
     {
         key: 'copy_of_tor',
@@ -230,7 +234,7 @@ var formEntries_ac = [
             allowedExtensions: ['application/pdf', 'image/jpeg', 'image/png'],
             calculateSpeed: true,
         },
-        required: true
+        ////required:  true
     },
     {
         key: 'av_grade1',
@@ -240,7 +244,7 @@ var formEntries_ac = [
         secParagraphArray: [`Please calculate the average grade from the best performance (equivalent to 150 ECTS) and enter this in the field below.`,
             `Note: Applicants whose Transcript of Records does not include ECTS: A 6-semester study program equals a workload of 180 ECTS.`,
             `Divide this workload between the different courses you took during your study program and upload your calculation at the end of this online application in the field Other documents`],
-        required: true
+        //required:  true
     },
     {
         key: 'av_grade2',
@@ -284,7 +288,7 @@ var formEntries_ac = [
                     placeHolder: 'E.g.: 1.5'
                 }],
         },
-        required: true
+        //required:  true
     },
     {
         key: 'av_grade3',
@@ -327,7 +331,7 @@ var formEntries_ac = [
                     placeHolder: 'E.g.: 1.5'
                 }],
         },
-        required: true
+        //required:  true
     },
 
     {
@@ -349,7 +353,7 @@ var formEntries_ac = [
                 name: 'Other kind of Institution'
             }
         ],
-        required: true
+        //required:  true
     },
     {
         key: 'lang_cert',
@@ -362,7 +366,7 @@ var formEntries_ac = [
             allowedExtensions: ['application/pdf', 'image/jpeg', 'image/png'],
             calculateSpeed: true,
         },
-        required: true
+        //required:  true
     }
 ];
 
@@ -381,7 +385,7 @@ var formEntries_oi = [
             allowedExtensions: ['application/pdf'],
             calculateSpeed: true,
         },
-        required: true
+        //required:  true
     },
     {
         key: 'further_certificates',
@@ -395,21 +399,21 @@ var formEntries_oi = [
             allowedExtensions: ['application/pdf'],
             calculateSpeed: true,
         },
-        required: true
+        //required:  true
     },
     {
         key: 'other_info',
         title: 'Any other information ',
         validators: ['minLength=5'],
         type: 'textarea',
-        required: false
+        //required:  false
     },
     {
         key: 'spec_interview_prov',
         title: 'Special provisions for the interview needed? (e.g. because of disability): ',
         validators: ['minLength=5'],
         type: 'textarea',
-        required: false
+        //required:  false
     },
     {
         key: 'notification_emailed',
@@ -417,7 +421,7 @@ var formEntries_oi = [
         infoText: 'You will be notified of the outcome of the aptitude assessment procedure by email. If you wish to be notified by mail, please select this field.',
         type: 'checkBox',
         //validators: ['validateEmail'],
-        required: false
+        //required:  false
     }
 
 ];
@@ -429,7 +433,7 @@ var formEntries_ac2 = [
         title: 'Academic Education *',
         type: 'textarea',
         validators: ['minLength=3'],
-        required: false
+        //required:  false
     },
     {
 
@@ -437,7 +441,7 @@ var formEntries_ac2 = [
         title: 'Academic Level *',
         type: 'textarea',
         validators: ['minLength=3'],
-        required: false
+        //required:  false
     },
     {
 
@@ -445,7 +449,7 @@ var formEntries_ac2 = [
         title: 'Academic Institution *',
         type: 'textarea',
         validators: ['minLength=3'],
-        required: false
+        //required:  false
     },
     {
 
@@ -459,7 +463,7 @@ var formEntries_ac2 = [
             placeholder: "yyyy-mm-dd"
         },
         validators: ['minLength=8'],
-        required: false
+        //required:  false
     },
     {
 
@@ -473,7 +477,7 @@ var formEntries_ac2 = [
             allowedExtensions: ['application/pdf'],
             calculateSpeed: true,
         },
-        required: false
+        //required:  false
     }
 ];
 

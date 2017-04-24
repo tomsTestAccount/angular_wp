@@ -4,39 +4,18 @@
 
     <form [formGroup]="currentForm" autocomplete="off">
 
-        <!--
-        <textarea [ngStyle]="{'background-color':'black','color':'white'}" [(ngModel)]='usermodel.prevEducation' rows="15" cols="80">
-                        </textarea>
-
-                         [ngClass]="{'formFrame_invalid' : peForm.controls[formEntry.key].value == true && uploadedData_Degree.length == 0 ,
-                                'formFrame_valid' :peForm.controls[formEntry.key].value == false || (peForm.controls[formEntry.key].value == true && uploadedData_Degree.length > 0)}"
-        -->
 
         <div *ngFor="let formEntry of currentFormEntries">
 
             <div [ngSwitch]="formEntry.key" >
 
-                <!-- used here,because to ignore that entry as an standalone entry-->
-                <div *ngSwitchCase="'copy_of_certificate_availableCheckbox'">
-                    <!--do nothing for that formcontrol-element at the moment, because it is handled by 'copy_of_certificate' below-->
-                </div>
+                <!-- used here,because to ignore that entry as an standalone entry
+                <!--do nothing for that formcontrol-element at the moment, because it is handled by 'copy_of_certificate' below
+                    <div *ngSwitchCase="'copy_of_certificate_availableCheckbox'">
+                    </div>
+                -->
 
                 <!--
-                <div *ngSwitchCase="'copy_of_certificate'"
-                     class="form-group"
-                     [ngClass]="{ 'formFrame_invalid' : currentForm.controls[formEntry.key].invalid && currentForm.controls['copy_of_certificate_availableCheckbox'].value == true,
-                                'formFrame_valid' : currentForm.controls[formEntry.key].valid  ||  currentForm.controls['copy_of_certificate_availableCheckbox'].value == false}"
-                     >
-                    <div>
-                    <md-checkbox formControlName="copy_of_certificate_availableCheckbox"  align="start" [(ngModel)]="currentForm.controls['copy_of_certificate_availableCheckbox'].value">
-                               <label class="lbl-form_main"> Degree Certificate available ? </label>
-                            </md-checkbox>
-
-
-
-                 -->
-
-
                 <div *ngSwitchCase="'copy_of_certificate'"
                          class="form-group"
                      [ngClass]="{ 'formFrame_invalid' :  currentForm.controls[formEntry.key].invalid,
@@ -44,6 +23,7 @@
                                     }"
                          >
                     <div>
+
 
                         <md-checkbox  align="start"  [(ngModel)]="degreeCertAvailable" [ngModelOptions]="{standalone: true}" (click)="toggle_degreeCertAvailable(this)">
                            <label class="lbl-form_main"> Degree Certificate available ? </label>
@@ -76,7 +56,7 @@
                     </div>
 
                 </div>
-
+                -->
 
                 <div *ngSwitchDefault>
                     <rt-input id="{{'rtInput_'+ formEntry.key}}"

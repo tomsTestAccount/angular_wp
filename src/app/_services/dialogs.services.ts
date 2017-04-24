@@ -3,7 +3,7 @@ import { uaFormDialogComponent} from '../modal/uaFormModal.component';
 import { MdDialogRef, MdDialog, MdDialogConfig } from '@angular/material';
 import { Injectable } from '@angular/core';
 
-const dbgDialog_Print = true;
+const dbgDialog_Print = false;
 
 @Injectable()
 export class DialogsService {
