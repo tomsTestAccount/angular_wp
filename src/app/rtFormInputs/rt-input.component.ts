@@ -4,9 +4,9 @@ import { FormGroup,FormControl,FormBuilder }        from '@angular/forms';
 
 //----------------------------------------------------------------------------------------------------------------------
 
-const dbgPrint_lifecyclehooks = true;
+const dbgPrint_lifecyclehooks = false;
 const dbgPrint_dateEntry = false;
-const dbgPrint_fileEntry = true;
+const dbgPrint_fileEntry = false;
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -14,7 +14,7 @@ const dbgPrint_fileEntry = true;
     //moduleId: module.id,
     selector: 'rt-input',
     //template:html,
-    //styleUrls: ['../css/rtForm.css']
+    //styleUrls: ['../css/rtFormInputs.css']
     //styles:[css]
     templateUrl: 'rt-input.component.html',
     styleUrls: ['rtForm.css']
@@ -32,6 +32,7 @@ export class rtInputComponent implements OnInit,DoCheck,AfterViewInit {
 
     @Input() formEntry: any;
     @Input() formgroup: FormGroup;
+    @Input() dbgPrint:boolean;
 
     showTooltip =  false;
     isOpened=true;
@@ -50,13 +51,12 @@ export class rtInputComponent implements OnInit,DoCheck,AfterViewInit {
         {
             this.checkValidationErrorExists();
         }
-
-
-
     }
 
     ngOnInit(): void {
 
+
+        if (this.dbgPrint) console.log("In rt-Input ngOnInit: Formgroup=", this.formgroup,", this.formEntry=", this.formEntry.key);
 
         if (this.formEntry.collapsible_box_title)
         {
@@ -155,10 +155,11 @@ export class rtInputComponent implements OnInit,DoCheck,AfterViewInit {
                 this.formgroup.controls[this.formEntry.key].enable();
             }
 
-            if (this.formEntry.key == 'copy_of_certificate') {
+            /*if (this.formEntry.key == 'copy_of_certificate') {
                 //console.log("Input-entry: File-upload, this.formEntry=", this.formEntry);
                 console.log("FormControl copy_of_certificate : FormControl=", this.formgroup.controls[this.formEntry.key]);
             }
+            */
 
         },1);
 

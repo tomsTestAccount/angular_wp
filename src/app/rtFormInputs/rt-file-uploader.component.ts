@@ -15,7 +15,7 @@ const dbgPrint = false;
 //import { ViewContainerRef } from '@angular/core';
 
 //var html = require('./rt-file-uploader.component.html!text');
-//var css = require('./rtForm.css!text');
+//var css = require('./rtFormInputs.css!text');
 
 @Component({
     //moduleId: module.id,

@@ -7,7 +7,7 @@ import 'rxjs/add/operator/debounceTime';
 const dbgPrint = false;
 
 //var html = require('./rt-grid-box-add.component.html!text');
-//var css = require('./rtForm.css!text');
+//var css = require('./rtFormInputs.css!text');
 
 @Component({
     //moduleId: module.id,

@@ -3,19 +3,14 @@
 <div [formGroup]="formgroup">
 
     <div [ngSwitch]="formEntry.type">
-        <!--
-        <input *ngSwitchCase="'selectbox'" [formControlName]="formEntry.key"
-               [id]="formEntry.key" [type]="formEntry.type">
-        <select [id]="formEntry.key" *ngSwitchCase="'dropdown'" [formControlName]="formEntry.key">
-            <option *ngFor="let opt of formEntry.options" [value]="opt.key">{{opt.value}}</option>
-        </select>
-        -->
 
-        <div  *ngSwitchCase="'text'">
-            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : formgroup.controls[formEntry.key].invalid ,
+        <div class="form-group" [ngClass]="{ 'formFrame_invalid' : formgroup.controls[formEntry.key].invalid ,
                                                     'formFrame_valid' : formgroup.controls[formEntry.key].valid,
-                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formEntry.required == false}">
-                <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
+                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid && (isOpened==false)
+                                                    }">
+
+            <div  *ngSwitchCase="'text'">
+             <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
                 <br />
                 <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
                 </label>
@@ -29,15 +24,11 @@
                 <div class="invalidInfo" *ngIf="entryErrorString">
                     {{entryErrorString}}
                 </div>
-
             </div>
-        </div>
+
 
         <div *ngSwitchCase="'textarea'">
-            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : formgroup.controls[formEntry.key].invalid ,
-                                                    'formFrame_valid' : formgroup.controls[formEntry.key].valid,
-                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formEntry.required == false}">
-                <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
+           <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
                 <br />
                 <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
                 </label>
@@ -52,15 +43,12 @@
                 <div class="invalidInfo" *ngIf="entryErrorString">
                     {{entryErrorString}}
                 </div>
-            </div>
+
         </div>
 
 
         <div  *ngSwitchCase="'date'">
-            <div class="form-group" [ngClass]="{    'formFrame_invalid' : formgroup.controls[formEntry.key].invalid ,
-                                                    'formFrame_valid' : formgroup.controls[formEntry.key].valid,
-                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid && formEntry.required == false}"
-                id="ngPrimeCalender">
+
                 <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
                 <br />
                 <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
@@ -91,15 +79,11 @@
                 </div>
 
 
-            </div>
+
         </div>
 
         <div  *ngSwitchCase="'select'">
-            <div class="form-group" [ngClass]="{    'formFrame_invalid' : formgroup.controls[formEntry.key].invalid ,
-                                                    'formFrame_valid' : formgroup.controls[formEntry.key].valid,
-                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formEntry.required == false}">
-
-                <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
+           <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
                 <br />
                 <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
                 </label>
@@ -115,15 +99,11 @@
                     {{entryErrorString}}
                 </div>
 
-            </div>
+
         </div>
 
         <div    *ngSwitchCase="'number'">
-            <div class="form-group" [ngClass]="{
-                                                    'formFrame_invalid' : formgroup.controls[formEntry.key].invalid ,
-                                                    'formFrame_valid' : formgroup.controls[formEntry.key].valid,
-                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formEntry.required == false}">
-                <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
+             <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
                 <br />
                 <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray" > {{text}}
                 </label>
@@ -141,15 +121,11 @@
                 </div>
 
 
-            </div>
+
         </div>
 
         <div    *ngSwitchCase="'email'">
-            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : formgroup.controls[formEntry.key].invalid ,
-                                                    'formFrame_valid' : formgroup.controls[formEntry.key].valid,
-                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formEntry.required == false
-                                                 }">
-                <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
+           <label class="lbl-form_main" [attr.for]="formEntry.key" >{{formEntry.title}}</label>
 
 
                 <input  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
@@ -163,14 +139,10 @@
                     {{entryErrorString}}
                 </div>
 
-            </div>
+
         </div>
         <div *ngSwitchCase="'grid-box-add'">
-            <div class="form-group"
-                 [ngClass]="{ 'formFrame_invalid' : entryErrorString && formEntry.required == true,
-                  'formFrame_valid' : formgroup.controls[formEntry.key].valid,
-                  'formFrame_optional' : !formgroup.controls[formEntry.key].invalid &&  formEntry.required == false}">
-                <label class="lbl-form_main" [attr.for]="formEntry.key">{{formEntry.title}}</label>
+           <label class="lbl-form_main" [attr.for]="formEntry.key">{{formEntry.title}}</label>
                 <br />
                 <label class="secParagraph" *ngFor="let text of formEntry.secParagraphArray"> {{text}}  <br />
                 </label>
@@ -184,18 +156,12 @@
                     {{entryErrorString}}
                 </div>
 
-            </div>
+
 
         </div>
 
         <div *ngSwitchCase="'fileUpload'">
-            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : formgroup.controls[formEntry.key].invalid ,
-                                                    'formFrame_valid' : formgroup.controls[formEntry.key].valid,
-                                                    'formFrame_optional' : !formgroup.controls[formEntry.key].invalid && (isOpened==false)
-                                                    }">
-
-
-                <md-checkbox *ngIf='formEntry.collapsible_box_title !== undefined'  [(ngModel)]="isOpened" [ngModelOptions]="{standalone: true}" (click)="toggle_isOpened(this)" align="start">
+            <md-checkbox *ngIf='formEntry.collapsible_box_title !== undefined'  [(ngModel)]="isOpened" [ngModelOptions]="{standalone: true}" (click)="toggle_isOpened(this)" align="start">
                     <label class="lbl-form_main"> {{formEntry.collapsible_box_title}} </label>
                 </md-checkbox>
 
@@ -220,14 +186,10 @@
                     {{entryErrorString}}
                 </div>
 
-            </div>
+
         </div>
         <div *ngSwitchCase="'checkBox'">
-            <div class="form-group" [ngClass]="{ 'formFrame_invalid' : entryErrorString && formEntry.required == true,
-                                                 'formFrame_valid' : !formgroup.controls[formEntry.key].invalid &&  formgroup.controls[formEntry.key].value != 0 && formEntry.required == true,
-                                                 'formFrame_optional' : formEntry.required == false}">
-
-                <div [style.color]="'#4b797c'">
+            <div [style.color]="'#4b797c'">
                     <md-checkbox formControlName={{formEntry.key}} align="start">
                         <label class="lbl-form_main" [attr.for]="formEntry.key"> {{formEntry.title}} </label>
                     </md-checkbox>
@@ -259,10 +221,10 @@
                                 <label class="infoText"> {{formEntry.infoText}} </label>
                             </div>
                         </div>
-                </div>
+
             </div>
         </div>
-
+      </div>
     </div>
 
 </div>

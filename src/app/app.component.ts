@@ -1,5 +1,5 @@
 import { Component,OnDestroy,Input } from '@angular/core';
-import {UserApplicationComponent} from '../app/lmu_uaForm/user-application.component';
+import {UserApplicationComponent} from './dynamicForm/mainform.component';
 
 @Component({
     selector: 'my-app',

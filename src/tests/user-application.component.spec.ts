@@ -8,7 +8,7 @@ import { DebugElement }    from '@angular/core';
 
 
 
-import {UserApplicationComponent} from '../app/lmu_uaForm/user-application.component';
+import {UserApplicationComponent} from '../app/dynamicForm/mainform.component';
 
 import { MaterialModule } from '@angular/material';
 import { ReactiveFormsModule,FormsModule} from '@angular/forms';
@@ -16,16 +16,18 @@ import {lmu_ua_formList} from  '../app/_models/lmu_ua_formList';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 
-import { LmuUserApdComponent } 	from '../app/lmu_uaForm/ua-apd.component';
-import { LmuUserPeComponent } 	from '../app/lmu_uaForm/ua-pe.component';
-import { LmuUserOpeComponent } 	from '../app/lmu_uaForm/ua-ope.component';
-import { LmuUserOiComponent } 	from '../app/lmu_uaForm/ua-oi.component';
+//import { LmuUserApdComponent } 	from '../app/dynamicForm/ua-apd.component';
+//import { LmuUserPeComponent } 	from '../app/dynamicForm/ua-pe.component';
+//import { LmuUserOpeComponent } 	from '../app/dynamicForm/ua-ope.component';
+//import { LmuUserOiComponent } 	from '../app/dynamicForm/ua-oi.component';
 
-import {rtInputComponent}       from '../app/rtForm/rt-input.component';
-import {rtGridBoxAddComponent}     from '../app/rtForm/rt-grid-box-add.component';
+import {DynamicSubFormComponent} from'../app/dynamicForm/dynamic-subform.component'
+
+import {rtInputComponent}       from '../app/rtFormInputs/rt-input.component';
+import {rtGridBoxAddComponent}     from '../app/rtFormInputs/rt-grid-box-add.component';
 import { CalendarModule }            from 'primeng/components/calendar/calendar';
 import { NgUploaderModule }        from 'ngx-uploader';
-import {rtFileUploaderComponent} from '../app/rtForm/rt-file-uploader.component';
+import {rtFileUploaderComponent} from '../app/rtFormInputs/rt-file-uploader.component';
 import {getKeyValuePair}        from '../app/_pipes/key-value.pipe';
 import {objValuesPipe}          from '../app/_pipes/key-value.pipe';
 
@@ -75,10 +77,11 @@ describe('UserApplicationComponent', () => {
                         BrowserAnimationsModule
                     ],
             declarations: [UserApplicationComponent,
-                            LmuUserApdComponent,
-                            LmuUserPeComponent,
-                            LmuUserOiComponent,
-                            LmuUserOpeComponent,
+                            DynamicSubFormComponent,
+                            //LmuUserApdComponent,
+                            //LmuUserPeComponent,
+                            //LmuUserOiComponent,
+                            //LmuUserOpeComponent,
                             rtInputComponent,
                             rtGridBoxAddComponent,
                             rtFileUploaderComponent,

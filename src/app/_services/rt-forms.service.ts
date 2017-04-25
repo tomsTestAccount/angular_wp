@@ -20,7 +20,7 @@ export class uaFormObj {
 };
 */
 
-const dbg_print = false;
+const dbgPrint_subFormUpdate = true;
 
 
 
@@ -31,15 +31,31 @@ export class RtFormService {
     //---------------- subForm - services - vor view/data init --------------------------------
 
 
-
     private subForm_APD_Updated = false;
     private subForm_PE_Updated = false;
     private subForm_OI_Updated = false;
 
+
+    private subForms_Updated_Array = {};
     private subFormsAreUpdated_Src = new Subject<boolean>();
 
+    public configSubforms4UpdateEvent(subformKey:string)
+    {
+        this.subForms_Updated_Array[subformKey] = false;
 
+        //if (dbgPrint_subFormUpdate) console.log("this.subForms_Updated_Array=",this.subForms_Updated_Array);
+    }
 
+    public setSubform_updated(subformKey:string)
+    {
+        this.subForms_Updated_Array[subformKey] = true;
+
+        if (dbgPrint_subFormUpdate) console.log("this.subForms_Updated_Array=",this.subForms_Updated_Array);
+
+        this.checkAllSubformsUpdated();
+    }
+
+    /*
     //subForm_APD_Updated$ = this.subForm_APD_Updated_Src.asObservable();
     set_subForm_APD_Updated(bVal : boolean) {
         this.subForm_APD_Updated = bVal;
@@ -64,10 +80,12 @@ export class RtFormService {
         this.checkAllSubformsUpdated();
     }
 
+    */
+
     subFormsAreUpdated$ = this.subFormsAreUpdated_Src.asObservable();
     set_subFormsAreUpdated(bVal : boolean) {
         this.subFormsAreUpdated_Src.next(bVal);
-        if (dbg_print) console.log("In rtFormService subFormWasUpdated");
+        if (dbgPrint_subFormUpdate) console.log("In rtFormService subFormWasUpdated");
     }
 
     private checkAllSubformsUpdated()
@@ -78,10 +96,37 @@ export class RtFormService {
         console.log("this.subForm_OI_Updated$=",this.subForm_OI_Updated);
         */
 
-        //if ( this.subForm_APD_Updated &&  this.subForm_OI_Updated ) this.set_subFormsAreUpdated(true);
-        if ( this.subForm_APD_Updated &&  this.subForm_PE_Updated &&  this.subForm_OI_Updated ) this.set_subFormsAreUpdated(true);
-        //else if(this.subFormsAreUpdated$._isScalar) this.set_subFormsAreUpdated(false);
+        let allUpdated = true;
+
+        //if ( this.subForm_APD_Updated &&  this.subForm_PE_Updated &&  this.subForm_OI_Updated ) this.set_subFormsAreUpdated(true);
+        for (let subFormUpdateKey in this.subForms_Updated_Array)
+        {
+
+            if (dbgPrint_subFormUpdate) console.log("In checkAllSubformsUpdated ,  this.subForms_Updated_Array[",subFormUpdateKey,"]=", this.subForms_Updated_Array[subFormUpdateKey] );
+
+            if ( this.subForms_Updated_Array[subFormUpdateKey] == false) {
+                allUpdated = false;
+                break;
+            }
+        }
+
+        if (allUpdated == true) this.set_subFormsAreUpdated(true);
+
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    public formEntries_changed_ObjList = {};
+
+    public reset_formEntries_changed_ObjList() {
+        this.formEntries_changed_ObjList = [];
+    };
+
+    public get_formEntries_changed_ObjList() {
+        return this.formEntries_changed_ObjList;
+    };
+
+    //------------------------------------------------------------------------------------------------------------------
 
     //----------------------------------------------------------------
 

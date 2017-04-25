@@ -20,17 +20,18 @@ import {LoginComponent} from './login/rt-login.component';
 
 import {getKeyValuePair}        from './_pipes/key-value.pipe';
 import {objValuesPipe}          from '../app/_pipes/key-value.pipe';
-import {rtFileUploaderComponent} from './rtForm/rt-file-uploader.component';
+import {rtFileUploaderComponent} from './rtFormInputs/rt-file-uploader.component';
 
-import {rtInputComponent}       from './rtForm/rt-input.component';
-import {rtGridBoxAddComponent}     from './rtForm/rt-grid-box-add.component';
+import {rtInputComponent}       from './rtFormInputs/rt-input.component';
+import {rtGridBoxAddComponent}     from './rtFormInputs/rt-grid-box-add.component';
 
 
-import { LmuUserApdComponent } 	from './lmu_uaForm/ua-apd.component';
-import { LmuUserPeComponent } 	from './lmu_uaForm/ua-pe.component';
-import { LmuUserOpeComponent } 	from './lmu_uaForm/ua-ope.component';
-import { LmuUserOiComponent } 	from './lmu_uaForm/ua-oi.component';
+//import { LmuUserApdComponent } 	from './dynamicForm/ua-apd.component';
+//import { LmuUserPeComponent } 	from './dynamicForm/ua-pe.component';
+//import { LmuUserOpeComponent } 	from './dynamicForm/ua-ope.component';
+//import { LmuUserOiComponent } 	from './dynamicForm/ua-oi.component';
 
+import {DynamicSubFormComponent} from'./dynamicForm/dynamic-subform.component'
 
 import { RestService } from './_services/rt-rest.service';
 import {AuthenticationService} from './_services/rt-authentication.service';
@@ -42,7 +43,7 @@ import { uaFormDialogComponent}         from './modal/uaFormModal.component';
 //import {MdDialogRef}                    from '@angular/material';
 import {lmu_ua_formList}                from './_models/lmu_ua_formList'; //TODO
 
-import { UserApplicationComponent }     from './lmu_uaForm/user-application.component';
+import { UserApplicationComponent }     from './dynamicForm/mainform.component';
 
 //import { AppComponent} 			from './app.component';
 import {StartPageComponent} from './home/start-page.component';
@@ -79,10 +80,11 @@ import { AppRoutingModule }             from './app-routing';
 
         uaFormDialogComponent,
         UserApplicationComponent,
-        LmuUserApdComponent,
-        LmuUserPeComponent,
-        LmuUserOpeComponent,
-        LmuUserOiComponent,
+        //LmuUserApdComponent,
+        //LmuUserPeComponent,
+        DynamicSubFormComponent,
+        //LmuUserOpeComponent,
+        //LmuUserOiComponent,
         rtFileUploaderComponent,
         rtInputComponent,
         rtGridBoxAddComponent,

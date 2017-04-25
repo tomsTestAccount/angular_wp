@@ -1,7 +1,7 @@
 
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UserApplicationComponent }   from './lmu_uaForm/user-application.component';
+import { UserApplicationComponent }   from './dynamicForm/mainform.component';
 import {LoginComponent} from './login/rt-login.component';
 import {StartPageComponent} from './home/start-page.component';
 //import {RtRegisterCompletion} from './register/rt-register-completion.component';

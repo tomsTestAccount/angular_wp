@@ -5,32 +5,54 @@
 
 		<md-tab-group mat-center-tabs="true" id="uaTabGroup" [(selectedIndex)]="selectedIndex">
 
-			<div  *ngFor="let ua_sec of subFormEntries">
-				<md-tab *ngIf="!ua_sec.embedded"
+			<div  *ngFor="let subFormEntry of formStruct.subForms">
+				<md-tab *ngIf="!subFormEntry.noneOwnTab"
 
-                (click)="select_subFormTab(ua_sec.key)"
-                id="uaTab_+{{ua_sec.key}}">
-					<ng-template md-tab-label>{{ua_sec.title}}
+                (click)="select_subFormTab(subFormEntry.key)"
+                id="uaTab_+{{subFormEntry.key}}">
+					<ng-template md-tab-label>{{subFormEntry.title}}
 
 					</ng-template>
 
-					<form *ngIf="isFormDataLoaded==true" [formGroup]="main_lmu_ua_form" >
+					<form *ngIf="isFormDataLoaded==true" [formGroup]="main_FormGroup" >
 
 						<md-card class="ua-cardBg">
 
 							<md-card-content class="uacard-content" >
 
-								<lmu_user_apd *ngIf="ua_sec.key=='subFormGroup_apd'"  [setForm]="main_lmu_ua_form.controls['subFormGroup_apd']" [setFormEntries]="apd_formObj.formEntries"></lmu_user_apd>
+<!--
+								<lmu_user_apd *ngIf="subFormEntry.key=='subFormGroup_apd'"  [setForm]="main_FormGroup.controls['subFormGroup_apd']" [setFormEntries]="subFormEntry.formObj.formEntries"></lmu_user_apd>
+-->
 
+								<!--
 								<lmu_user_pe *ngIf="ua_sec.key=='subFormGroup_ac'"
-                             		[setForm]="main_lmu_ua_form.controls['subFormGroup_ac']"
+                             		[setForm]="main_FormGroup.controls['subFormGroup_ac']"
                              		[setFormEntries]="ac_formObj.formEntries"
-									[setForm2]="main_lmu_ua_form.controls['subFormGroup_ac2']"
+									[setForm2]="main_FormGroup.controls['subFormGroup_ac2']"
                               		[setFormEntries2]="ac2_formObj.formEntries">
                 				</lmu_user_pe>
 
-								<lmu_user_oi *ngIf="ua_sec.key=='subFormGroup_oi'"  [setForm]="main_lmu_ua_form.controls['subFormGroup_oi']" [setFormEntries]="oi_formObj.formEntries"></lmu_user_oi>
+                				[setSubForms]="{form:main_FormGroup.controls['subFormGroup_ac2'].controls[0],formEntries:ac2_formObj.formEntries}">
+                				 [setSubForms]="{form:main_FormGroup.controls['subFormGroup_ac2'],formEntries:subFormEntry.formObj.formEntries}">
 
+                				-->
+
+								<!--
+								<dynamicSubForm *ngIf="subFormEntry.key=='subFormGroup_ac'"
+											 [setForm]="main_FormGroup.controls['subFormGroup_ac']"
+											 [setFormEntries]="subFormEntry.formObj.formEntries"
+												[setChildSubForms]="subFormEntry.childrenFormsArray">
+								</dynamicSubForm>
+								-->
+
+								<dynamicSubForm
+												[input_mainForm]="main_FormGroup"
+												[input_subFormInfo]="subFormEntry"
+												>
+								</dynamicSubForm>
+<!--
+								<lmu_user_oi *ngIf="subFormEntry.key=='subFormGroup_oi'"  [setForm]="main_FormGroup.controls['subFormGroup_oi']" [setFormEntries]="subFormEntry.formObj.formEntries"></lmu_user_oi>
+-->
 
 								<label class="lbl-form_main">* = required</label>
 
