@@ -4,10 +4,6 @@ import { Component,OnInit,AfterViewInit,EventEmitter,Input,Output ,NgZone,Inject
 
 import {FormControl,FormGroup} from '@angular/forms';
 
-//import {Validators, FormGroup,FormControl,FormBuilder} from '@angular/forms';
-
-
-//import {ServerConfigs} from '../_models/configFile';
 import {AuthenticationService} from '../_services/rt-authentication.service'
 
 const dbgPrint = false;
@@ -40,12 +36,6 @@ export class rtFileUploaderComponent implements AfterViewInit,OnInit
 
     options: NgUploaderOptions;
 
-    //uploadedData : any = new Array();
-
-    //@Output() uploadedDataChanged = new EventEmitter();
-
-    //zone: NgZone;
-
     showTooltip1 = false;
 
     fU_progress: number = 0;
@@ -60,9 +50,6 @@ export class rtFileUploaderComponent implements AfterViewInit,OnInit
     localFileArray:any[];
 
     //--------------------------------------------
-
-    //@Input() formEntry:any;
-    //@Input() formgroup:any;
 
 
     currentForm:FormGroup;
@@ -132,7 +119,7 @@ export class rtFileUploaderComponent implements AfterViewInit,OnInit
         this.compId = this.currentFormEntry.key;
 
         //this.fileUpload_url = this.srvCfgs.get_serverConfigs().url + '/applications/' + this.srvCfgs.get_serverConfigs().userId + '/' + this.srvCfgs.get_serverConfigs().userId + '/' + this.currentFormEntry.key;
-        this.fileUpload_url = "not neccessary here, because of fileUpload via stringStream in formObject";
+        this.fileUpload_url = ""; //"not neccessary here, because of fileUpload via stringStream in formObject";
 
         this.options = new NgUploaderOptions({
             url : this.fileUpload_url,
@@ -287,34 +274,6 @@ export class rtFileUploaderComponent implements AfterViewInit,OnInit
         if (index > -1) {
             this.localFileArray.splice(index, 1);
 
-            //let tmpSplitString = file.download.split('/@@');
-
-            //this.authSrv.auth_deleteFile_Server(tmpSplitString[0]);
-
-
-            /*let tmpIdString = '';
-
-            let tmpSplitString = file.download.split('/');
-
-            for (let i=0;i<tmpSplitString.length;i++)
-            {
-                let found_fileId =  tmpSplitString[i].indexOf('.pdf');
-                if (found_fileId != -1)
-                {
-                    console.log("found_fileId=",tmpSplitString[i]);
-                    this.authSrv.auth_deleteFile_Server(tmpSplitString[i]);
-                    break;
-                }
-            }
-            */
-
-            /*
-            this.options['data']['file']['data'] = null ;
-            this.localFileArray[0] =  this.options['data'].file;
-            */
-
-
-
             var delObj = {
                 //"content-type": "application/octet-stream",
                 "download": file['download'],
@@ -325,25 +284,13 @@ export class rtFileUploaderComponent implements AfterViewInit,OnInit
             //var delObj2 = {};  //TODO: ask Max, because set formObject-value = null from type 'file' isn't accepted by plone-server at the moment ??
 
             (<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(delObj);  //only one fileObject used at the moment
-            //let keystring :string = this.currentFormEntry.key.toString();
-            //this.currentForm.patchValue({keystring: delObj});
-        }
 
-        //(<FormControl>this.currentForm.controls[this.currentFormEntry.key]).patchValue(this.localFileArray);
+        }
 
         if (dbgPrint) console.log("formgroup.controls[",this.currentFormEntry.key,"]=", this.currentForm.controls[this.currentFormEntry.key]);
 
 
     }
-
-    /*
-    uploadChanged(list:any) : void {
-        if (dbgPrint)  console.log("In uploadChanged, list=",list)
-        this.uploadedDataChanged.emit({
-            value: this.uploadedData
-        })
-    }
-    */
 
 
     downloadFile_envDev(fileObj:any)

@@ -31,7 +31,7 @@ export class rtFormValidators {
 
         let retValue = null; // {notValid: true};
 
-        //TODO:   just a workaround here -> we have to wait for max for implementing to setting null to file-entries to plone-serialization
+        //TODO:   just a workaround here -> we have to wait for Max Jakob to implement  setting of 'null'-value to file-entries to plone-serialization
 
         if (c.value != null) {
 

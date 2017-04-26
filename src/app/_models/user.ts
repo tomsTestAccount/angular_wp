@@ -1,3 +1,19 @@
+
+export class User4Create
+{
+
+    constructor(
+
+        public email:  string,
+        public lastName:   string,
+        public firstName:   string,
+        public password: string
+    ){};
+
+}
+
+
+/*
 export class User
 {
 
@@ -16,19 +32,7 @@ export class User
 }
 
 
-export class User4Create
-{
-
-    constructor(
-
-
-    public email:  string,
-    public lastName:   string,
-    public firstName:   string,
-    public password: string
-    ){};
-
-}
+*/
 
 
 /*

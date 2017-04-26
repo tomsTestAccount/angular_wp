@@ -1,11 +1,9 @@
-
 import {Component,Injectable} from '@angular/core';
 import { CountryList} from '../_models/countries';
 import { RtFormService ,cFormObject} from '../_services/rt-forms.service';
 import {FormGroup, FormArray, FormBuilder,Validators} from "@angular/forms";
 import {rtFormValidators}  from '../_services/rt-form-validators.service';
 import {constSrvUrl} from './configFile';
-
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -14,9 +12,8 @@ const dbgPrint = false;
 const dbgPrint_handle4local = false;
 const dbgPrint_handle4server = false;
 
-//TODO: todo rename class and file ( it isn't a list anymore. it's a class with init- and mapping-functions, a.s.o
+//----------------------------------------------------------------------------------------------------------------------
 
-//--------------------------------------------------------------------------------
 
 var fileUploadUrl="";
 
@@ -482,12 +479,12 @@ var formEntries_oi = [
 ];
 
 
-
+//----------------------------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
 
 
-
+//TODO: todo rename class and file ( it isn't a list anymore. it's a class with init- and mapping-functions, a.s.o
 @Injectable()
 export class lmu_ua_formList {
 
@@ -534,144 +531,6 @@ export class lmu_ua_formList {
         this.init_mainForm();
 
     }
-
-
-
-    subForms = [
-    {
-        subForm_apd:{
-            title: " Applicant\'s Personal Details",
-            key: "subFormGroup_apd",
-            site: 'subFormGroup_apd',
-            formObj: this.apd_formObj,
-            formEntries: [{
-                    key: 'lastname',
-                    title: 'Surname / Family Name *',
-                    type: 'text',
-                    validators: ['required','minLength=5'],
-                    //required:  true
-                },
-                {
-                    key: 'firstname',
-                    title: 'First Name(s) / Given Name(s) *',
-                    type: 'text',
-                    validators: ['required','minLength=3'],
-                    //required:  true
-                },
-                {
-                    key: 'gender',
-                    title: 'Gender *',
-                    type: 'select',
-                    validators: ['required','minLength=3'],
-                    options: [
-                        {
-                            name: 'male'
-                        },
-                        {
-                            name: 'female'
-                        }
-                    ],
-                    //required:  true
-                },{
-
-                    key: 'dateofbirth',
-                    title: 'Date of Birth *',
-                    type: 'date',
-                    validators: ['required','minLength=8'],
-                    options: {
-                        dateFormat: "yy-mm-dd",
-                        dataType: "string",
-                        yearRange: "1965:1999",
-                        placeholder: "yyyy-mm-dd"
-                    },
-                    //required:  true
-                },
-                {
-
-                    key: 'nationality',
-                    title: 'Country of Nationality *',
-                    type: 'select',
-                    validators: ['required','minLength=3'],
-                    options: CountryList,
-                    //required:  true
-                },
-                {
-
-                    key: 'street',
-                    title: 'Street Name and House Number *',
-                    type: 'text',
-                    validators: ['required','minLength=3'],
-                    //required:  true
-                },
-                {
-
-                    key: 'postalcode',
-                    title: 'Postcode / ZIP Code *',
-                    type: 'text',
-                    validators: ['required','minLength=3'],
-                    //required:  true
-                },
-                {
-
-                    key: 'residence',
-                    title: 'Place of Residence  *',
-                    type: 'text',
-                    validators: ['required','minLength=3'],
-                    //required:  true
-                },
-                {
-
-                    key: 'country',
-                    title: 'Country of Residence *',
-                    type: 'select',
-                    validators: ['required','minLength=3'],
-                    options: CountryList,
-                    //required:  true
-                },
-                {
-
-                    key: 'phone',
-                    title: 'Phonenumber  *',
-                    type: 'number',
-                    validators: ['required','minLength=3'],
-                    //required:  true
-                },
-                {
-
-                    key: 'phone2',
-                    title: 'other Phonenumber  (optional)',
-                    type: 'number',
-                    validators: ['minLength=3'],
-                    //required:  false
-                },
-                {
-
-                    key: 'email',
-                    title: 'Email Address *',
-                    type: 'email',
-                    validators: ['required','validateEmail'],
-                    //required:  true
-                },
-                {
-
-                    key: 'email2',
-                    title: 'Other Email Address (optional)',
-                    type: 'email',
-                    validators: ['validateEmail'],
-                    //required:  false
-                },
-                {
-
-                    key: 'homepage',
-                    title: 'Homepage (optional)',
-                    type: 'text',
-                    validators: ['minLength=5'],
-                    //required:  false
-                }
-            ]
-        }
-    }
-]
 
 
     update_subFormData(){

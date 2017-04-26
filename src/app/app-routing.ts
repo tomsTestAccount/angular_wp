@@ -1,7 +1,7 @@
 
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UserApplicationComponent }   from './dynamicForm/mainform.component';
+import { MainFormComponent }   from './dynamicForm/mainform.component';
 import {LoginComponent} from './login/rt-login.component';
 import {StartPageComponent} from './home/start-page.component';
 //import {RtRegisterCompletion} from './register/rt-register-completion.component';
@@ -11,7 +11,7 @@ import {AuthGuard } from '../app/_services/rt-authentication.service';
 const routes: Routes = [
 
 	{ path: 'startPage',  component: StartPageComponent },
-	{ path: 'userApplication',  component: UserApplicationComponent, canActivate: [AuthGuard] },
+	{ path: 'userApplication',  component: MainFormComponent, canActivate: [AuthGuard] },
 	{ path: 'login/:where2go/:from', component: LoginComponent },
 	//{ path: 'registerCompletion/:userId/:token', component: RtRegisterCompletion},
     { path: '', redirectTo: '/startPage', pathMatch:'full' },

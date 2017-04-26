@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 
-import { User,User4Create } from '../_models/user';
+import { User4Create } from '../_models/user';
 import {Observable} from "rxjs/Observable";
 
 import 'rxjs/add/operator/map';
@@ -10,8 +10,6 @@ import 'rxjs/add/operator/timeout';
 import 'rxjs/add/observable/throw';
 
 import {ServerConfigs} from '../_models/configFile';
-//import {Body} from "@angular/http/src/body";
-//import { Subject }    from 'rxjs/Subject';
 
 const dbgPrint_getUser = false;
 const dbgPrint = false;

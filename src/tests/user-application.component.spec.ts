@@ -7,20 +7,13 @@ import { By }              from '@angular/platform-browser';
 import { DebugElement }    from '@angular/core';
 
 
-
-import {UserApplicationComponent} from '../app/dynamicForm/mainform.component';
-
 import { MaterialModule } from '@angular/material';
 import { ReactiveFormsModule,FormsModule} from '@angular/forms';
 import {lmu_ua_formList} from  '../app/_models/lmu_ua_formList';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 
-//import { LmuUserApdComponent } 	from '../app/dynamicForm/ua-apd.component';
-//import { LmuUserPeComponent } 	from '../app/dynamicForm/ua-pe.component';
-//import { LmuUserOpeComponent } 	from '../app/dynamicForm/ua-ope.component';
-//import { LmuUserOiComponent } 	from '../app/dynamicForm/ua-oi.component';
-
+import {MainFormComponent} from '../app/dynamicForm/mainform.component';
 import {DynamicSubFormComponent} from'../app/dynamicForm/dynamic-subform.component'
 
 import {rtInputComponent}       from '../app/rtFormInputs/rt-input.component';
@@ -46,7 +39,6 @@ class AuthenticationService_MOCK
         return new Promise((resolve,reject) =>{
             resolve({});
         })
-
     }
 };
 
@@ -76,7 +68,7 @@ describe('UserApplicationComponent', () => {
                         NgUploaderModule,
                         BrowserAnimationsModule
                     ],
-            declarations: [UserApplicationComponent,
+            declarations: [MainFormComponent,
                             DynamicSubFormComponent,
                             //LmuUserApdComponent,
                             //LmuUserPeComponent,
@@ -103,12 +95,12 @@ describe('UserApplicationComponent', () => {
 //--------------------------- tests ------------------------------------------------------
 
     it('should have a defined component', () => {
-        expect(UserApplicationComponent).toBeDefined();
+        expect(MainFormComponent).toBeDefined();
     });
     it ('should create Instance', () => {
-        fixture = TestBed.createComponent(UserApplicationComponent);
+        fixture = TestBed.createComponent(MainFormComponent);
         comp = fixture.componentInstance ;
-        expect(comp instanceof UserApplicationComponent).toBe(true, 'should create UserApplicationComponent');
+        expect(comp instanceof MainFormComponent).toBe(true, 'should create UserApplicationComponent');
 
 
     });

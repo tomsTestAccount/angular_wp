@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Rx';
-import { uaFormDialogComponent} from '../modal/uaFormModal.component';
+import { DialogComponent} from '../modal/DialogModal.component';
 import { MdDialogRef, MdDialog, MdDialogConfig } from '@angular/material';
 import { Injectable } from '@angular/core';
 
@@ -8,7 +8,7 @@ const dbgDialog_Print = false;
 @Injectable()
 export class DialogsService {
 
-    private dialogRef: MdDialogRef<uaFormDialogComponent>;
+    private dialogRef: MdDialogRef<DialogComponent>;
     private config: MdDialogConfig;
     private isDialog_open = false;
 
@@ -24,7 +24,7 @@ export class DialogsService {
         if (this.dialogRef)
         {
             this.dialog.closeAll();
-            //this.dialogRef.close(uaFormDialogComponent);
+            //this.dialogRef.close(DialogComponent);
             if (dbgDialog_Print) console.log("In closeDialog 2, dialogRef=",this.dialogRef);
         }
         this.isDialog_open = false;
@@ -36,7 +36,7 @@ export class DialogsService {
 
         if (dbgDialog_Print) console.log("In DialogService,confirm,title",title,",message=",message);
 
-        this.dialogRef = this.dialog.open(uaFormDialogComponent);
+        this.dialogRef = this.dialog.open(DialogComponent);
         this.isDialog_open = true;
 
         this.dialogRef.componentInstance.set_dialogSel(
@@ -56,11 +56,11 @@ export class DialogsService {
 
         //if (dbgDialog_Print) console.log("In DialogService,loading,title",title,",message=",message);
 
-        //this.dialogRef = MdDialogRef<uaFormDialogComponent>;
+        //this.dialogRef = MdDialogRef<DialogComponent>;
 
         //this.config.disableClose = false;
 
-        this.dialogRef = this.dialog.open(uaFormDialogComponent,this.config);
+        this.dialogRef = this.dialog.open(DialogComponent,this.config);
         this.isDialog_open = true;
 
         this.dialogRef.componentInstance.set_dialogSel(
@@ -82,9 +82,9 @@ export class DialogsService {
 
         if (dbgDialog_Print) console.log("In DialogService,info,title",title,",message=",message);
 
-        //let dialogRef: MdDialogRef<uaFormDialogComponent>;
+        //let dialogRef: MdDialogRef<DialogComponent>;
 
-        this.dialogRef = this.dialog.open(uaFormDialogComponent);
+        this.dialogRef = this.dialog.open(DialogComponent);
         this.isDialog_open = true;
         //dialogRef.componentInstance.title = title;
         //dialogRef.componentInstance.message = message;

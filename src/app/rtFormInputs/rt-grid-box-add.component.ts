@@ -6,8 +6,6 @@ import 'rxjs/add/operator/debounceTime';
 
 const dbgPrint = false;
 
-//var html = require('./rt-grid-box-add.component.html!text');
-//var css = require('./rtFormInputs.css!text');
 
 @Component({
     //moduleId: module.id,
@@ -17,37 +15,16 @@ const dbgPrint = false;
     //template:html,
     //styles:[css]
 })
-
-
-
-
 export class rtGridBoxAddComponent implements OnInit
 {
-
-    /*
-    @Input() title : string = 'title string missing';
-    @Input() secParagraph : string = 'secParagrap string missing';
-    @Input() secParagraphArray : string[] = new Array();
-
-    @Input() compId : string;
-
-    @Input() formCtrlName : string;
-    @Input() required: boolean = false;
-    */
 
     @Input() formEntry : any;
 
     @Input() formgroup: FormGroup;
 
-
-    //--------------------------------------------
-
-
     newAddObj : Object ;
 
     gridOptions : any;
-
-    //currentUaFormObj : any;
 
     averageCalculated = 0.0;
     avrgValueDisplayed : string;           //a string is used because of different display of floating point number in different countries  problems of browser
@@ -58,8 +35,6 @@ export class rtGridBoxAddComponent implements OnInit
     differ:any;
     //----------------------------------------------------
 
-    //constructor(compId:string,t:string,secP:string,fCN:string) {
-    //constructor(private _authService:AuthenticationService) {
     constructor() {
     }
 
@@ -90,7 +65,7 @@ export class rtGridBoxAddComponent implements OnInit
 
                 let tmpObj = JSON.parse(JSON.stringify(this.formgroup.value[formCtrlKey]));
 
-                if ((tmpObj.table !== undefined) && (tmpObj.average!==undefined))
+                if ((tmpObj.table !== undefined) && (tmpObj.average!==undefined))           //updated data
                 //if ((tmpObj.table) && (tmpObj.average))
                 {
 
@@ -114,32 +89,7 @@ export class rtGridBoxAddComponent implements OnInit
 
     }
 
-    /*
-    ngDoCheck() {
-        var changes = this.differ.diff(this.setObj);
-
-        if(changes) {
-            console.log('changes detected');
-            changes.forEachChangedItem(r => console.log('changed ', r.currentValue));
-            changes.forEachAddedItem(r => console.log('added ' + r.currentValue));
-            changes.forEachRemovedItem(r => console.log('removed ' + r.currentValue));
-            this.setFormControlValue(this.setObj);
-        } else {
-            console.log('nothing changed');
-        }
-    }
-    */
-
-
-    /*
-    ngOnChanges():void{
-        console.log("In ngOnChanges");
-        this.setFormControlValue(this.setObj);
-    }
-    */
-
     //---------------------------------------------------
-
 
     addNewLine_grTbl():void {
 
@@ -247,8 +197,6 @@ export class rtGridBoxAddComponent implements OnInit
         this.checkNewAddObj();
     }
 
-
-
     checkNewAddObj():void{
         var isComplete = true;
         for (let key in this.newAddObj)
@@ -354,10 +302,7 @@ export class rtGridBoxAddComponent implements OnInit
 
     }
 
-
-
-    setFormControlValue(setObject:any)
-    {
+    setFormControlValue(setObject:any) {
         //let setObjReally = setObject;
         setTimeout(() => {
 

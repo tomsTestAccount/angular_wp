@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-//import { Http, Headers, Response } from '@angular/http';
+
 import {
     CanActivate, Router,
     ActivatedRouteSnapshot,
@@ -13,13 +13,12 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription }   from 'rxjs/Subscription';
 import {RestService} from './rt-rest.service';
 
-import {lmu_ua_formList} from '../_models/lmu_ua_formList'
-//import {RtFormService} from '../_services/rt-forms.service'
+import {RtFormService} from '../_services/rt-forms.service'
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-const dbgPrint_lifecyclehooks = true;
+const dbgPrint_lifecyclehooks = false;
 const dbgPrint = false;
 const dbgPrint_user = false;
 const dbgPrint_userId = false;
@@ -48,8 +47,8 @@ export class AuthenticationService {
     userDisplayName$ = this.userDisplayNameSrc.asObservable();
 
     constructor(private _rtRestService : RestService
-               ,private _lmuForms : lmu_ua_formList
-                //,private _rtFormSrv: RtFormService
+               //,private _lmuForms : lmu_ua_formList
+                ,private _rtFormSrv: RtFormService
     ){
 
         if (dbgPrint_lifecyclehooks) console.log("In authService constructor");
@@ -63,6 +62,8 @@ export class AuthenticationService {
 
 
     //------------------------------------------------------------------------------------------------------------------
+    //TODO: it's modal or 'home'-site stuff  --> put it in another file
+
     private progressValue: Subject<number> = new Subject<number>();
 
     public getProgressValue(): Observable<number> {
@@ -147,7 +148,7 @@ export class AuthenticationService {
         this.userDisplayNameSrc.next(name);
     }
 
-    public logout() {
+    public cleanAtlogout() {
 
         if (dbgPrint_login) console.log("In authService-logout");
 
@@ -263,7 +264,8 @@ export class AuthenticationService {
     }
 
     //-----------------------------------------------------------------------------------------------------------------
-    //TODO: put mapping functions (auth_handleFormObject4localWorking and auth_handleFormObject4SendToServer) to lmu_ua_formList.ts-class
+
+    //TODO: put formObject getter/setter in special file
 
     public auth_getFormObject():Promise<Object> {
 
@@ -311,7 +313,6 @@ export class AuthenticationService {
 
     }
 
-
     private _auth_getFormObject_Server(currentUserId:string):any{
 
         if (dbgPrint_getFormObj)  console.log("1 In  rt-auth-service: auth_getFormObject_Server ,this._currentUserId=",this._currentUserId);
@@ -327,7 +328,9 @@ export class AuthenticationService {
 
                         if (dbgPrint_getFormObj)console.log("In auth_getFormObject_Server after rest-call, response=",response);
 
-                        var convertedUaObject = this._lmuForms.handleServerFormObject4localWorking(response);
+                        //var convertedUaObject = this._lmuForms.handleServerFormObject4localWorking(response);
+
+                        var convertedUaObject = this._rtFormSrv.handleServerFormObject4localWorking(response);
 
                         //this._rtFormSrv.subFormsUpdated(true);
 
@@ -350,10 +353,10 @@ export class AuthenticationService {
 
     //------------------------------------------------------------------------------------------------------------
 
-    //TODO: put mapping functions (auth_handleFormObject4localWorking and auth_handleFormObject4SendToServer) to lmu_ua_formList.ts-class
 
-    auth_setFormObj(uaObjLocal:any,sendToServer:boolean=false):any
-    {
+    //TODO: put formObject getter/setter in special file
+
+    auth_setFormObj(uaObjLocal:any,sendToServer:boolean=false):any {
         if (dbgPrint_setFormObj) console.log("In authService, auth_setFormObj 1:given uaObj=",uaObjLocal);
 
         this._currentFormObj = uaObjLocal;
@@ -367,7 +370,10 @@ export class AuthenticationService {
             localStorage.setItem('currentUaObject', tmpLocalObjString );
         */
 
-        let uaObj4Server = this._lmuForms.handleFormObject2SendToServer(uaObjLocal);
+        //let uaObj4Server = this._lmuForms.handleFormObject2SendToServer(uaObjLocal);
+
+        let uaObj4Server = this._rtFormSrv.handleFormObject2SendToServer(uaObjLocal);
+
 
         //if (dbgPrint_setFormObj)
             console.log("In authService, auth_setFormObj 2 ,uaObj4Server=",uaObj4Server);
@@ -377,8 +383,7 @@ export class AuthenticationService {
     }
 
 
-    private auth_setFormObj_Server(obj2Server?:any):any
-    {
+    private auth_setFormObj_Server(obj2Server?:any):any {
 
        // var localObj = localStorage.getItem('currentUaObject');
         return new Promise((resolve, reject) => {

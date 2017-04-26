@@ -1,20 +1,20 @@
 import { Component,OnDestroy,Input } from '@angular/core';
-import {UserApplicationComponent} from './dynamicForm/mainform.component';
+import {MainFormComponent} from './dynamicForm/mainform.component';
 
 @Component({
     selector: 'my-app',
     template: `
 		<div class="container">
 		
-          <my-userApplication></my-userApplication>
+          <rt-mainForm></rt-mainForm>
   
         </div>
     `,
-    providers: [UserApplicationComponent]
+    providers: [MainFormComponent]
 })
 
 export class AppComponent{
 
-    constructor( public uaFormComp:UserApplicationComponent)
+    constructor( public rtMainFormComp:MainFormComponent)
     {}
 }

@@ -41,7 +41,7 @@ export class rtInputComponent implements OnInit,DoCheck,AfterViewInit {
     constructor()
     {
 
-       // console.log("In rt-input constructor, this.formEntry = ", this.formEntry );
+       //if(dbgPrint_lifecyclehooks) console.log("In rt-input constructor, this.formEntry = ", this.formEntry );
 
     }
 
@@ -58,17 +58,13 @@ export class rtInputComponent implements OnInit,DoCheck,AfterViewInit {
 
         if (this.dbgPrint) console.log("In rt-Input ngOnInit: Formgroup=", this.formgroup,", this.formEntry=", this.formEntry.key);
 
-        if (this.formEntry.collapsible_box_title)
-        {
+        if (this.formEntry.collapsible_box_title) {
 
             this.isOpened = false;
             this.toggle_isOpened();     ////this.formgroup.controls[this.formEntry.key].disable();
 
            // setTimeout(() => {this.isOpened = false},1);
-
         }
-
-
 
         if (this.formEntry.type == 'fileUpload') {
 
@@ -91,8 +87,7 @@ export class rtInputComponent implements OnInit,DoCheck,AfterViewInit {
                 //setTimeout(() => {this.isOpened = true},1);
             }
         }
-        else if (this.formEntry.type == 'date')
-        {
+        else if (this.formEntry.type == 'date') {
 
 
              if (dbgPrint_dateEntry) console.log("Input-entry: DATE, this.formEntry=", this.formEntry);

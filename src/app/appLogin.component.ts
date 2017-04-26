@@ -6,10 +6,6 @@ import { Subscription }   from 'rxjs/Subscription';
 import {Location} from '@angular/common';
 
 
-
- //var css = require('./css/app.component.css!text');
-
-
  @Component({
  selector: 'my-app',
  template: `

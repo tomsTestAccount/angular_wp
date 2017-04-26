@@ -24,7 +24,7 @@
         <div  *ngFor="let childFormObj of subFormChildren"  [ngClass]="{'formFrame_optional' : true}">
 
             <md-checkbox align="start" [(ngModel)]="childFormObj.isShown" [ngModelOptions]="{standalone: true}" [checked]="childFormObj.isShown" (click)="toogle_subForm_isOpened(childFormObj.isShown)">
-                <label class="lbl-form_main"> Other previous education available ? (optional) </label>
+                <label class="lbl-form_main"> {{childFormObj.title}} (optional) </label>
             </md-checkbox>
 
             <form *ngIf="childFormObj.isShown"
@@ -48,39 +48,6 @@
             </form>
 
         </div>
-
-
-        <!--
-        <div  [ngClass]="{'formFrame_optional' : true}">
-
-            <md-checkbox align="start" [(ngModel)]="ac2_hasValues" [ngModelOptions]="{standalone: true}" [checked]="ac2_hasValues">
-                <label class="lbl-form_main"> Other previous education available ? (optional) </label>
-            </md-checkbox>
-
-            <form *ngIf="ac2_hasValues"
-                  [formGroup]="currentForm2" name="ac2_form" novalidate>
-
-                <div *ngFor="let formEntry of currentFormEntries2">
-
-                    <div [ngSwitch]="formEntry.key" >
-
-                        <div *ngSwitchDefault>
-                            <rt-input
-                                    [formgroup]=currentForm2
-                                    [formEntry]=formEntry>
-
-                            </rt-input>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-            </form>
-
-        </div>
-        -->
 
     </div>
 

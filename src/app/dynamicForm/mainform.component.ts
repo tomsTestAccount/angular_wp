@@ -1,60 +1,51 @@
 import {
-	Component, OnInit, AfterViewInit, DoCheck, AfterViewChecked,Renderer2, ViewChildren, ViewChild, ElementRef, QueryList,
-	Directive, ContentChildren, Input, OnChanges, SimpleChange, Query
+	Component, OnInit, AfterViewInit, DoCheck, ElementRef
 } from '@angular/core';
 
-import {FormGroup,FormControl,FormBuilder} from '@angular/forms';
+import {FormGroup,FormControl} from '@angular/forms';
 
-import {lmu_ua_formList} from'../_models/lmu_ua_formList';
-import { RtFormService ,cFormObject} from '../_services/rt-forms.service';
+//import {lmu_ua_formList} from'../_models/lmu_ua_formList';
+import { RtFormService ,cWholeFormObject} from '../_services/rt-forms.service';
 
 import {AuthenticationService} from  '../_services/rt-authentication.service';
 import {ServerConfigs} from '../_models/configFile';
 import {DialogsService} from '../_services/dialogs.services'
 
-const dbgPrint_lifecyclehooks = true;
-const dbgPrint_save = true;
-const dbgPrint_formChanged = false;
-const dbgPrint_formEntryChanged = true;
-const dbgPrint_setChildSubForms = true;
 
+//----------------------------------------------------------------------------------------------------------------------
+
+const dbgPrint_lifecyclehooks = false;
+const dbgPrint_save = false;
+const dbgPrint_formChanged = false;
+const dbgPrint_formEntryChanged = false;
+const dbgPrint_setChildSubForms = false;
+const dbgPrint_updateData = false;
+
+
+//----------------------------------------------------------------------------------------------------------------------
 
 @Component({
 	//moduleId: module.id,
-	selector: 'my-userApplication',
+	selector: 'rt-mainForm',
     //template:html,
     //styles:[css]
 	templateUrl: 'mainForm.component.html',
 	styleUrls: ['mainForm.component.css'],
 })
-export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
+export class MainFormComponent implements OnInit,AfterViewInit,DoCheck{
 
 
 	selectedIndex : number;
 
+	formStruct: cWholeFormObject;
 
-	formStruct:{
-		mainForm:FormGroup,
-		subForms:[any]					//Todo: define given object exactly ( title: string,key: string, formObj:cFormObject,site: string,	embedded?: boolean)
-	};
-
-	//subFormEntries :[any];
 	//------------------------------------------
 	main_FormGroup : FormGroup;
 	sub_FormGroups : [FormGroup];
 	//-------------------------------------------
 
-	//currentFormObject:cFormObject;
-
-	ac_formObj:cFormObject;
-	ac2_formObj:cFormObject;
-	apd_formObj:cFormObject;
-	oi_formObj:cFormObject;
-
 
 	dbgIsOpen = false;
-
-	//currentUaObj:any;
 
     dbgFormValues =false;
 
@@ -73,7 +64,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 				private _elementRef : ElementRef,
 				private _rtFormSrv : RtFormService,
 				private serverConfs: ServerConfigs,
-				private lmu_ua_form: lmu_ua_formList,
+				//private lmu_ua_form: lmu_ua_formList,
 				private dialogsService: DialogsService
 				)
     {
@@ -82,8 +73,10 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 		let userId = serverConfs.get_serverConfigs().userId;
 		this.summaryPage_href = serverURL + '/applications/' + userId + '/' + userId ;
 
-		this.formStruct = this.lmu_ua_form.get_formInfos();
-		this.main_FormGroup = this.formStruct.mainForm;
+		//this.formStruct = this.lmu_ua_form.get_formInfos();
+
+		this.formStruct = this._rtFormSrv.get_formInfos();
+		this.main_FormGroup = this.formStruct.mainForm.formGroup;
 
 		//detect changes for form made by server --> detect when download form-data finished and child-views are initialized
 		//TODO: We have to know here, when the init-process of child-Views (subFomrs) is finished !?! .... using of lifeCycleHooks (afterContent .. ) ??
@@ -91,15 +84,11 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 		this._rtFormSrv.subFormsAreUpdated$.subscribe(
 			isUpdated => {
 				setTimeout(()=> {		//not needed , but let the modal-dialog displayed at least for 1sec
-					//this.main_FormGroup = this.lmu_ua_form.init_mainForm();
-					//if (dbgPrint)
-					console.log("In subFormsAreAllUpdated$ ", this.main_FormGroup);
+
+					if (dbgPrint_updateData) console.log("In subFormsAreAllUpdated$ ", this.main_FormGroup);
 
 					// subscribe to form changes, so we can detect the formEntries that were changed --> and send only these ones
 					this.subscribeToFormEntriesChanges();
-
-					//set event the view is waiting for
-					//this.isFormUpdated = isUpdated;
 
 					//close loading dialog
 					this.dialogsService.closeDialog();
@@ -116,16 +105,15 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 
 		if (dbgPrint_lifecyclehooks) console.log("In ngOnInit for user-application-component");
 
-		this.dialogsService.loading('Your data is loading ... '); //TODO: put this or a similar message at the beginning -> i.e. in app.module.ts
+		this.dialogsService.loading('Your data is loading ... '); //TODO: put this or a similar message at the beginning -> i.e. in app.component.ts
 
 		this._authService.auth_getFormObject()
             .then(response => {
 
 				if (dbgPrint_lifecyclehooks)console.log("In ngOnInit for user-application , after get data from server, data=!",response);
 
-				this.formStruct = this.lmu_ua_form.get_formInfos();
-				this.main_FormGroup = this.formStruct.mainForm;
-
+				this.formStruct = this._rtFormSrv.get_formInfos();
+				this.main_FormGroup = this.formStruct.mainForm.formGroup;
 
 				//set event the view is waiting for --> so the childViews (for each subForm) will be initialized
 				this.isFormDataLoaded = true;
@@ -141,20 +129,6 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 	ngAfterViewInit(): void {
 
 		if (dbgPrint_lifecyclehooks)console.log("In ngAfterViewInit for user-application-component");
-
-		//setTimeout(()=> {
-		//var el = this._elementRef.nativeElement.querySelector('lmu_user_apd');
-		//console.log(el);},1000);
-
-
-	}
-
-	ngAfterViewChecked() {
-
-		//if (dbgPrint_lifecyclehooks)	console.log("In ngAfterViewChecked for user-application-component");
-
-		//let vc = ViewChildren('input');
-		//console.log("In ngAfterViewChecked,vc=",vc());
 
 	}
 
@@ -192,22 +166,7 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 
 	}
 
-	private reset_formChangedEntries() {
-		/*this.formChangedEntries = {
-			subFormGroup_ac: {0: {}},
-			subFormGroup_ac2: {0: {}},
-			subFormGroup_apd: {0: {}},
-			subFormGroup_oi: {0: {}},
-		*/
-	}
-
 	private subscribeMainFormValuesChanged() {
-		/*this.main_FormGroup.controls['subFormGroup_ac'].valueChanges
-            .subscribe(x => {
-				console.log("in ValueChanged x = ",this.main_FormGroup);
-				if (this.main_FormGroup.dirty) this.setChangeDetected(true);
-			});
-		*/
 
 		this.main_FormGroup.valueChanges
             .subscribe(x => {
@@ -398,73 +357,6 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 
 						let currControl = this.main_FormGroup.controls[subForm]['controls'][subFormControl];
 
-						//if (this.main_FormGroup.controls[subForm]['controls'][subFormControl].invalid)
-						/*
-						if (0)//(currControl['invalid'])
-						{
-							console.log(subFormControl, ": ", currControl);
-
-							//hjgjj: ElementRef;
-							//ViewChild('fhgfj') hjgjj;
-							//console.log(this.viewChildren);
-
-							//this._elementRef.nativeElement(subFormControl).focus();
-							//navtiveElement.querySelector(subFormControl).focus();
-
-
-							var el1 = this._elementRef.nativeElement.querySelector('rt-input#rtInput_'+subFormControl);
-							console.log(el1);
-
-							//setTimeout(() => {
-							//var el = this._elementRef.nativeElement.querySelector('input#'+subFormControl);
-
-							let el;
-
-							//this._elementRef.nativeElement.querySelector('rt-input#'+subFormControl).focus();
-							if (el = this._elementRef.nativeElement.querySelector('input#'+subFormControl))
-							{
-								console.log("input-element=",el);
-								el.focus();
-							}
-							else if (el = this._elementRef.nativeElement.querySelector('textarea#'+subFormControl))
-							{
-								console.log("textarea-element=",el);
-								el.focus();
-							}
-							else if (el = this._elementRef.nativeElement.querySelector('select#'+subFormControl))
-							{
-								console.log("select-element=",el);
-								el.focus();
-							}
-							else if (el = this._elementRef.nativeElement.querySelector('p-calendar#'+subFormControl))
-							{
-								console.log("p-calender-element=",el);
-								el.focus();
-							}
-							else if(el = this._elementRef.nativeElement.querySelector('div.invalidInfo'))
-							{
-								console.log("invalidInfo=",el);
-								el.scrollIntoView('center');
-							}
-
-
-							//},1000);
-
-						}
-
-
-						if (0)//(currControl['invalid'])
-						{
-							var el1 = this._elementRef.nativeElement.querySelector('rt-input#'+subFormControl);
-							console.log(el1);
-
-							let element = document.getElementById(subFormControl); //.focus(), .scrollTo();
-							console.log("element=",element);
-							//element.getTar();
-							//this.content.scrollTo(0, element.offsetTop, 500);
-						}
-						*/
-
 						if (currControl['invalid'])
 						{
 
@@ -502,28 +394,12 @@ export class UserApplicationComponent implements OnInit,AfterViewInit,DoCheck{
 
 
 
-	//LmuUserApdComponent.get
-
 
 	//---------------------- dbg
 
 	showDbg(){
 
 		console.log("In user-application ngAfterViewInit2, after get data!",this.main_FormGroup);
-		/*//console.log("this.main_FormGroup=",this.main_FormGroup);
-		let currUsers = JSON.parse(localStorage.getItem('users'));
-        console.log("In showDbg, localStorage.getItem('users')=",currUsers);
-
-        let currUserObj = JSON.parse(localStorage.getItem('currentUser'));
-        console.log("In showDbg, localStorage.getItem('currUserObj')=",currUserObj);
-
-
-        //this._authService.auth_getFormObject();
-        let currUaObj = JSON.parse(localStorage.getItem('currentUaObject'));
-        console.log("In showDbg, localStorage.getItem('currentUaObject')=",currUaObj);
-
-        //currUaObj = JSON.parse(localStorage.getItem('currentUaObject'));
-		*/
 	}
 
 }

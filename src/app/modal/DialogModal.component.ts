@@ -42,7 +42,7 @@ const dbg_print = true;
             </div>
     `,
 })
-export class uaFormDialogComponent implements OnInit,DoCheck,AfterViewInit {
+export class DialogComponent implements OnInit,DoCheck,AfterViewInit {
 
     public ds  : IDialogStruct;
 
@@ -57,9 +57,9 @@ export class uaFormDialogComponent implements OnInit,DoCheck,AfterViewInit {
         this.dialog_selection.next(dialogStruct);
     }
 
-    constructor(public dialogRef: MdDialogRef<uaFormDialogComponent>) {
+    constructor(public dialogRef: MdDialogRef<DialogComponent>) {
 
-        if (dbg_print) console.log('In constructor uaFormDialogComponent');
+        if (dbg_print) console.log('In constructor DialogComponent');
 
          this.dialogSel$.subscribe(
          selStruct => {
@@ -76,7 +76,7 @@ export class uaFormDialogComponent implements OnInit,DoCheck,AfterViewInit {
 
     ngOnInit()
     {
-        console.log("In ngOnInit for uaFormDialogComponent");
+        console.log("In ngOnInit for DialogComponent");
     }
 
     ngDoCheck()
@@ -86,7 +86,7 @@ export class uaFormDialogComponent implements OnInit,DoCheck,AfterViewInit {
 
     ngAfterViewInit()
     {
-        console.log("In ngAfterViewInit for uaFormDialogComponent");
+        console.log("In ngAfterViewInit for DialogComponent");
     }
 
 
