@@ -466,8 +466,7 @@ export class RtFormService {
     }
 
 
-    public get_formInfos():cWholeFormObject
-    {
+    public get_formInfos():cWholeFormObject {
         this.build_wholeFormGroup();            //after update
         return this.wFO;
     }
@@ -475,18 +474,19 @@ export class RtFormService {
 
     //---------------- subForm - services - for load data and view initialization --------------------------------------
 
+
+
     private subForms_Updated_Array = {};
     private subFormsAreUpdated_Src = new Subject<boolean>();
 
-    public configSubforms4UpdateEvent(subformKey:string)                                //TODO: make this private later
-    {
+    private configSubforms4UpdateEvent(subformKey:string) {
         this.subForms_Updated_Array[subformKey] = false;
 
         //if (dbgPrint_subFormUpdate) console.log("this.subForms_Updated_Array=",this.subForms_Updated_Array);
     }
 
-    public setSubform_updated(subformKey:string)
-    {
+    //TODO: update-subForms-data as own service ??
+    public setSubform_updated(subformKey:string) {
         this.subForms_Updated_Array[subformKey] = true;
 
         if (dbgPrint_subFormUpdate) console.log("this.subForms_Updated_Array=",this.subForms_Updated_Array);
@@ -494,15 +494,14 @@ export class RtFormService {
         this.checkAllSubformsUpdated();
     }
 
+    public subFormsAreUpdated$ = this.subFormsAreUpdated_Src.asObservable();
 
-    subFormsAreUpdated$ = this.subFormsAreUpdated_Src.asObservable();
-    set_subFormsAreUpdated(bVal : boolean) {
+    private set_subFormsAreUpdated(bVal : boolean) {
         this.subFormsAreUpdated_Src.next(bVal);
         if (dbgPrint_subFormUpdate) console.log("In rtFormService subFormWasUpdated");
     }
 
-    private checkAllSubformsUpdated()
-    {
+    private checkAllSubformsUpdated() {
         let allUpdated = true;
 
         //if ( this.subForm_APD_Updated &&  this.subForm_PE_Updated &&  this.subForm_OI_Updated ) this.set_subFormsAreUpdated(true);
@@ -539,12 +538,13 @@ export class RtFormService {
 
     rtValidators = new rtFormValidators;
 
-    buildFormObject(form:FormGroup,entries:any):cFormObject {
+    /*buildFormObject(form:FormGroup,entries:any):cFormObject {
         return new cFormObject(form,entries);
     }
+    */
 
     // Get function from string for Validator-Function. With or without scopes (by Nicolas Gauthier)
-    getFunctionCallFromString = function(stringArray) {
+    private getFunctionCallFromString = function(stringArray) {
         if (stringArray == undefined) return null;
         if (!Array.isArray(stringArray)) return null;
         if (stringArray.length == 0 ) return null;
@@ -609,8 +609,7 @@ export class RtFormService {
         return Validators.compose(validatorArray);
     }
 
-
-    toFormGroup(entries: any) {
+    private toFormGroup(entries: any) {
 
         //console.log("entries=",entries);
 
@@ -629,7 +628,7 @@ export class RtFormService {
 
     }
 
-    toFormGroup4SubForms(subForms: any) {
+    private toFormGroup4SubForms(subForms: any) {
 
         //console.log("entries=",entries);
 

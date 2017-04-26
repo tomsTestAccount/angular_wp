@@ -9,7 +9,7 @@ import { DebugElement }    from '@angular/core';
 
 import { MaterialModule } from '@angular/material';
 import { ReactiveFormsModule,FormsModule} from '@angular/forms';
-import {lmu_ua_formList} from  '../app/_models/lmu_ua_formList';
+
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 
@@ -82,7 +82,7 @@ describe('UserApplicationComponent', () => {
                             ],
             providers:    [ {provide: AuthenticationService, useValue: new AuthenticationService_MOCK() },
                 {provide: DialogsService, useValue: new DialogsService_MOCK() },
-                lmu_ua_formList,RtFormService,ServerConfigs]
+                RtFormService,ServerConfigs]
         });
 
         // Before each test set our injected Users factory (_Users_) to our local Users variable

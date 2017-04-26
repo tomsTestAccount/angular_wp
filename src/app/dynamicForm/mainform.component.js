@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var lmu_ua_formList_1 = require("../_models/lmu_ua_formList");
+var lmu_ua_formList_1 = require("../_models/lmu_ua_formList_ts");
 var rt_forms_service_1 = require("../_services/rt-forms.service");
 var rt_authentication_service_1 = require("../_services/rt-authentication.service");
 var configFile_1 = require("../_models/configFile");
