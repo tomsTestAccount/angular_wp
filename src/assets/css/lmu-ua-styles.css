@@ -39,8 +39,13 @@ body
   background-color: rgba(236, 248, 248,0.85) !important;/*#eff5f5;*/
   color:#4b797c !important;
   opacity: 1 !important;
+
 }
 
+.mat-tab-body
+{
+  overflow:hidden !important;
+}
 
 div.mat-tab-labels
 {

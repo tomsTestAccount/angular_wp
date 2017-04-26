@@ -126,7 +126,7 @@ export class RtFormService {
 
     private _set_formEntryValue4Local(key:string,value:any) {
 
-        //TODO: make this more general , i.e. this._handleFormEntry4GridBox to this.handleSpecialEntries --> see i.e. ac2 handleFileUploads, too
+        //TODO: make this more general , i.e. this._handleFormEntry4GridBox to this.handleSpecialEntries
 
         for (let i=0;i<this.wFO.subForms.length;i++) {
 
@@ -135,91 +135,39 @@ export class RtFormService {
                 if (key.toString() === this.wFO.subForms[i].formEntries[y]['key']) {
 
                     //type: 'grid-box-add'
-                    if (this.wFO.subForms[i].formEntries[y].type === 'grid-box-add')
-                    {
-                        let newValue = this._handleFormEntry4GridBox(this.wFO.subForms[i].formEntries[y],value);
-                        if (newValue) value=newValue;
+                    if (this.wFO.subForms[i].formEntries[y].type === 'grid-box-add') {
+                        let newValue = this._handleFormEntry4GridBox(this.wFO.subForms[i].formEntries[y], value);
+                        if (newValue) value = newValue;
 
                     }
-                    this.wFO.subForms[i].formEntries[y]['defaultValue']=value;
+                    this.wFO.subForms[i].formEntries[y]['defaultValue'] = value;
                     return;
                 }
-
             }
-        }
 
-        /*
-        for (var i=0; i<formEntries_apd.length;i++)
-        {
-            //console.log("Search for ",v);
-            if (key.toString() === formEntries_apd[i]['key'])
-            {
-                //type: 'grid-box-add'
-                if (formEntries_apd[i].type === 'grid-box-add')
-                {
-                    let newValue = this._handleFormEntry4GridBox(formEntries_apd[i],value);
-                    if (newValue) value=newValue;
+            if (this.wFO.subForms[i].childrenFormsArray) {
 
-                }
-                formEntries_apd[i]['defaultValue']=value;
-                return;
-            }
-        }
-        for (var i=0; i<formEntries_ac.length;i++)
-        {
+                for (let z = 0; z < this.wFO.subForms[i].childrenFormsArray.length; z++) {
 
-            if (key.toString() === formEntries_ac[i]['key'])
-            {
+                    for (let y = 0; y < this.wFO.subForms[i].childrenFormsArray[z].formEntries.length; y++) {
 
-                if (formEntries_ac[i].type === 'grid-box-add')
-                {
-                    formEntries_ac[i]['defaultValue'] =  this._handleFormEntry4GridBox(formEntries_ac[i],value);
-                }
+                        if (key.toString() === this.wFO.subForms[i].childrenFormsArray[z].formEntries[y]['key']) {
 
-                else formEntries_ac[i]['defaultValue'] = value;
-                return;
-            }
-        }
-        for (var i=0; i<formEntries_oi.length;i++)
-        {
+                            //type: 'grid-box-add'
+                            if (this.wFO.subForms[i].formEntries[y].type === 'grid-box-add') {
+                                let newValue = this._handleFormEntry4GridBox(this.wFO.subForms[i].childrenFormsArray[z].formEntries[y], value);
+                                if (newValue) value = newValue;
 
-            if (key.toString() === formEntries_oi[i]['key'])
-            {
-
-                formEntries_oi[i]['defaultValue']=value;
-                return;
-            }
-        }
-        for (var i=0; i<formEntries_ac2.length;i++)
-        {
-            //console.log("Search for ",v);
-            if (key.toString() === formEntries_ac2[i]['key'])
-            {
-
-                if (formEntries_ac2[i].type === 'grid-box-add')
-                {
-                    value =  this._handleFormEntry4GridBox(formEntries_ac2[i],value);
-
-                }
-                else if (formEntries_ac2[i].type === 'fileUpload')
-                {
-                    if (value)
-                    {
-                        if (value.filename == null)
-                        {
-                            value = null;
+                            }
+                            this.wFO.subForms[i].childrenFormsArray[z].formEntries[y]['defaultValue'] = value;
+                            return;
                         }
                     }
+
                 }
-
-
-                formEntries_ac2[i]['defaultValue']=value;
-                //if (dbgPrint_handle4local) console.log("Set Default-Value for ",formEntries_ac2[i].key, " = ",value);
-
-                return;
             }
+
         }
-        */
 
         if (dbgPrint_handle4local) console.log("FormEntry: ",key," NOT FOUND !!!!!");
     }
@@ -336,7 +284,6 @@ export class RtFormService {
         return retStruct;
     }
 
-
     public handleFormObject2SendToServer(uaObjLocal:any) {
 
         //if (dbgPrint_handleFormObject2SendToServer) console.log("In auth_handleFormObject4localWorking uaObjLocal=",uaObjLocal);
@@ -415,8 +362,6 @@ export class RtFormService {
         if (dbgPrint_handle4server) console.log("tmpUaObj2Server=",tmpUaObj2Server);
         return tmpUaObj2Server;
     };
-
-
 
     //------------------------------------------------------------------------------------------------------------------
 

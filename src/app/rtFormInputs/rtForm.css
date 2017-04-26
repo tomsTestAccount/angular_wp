@@ -43,7 +43,6 @@
 }
 
 
-
 .formList
 {
     padding:0;
@@ -149,7 +148,6 @@ select.form-control.ng-untouched
 
     cursor: pointer !important;
 
-
     border-width:1px;
     border-style: solid;
     border-color: #4b797c;
@@ -191,6 +189,7 @@ select.form-control.ng-untouched
     min-width: 100px;
     height:100%;
     cursor: pointer;
+
 }
 
 

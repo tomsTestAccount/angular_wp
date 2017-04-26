@@ -12,7 +12,9 @@ import { NgUploaderModule }        from 'ngx-uploader';
 
 import  'hammerjs';
 
-import {LoginComponent} from './login/rt-login.component';
+
+
+
 //import {RtRegisterCompletion} from './register/rt-register-completion.component';
 
 import {getKeyValuePair}        from './_pipes/key-value.pipe';
@@ -22,12 +24,6 @@ import {rtFileUploaderComponent} from './rtFormInputs/rt-file-uploader.component
 import {rtInputComponent}       from './rtFormInputs/rt-input.component';
 import {rtGridBoxAddComponent}     from './rtFormInputs/rt-grid-box-add.component';
 
-
-//import { LmuUserApdComponent } 	from './dynamicForm/ua-apd.component';
-//import { LmuUserPeComponent } 	from './dynamicForm/ua-pe.component';
-//import { LmuUserOpeComponent } 	from './dynamicForm/ua-ope.component';
-//import { LmuUserOiComponent } 	from './dynamicForm/ua-oi.component';
-
 import {DynamicSubFormComponent} from'./dynamicForm/dynamic-subform.component'
 
 import { RestService } from './_services/rt-rest.service';
@@ -36,9 +32,7 @@ import {RtFormService} from './_services/rt-forms.service'
 import {ServerConfigs} from './_models/configFile';
 
 import {DialogsService}                 from './_services/dialogs.services'
-import { DialogComponent}         from './modal/DialogModal.component';
-//import {MdDialogRef}                    from '@angular/material';
-//import {lmu_ua_formList}                from './_models/lmu_ua_formList'; //TODO
+import {DialogComponent}         from './modal/DialogModal.component';
 
 import { MainFormComponent }     from './dynamicForm/mainform.component';
 
@@ -46,7 +40,7 @@ import { MainFormComponent }     from './dynamicForm/mainform.component';
 import {StartPageComponent} from './home/start-page.component';
 import { AppLoginComponent} 			from './appLogin.component';
 import { AppRoutingModule }             from './app-routing';
-
+import {LoginComponent} from './login/rt-login.component';
 
 
     var importsList = [
@@ -55,15 +49,12 @@ import { AppRoutingModule }             from './app-routing';
         ReactiveFormsModule,
         MaterialModule,
         HttpModule,
-        CalendarModule,
-
-        NgUploaderModule,
-
         AppRoutingModule,
+        BrowserAnimationsModule,
 
-        BrowserAnimationsModule
-        //MaterialModule.forRoot(),
-        //ModalModule.forRoot(),
+        CalendarModule,
+        NgUploaderModule
+
         ];
 
     var declarationList = [
@@ -74,7 +65,6 @@ import { AppRoutingModule }             from './app-routing';
         LoginComponent,
 
         //RtRegisterCompletion,
-
         DialogComponent,
         MainFormComponent,
         //LmuUserApdComponent,

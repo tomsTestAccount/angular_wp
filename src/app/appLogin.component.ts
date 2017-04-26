@@ -13,7 +13,6 @@ import {Location} from '@angular/common';
  <button (click)="toggleHeading()">Toggle Heading</button>
  <h1 *ngIf="showHeading">My First Angular App</h1>
  -->
-
  <div class="container">
 
  <header>
