@@ -42,7 +42,6 @@ export class rtInputComponent implements OnInit,DoCheck,AfterViewInit {
     {
 
        //if(dbgPrint_lifecyclehooks) console.log("In rt-input constructor, this.formEntry = ", this.formEntry );
-
     }
 
     ngDoCheck() {

@@ -210,8 +210,6 @@ import {Location} from '@angular/common';
         this._router.navigate([route]);
      }
 
-
-
      ngOnDestroy()
      {
         // prevent memory leak when component destroyed

@@ -26,7 +26,7 @@ export class DynamicSubFormComponent implements OnInit, AfterViewInit{
     currentFormEntries:[any];
     currentMainForm:FormGroup;
 
-    subFormChildren:[cFormInfo];
+    subFormChildren = []; //[cFormInfo]
 
     //----------------------------------------------------
 
@@ -42,7 +42,6 @@ export class DynamicSubFormComponent implements OnInit, AfterViewInit{
         this.currentFormInfo = givenFormInfo;
         this.currentForm = <FormGroup>this.currentMainForm.controls[givenFormInfo.key];
         if (dbgPrint_form) console.log(" this.currentForm=", this.currentForm);
-
     };
 
 
@@ -55,7 +54,8 @@ export class DynamicSubFormComponent implements OnInit, AfterViewInit{
         if (dbgPrint_lifecyclehooks) console.log("In ngOnInit for ",this.currentFormInfo.key);
 
         this.currentFormEntries =this.currentFormInfo.formEntries;
-        this.subFormChildren = this.currentFormInfo.childrenFormsArray || [cFormInfo];
+        this.subFormChildren = this.currentFormInfo.childrenFormsArray || [];
+
 
         for (let i= 0;i<this.subFormChildren.length;i++) {
 

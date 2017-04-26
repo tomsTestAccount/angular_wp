@@ -28,9 +28,9 @@
             </md-checkbox>
 
             <form *ngIf="childFormObj.isShown"
-                  [formGroup]="childFormObj.formObj.formgroup"  novalidate>
+                  [formGroup]="childFormObj.formGroup"  novalidate>
 
-                <div *ngFor="let formEntry of childFormObj.formObj.formEntries">
+                <div *ngFor="let formEntry of childFormObj.formEntries">
 
                     <div [ngSwitch]="formEntry.key" >
 

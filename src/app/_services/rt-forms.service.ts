@@ -55,6 +55,7 @@ export class RtFormService {
             this.configSubforms4UpdateEvent(this.wFO.subForms[i].key);
 
         }
+
         this.build_wholeFormGroup();
 
         if (dbgPrint_lifecyclehooks) console.log("In RtFormService constructor,this.wholeFormObject= ",this.wFO);
@@ -449,6 +450,13 @@ export class RtFormService {
             //let subFormGroup :FormGroup;
 
             this.wFO.subForms[i].formGroup =  this.toFormGroup(this.wFO.subForms[i].formEntries);
+            if (this.wFO.subForms[i].childrenFormsArray)
+            {
+                for (let y = 0;y<this.wFO.subForms[i].childrenFormsArray.length;y++)
+                {
+                    this.wFO.subForms[i].childrenFormsArray[y].formGroup =  this.toFormGroup(this.wFO.subForms[i].childrenFormsArray[y].formEntries);
+                }
+            }
 
             if (dbgPrint_buildFormObject) console.log("In buildFormObject_apd,subFormGroup[",i,"]=",this.wFO.subForms[i].formGroup);
 
@@ -460,7 +468,7 @@ export class RtFormService {
 
     public get_formInfos():cWholeFormObject
     {
-        this.build_wholeFormGroup();
+        this.build_wholeFormGroup();            //after update
         return this.wFO;
     }
 
@@ -608,10 +616,6 @@ export class RtFormService {
 
         let group: any = {};
 
-        //console.log("this.currentForm=", this.currentForm.entries);
-
-        //'address2': ['', Validators.compose([Validators.required,Validators.minLength(3)])],
-
         entries.forEach(entry => {
                 //console.log("entry=", entry);
                 //Validators.compose([Validators.required,Validators.minLength(3)])
@@ -627,7 +631,6 @@ export class RtFormService {
 
     toFormGroup4SubForms(subForms: any) {
 
-
         //console.log("entries=",entries);
 
         let group: any = {};
@@ -635,6 +638,15 @@ export class RtFormService {
         subForms.forEach(sForm => {
 
             group[sForm.key] = sForm.formGroup;//this._fb.group(sForm.formGroup);
+
+            if (sForm.childrenFormsArray)
+            {
+                for (let y = 0;y<sForm.childrenFormsArray.length;y++)
+                {
+                    group[sForm.childrenFormsArray[y].key]  =  sForm.childrenFormsArray[y].formGroup;
+                }
+            }
+
         });
 
         return new FormGroup(group);
